@@ -16,297 +16,333 @@
   <!-- FontAwesome Icons for crisp UI symbols -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-  <!-- Tailwind CSS CDN Fallback (Ensures complete styling regardless of local build state) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              primary: '#204A7A',
-              navy: '#1A3B62',
-              blue: '#21487B',
-              bg: '#F6F6F6',
-              dark: '#1D1D1D',
-              muted: '#8E98A8',
-              border: '#DDE4ED',
-              gold: '#C8A84B',
-              purple: '#5C3E9B',
-              spiritual: '#5B6ECC',
-              pink: '#963056',
-              orange: '#BC7B4A',
-              teal: '#27797E',
-              emerald: '#489674',
-              yellow: '#B8AA44',
-            }
-          },
-          fontFamily: {
-            messiri: ['"El Messiri"', 'sans-serif'],
-            cairo: ['"Cairo"', 'sans-serif'],
-          }
-        }
-      }
-    }
-  </script>
-
-  <!-- Local styles -->
+  <!-- Local compiled styles via Vite -->
   <link rel="stylesheet" href="/src/style.css" />
+
+  <style>
+    @keyframes marqueeRight {
+      0% { transform: translateX(calc(-100% / 3)); }
+      100% { transform: translateX(0%); }
+    }
+    .animate-marquee-right {
+      animation: marqueeRight 40s linear infinite;
+      will-change: transform;
+      contain: layout paint;
+    }
+  </style>
 </head>
-<body class="bg-[#F6F6F6] text-[#1D1D1D] font-messiri antialiased selection:bg-brand-primary selection:text-white min-w-[1280px]">
+<body class="bg-[#F6F6F6] text-[#1D1D1D] font-messiri antialiased selection:bg-brand-primary selection:text-white overflow-x-hidden">
 
   <!-- Top Announcement Bar / Space for floating header -->
   <div class="h-6"></div>
 
   <!-- ==================== 1. FLOATING NAV-BAR (#875:7147) ==================== -->
-  <header class="sticky top-4 z-50 w-[1240px] mx-auto h-[100px] rounded-[48px] bg-white/75 backdrop-blur-xl border border-white/80 shadow-[0_10px_35px_rgba(0,0,0,0.06)] px-8 flex items-center justify-between transition-all duration-300">
-    
-    <!-- Left Action Button: Login -->
-    <div class="flex items-center">
-      <a href="#login" class="px-7 py-3 rounded-[20px] border border-brand-primary text-brand-primary font-cairo font-semibold text-[17px] hover:bg-brand-primary hover:text-white transition-all duration-200 shadow-sm flex items-center gap-2">
-        <i class="fa-regular fa-user text-sm"></i>
-        <span>تسجيل الدخول</span>
+  <header class="sticky top-2 sm:top-4 z-40 w-[95%] sm:w-[92%] max-w-[1240px] mx-auto h-[64px] sm:h-[76px] rounded-full bg-white/95 backdrop-blur-xl border border-[#E2E8F0] shadow-[0_6px_25px_rgba(0,0,0,0.06)] px-4 sm:px-6 lg:px-8 flex items-center justify-between transition-all duration-300">
+
+    <!-- DESKTOP LOGO (First child in RTL: Right side on desktop, hidden on mobile) -->
+    <div class="hidden lg:flex items-center gap-3">
+      <a href="#home" class="flex items-center gap-2">
+        <img src="/images/logo.png" alt="شعار دار الرؤى للتدريب" loading="eager" fetchpriority="high" decoding="async" class="h-10 sm:h-12 w-auto object-contain drop-shadow-sm" />
       </a>
     </div>
 
-    <!-- Center Navigation Links -->
-    <nav class="flex items-center gap-8 text-[19px] font-medium text-brand-dark">
-      <a href="#contact" class="hover:text-brand-primary transition-colors py-1">تواصل معنا</a>
-      <a href="#about" class="hover:text-brand-primary transition-colors py-1">عن دار الرؤى</a>
-      <a href="#assessments" class="hover:text-brand-primary transition-colors py-1">المقاييس</a>
-      <a href="#certifications" class="hover:text-brand-primary transition-colors py-1">الشهادات الاحترافية</a>
-      <a href="#courses" class="hover:text-brand-primary transition-colors py-1">الدورات</a>
-      <a href="#home" class="text-brand-primary font-bold relative py-1">
-        <span>الرئيسية</span>
-        <span class="absolute bottom-[-6px] left-0 right-0 h-[3px] bg-brand-primary rounded-full"></span>
+    <!-- MOBILE MENU TOGGLE (First child in RTL on mobile: Right side, hidden on lg) -->
+    <div class="flex lg:hidden items-center w-[95px] justify-start">
+      <button id="mobile-menu-btn" aria-label="فتح القائمة" aria-expanded="false" class="w-10 h-10 -mr-1 rounded-full flex items-center justify-center text-brand-navy hover:bg-black/5 active:scale-95 transition-all cursor-pointer">
+        <i class="fa-solid fa-bars text-xl text-brand-navy"></i>
+      </button>
+    </div>
+
+    <!-- MOBILE LOGO (Centered on mobile, hidden on lg) -->
+    <div class="flex lg:hidden items-center justify-center flex-1">
+      <a href="#home" class="flex items-center">
+        <img src="/images/logo.png" alt="شعار دار الرؤى للتدريب" loading="eager" fetchpriority="high" decoding="async" class="h-8 sm:h-9 w-auto object-contain drop-shadow-sm" />
+      </a>
+    </div>
+
+    <!-- Center Navigation Links (desktop) -->
+    <nav id="main-nav" class="hidden lg:flex items-center gap-6 xl:gap-8 text-[17px] xl:text-[18px] font-cairo">
+      <a href="#home" data-nav="home" class="nav-item relative py-1 text-brand-primary font-bold transition-colors cursor-pointer">
+        <span class="nav-text">الرئيسية</span>
+        <span class="nav-indicator absolute bottom-[-6px] left-0 right-0 h-[2.5px] bg-brand-primary rounded-full"></span>
+      </a>
+      <a href="#courses" data-nav="courses" class="nav-item relative py-1 text-brand-dark font-normal hover:text-brand-primary transition-colors cursor-pointer">
+        <span class="nav-text">الدورات</span>
+      </a>
+      <a href="#certifications" data-nav="certifications" class="nav-item relative py-1 text-brand-dark font-normal hover:text-brand-primary transition-colors cursor-pointer">
+        <span class="nav-text">الشهادات الاحترافية</span>
+      </a>
+      <a href="#assessments" data-nav="assessments" class="nav-item relative py-1 text-brand-dark font-normal hover:text-brand-primary transition-colors cursor-pointer">
+        <span class="nav-text">المقاييس</span>
+      </a>
+      <a href="#about" data-nav="about" class="nav-item relative py-1 text-brand-dark font-normal hover:text-brand-primary transition-colors cursor-pointer">
+        <span class="nav-text">عن دار الرؤى</span>
+      </a>
+      <a href="#contact" data-nav="contact" class="nav-item relative py-1 text-brand-dark font-normal hover:text-brand-primary transition-colors cursor-pointer">
+        <span class="nav-text">تواصل معنا</span>
       </a>
     </nav>
 
-    <!-- Right Brand Logo -->
-    <div class="flex items-center gap-3">
-      <a href="#home" class="flex items-center gap-2">
-        <img src="/images/logo.png" alt="شعار دار الرؤى للتدريب" class="h-16 w-auto object-contain drop-shadow-sm" />
+    <!-- Left Action Button: Login (Last child in RTL: Left side on mobile & desktop) -->
+    <div class="flex items-center w-[95px] lg:w-auto justify-end">
+      <a href="#login" class="px-3.5 sm:px-4 lg:px-7 py-1.5 lg:py-2.5 rounded-full border border-brand-primary text-brand-primary font-cairo font-semibold text-[13px] sm:text-[14px] lg:text-[16px] hover:bg-brand-primary hover:text-white transition-all duration-200 shadow-sm flex items-center justify-center whitespace-nowrap">
+        <span>تسجيل الدخول</span>
       </a>
     </div>
   </header>
 
+  <!-- ==================== MOBILE OFF-CANVAS DRAWER (#Frame 214723) ==================== -->
+  <!-- Backdrop Overlay -->
+  <div id="mobile-drawer-backdrop" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 opacity-0 pointer-events-none transition-opacity duration-300 ease-in-out"></div>
+
+  <!-- Off-Canvas Drawer (Solid navy brand color, right-anchored RTL slide-in) -->
+  <aside id="mobile-drawer" class="fixed top-0 right-0 bottom-0 h-full w-[240px] sm:w-[260px] max-w-[80vw] bg-[#1A3B62] z-[51] p-6 sm:p-7 flex flex-col shadow-2xl translate-x-full transition-transform duration-300 ease-in-out font-cairo select-none" aria-label="القائمة الجانبية">
+    <!-- Top Row: Close Button (Positioned at top-left inside drawer, exactly as in Figma Frame 214723) -->
+    <div dir="ltr" class="flex items-center justify-start mb-8 pt-1">
+      <button id="mobile-drawer-close" aria-label="إغلاق القائمة" class="w-9 h-9 rounded-full flex items-center justify-center text-white/90 hover:text-white hover:bg-white/10 active:scale-95 transition-all cursor-pointer">
+        <i class="fa-solid fa-xmark text-2xl text-white"></i>
+      </button>
+    </div>
+
+    <!-- Navigation Links List (Right-aligned, clean vertical spacing, no dividing lines) -->
+    <nav class="flex flex-col gap-6 text-right">
+      <a href="#home" data-nav="home" class="mobile-nav-item text-white font-bold text-[18px] transition-colors py-1 cursor-pointer">الرئيسية</a>
+      <a href="#courses" data-nav="courses" class="mobile-nav-item text-white/85 hover:text-white font-normal text-[17px] transition-colors py-1 cursor-pointer">الدورات</a>
+      <a href="#certifications" data-nav="certifications" class="mobile-nav-item text-white/85 hover:text-white font-normal text-[17px] transition-colors py-1 cursor-pointer">الشهادات الإحترافية</a>
+      <a href="#assessments" data-nav="assessments" class="mobile-nav-item text-white/85 hover:text-white font-normal text-[17px] transition-colors py-1 cursor-pointer">المقاييس</a>
+      <a href="#about" data-nav="about" class="mobile-nav-item text-white/85 hover:text-white font-normal text-[17px] transition-colors py-1 cursor-pointer">عن دار الرؤى</a>
+      <a href="#contact" data-nav="contact" class="mobile-nav-item text-white/85 hover:text-white font-normal text-[17px] transition-colors py-1 cursor-pointer">تواصل معنا</a>
+    </nav>
+  </aside>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Mobile Drawer Controller
+      const drawerBtn = document.getElementById('mobile-menu-btn');
+      const drawerCloseBtn = document.getElementById('mobile-drawer-close');
+      const drawer = document.getElementById('mobile-drawer');
+      const backdrop = document.getElementById('mobile-drawer-backdrop');
+
+      const openDrawer = () => {
+        if (!drawer || !backdrop) return;
+        backdrop.classList.remove('opacity-0', 'pointer-events-none');
+        backdrop.classList.add('opacity-100', 'pointer-events-auto');
+        drawer.classList.remove('translate-x-full');
+        drawer.classList.add('translate-x-0');
+        document.body.classList.add('overflow-hidden');
+        drawerBtn?.setAttribute('aria-expanded', 'true');
+      };
+
+      const closeDrawer = () => {
+        if (!drawer || !backdrop) return;
+        backdrop.classList.remove('opacity-100', 'pointer-events-auto');
+        backdrop.classList.add('opacity-0', 'pointer-events-none');
+        drawer.classList.remove('translate-x-0');
+        drawer.classList.add('translate-x-full');
+        document.body.classList.remove('overflow-hidden');
+        drawerBtn?.setAttribute('aria-expanded', 'false');
+      };
+
+      if (drawerBtn) drawerBtn.addEventListener('click', openDrawer);
+      if (drawerCloseBtn) drawerCloseBtn.addEventListener('click', closeDrawer);
+      if (backdrop) backdrop.addEventListener('click', closeDrawer);
+
+      // Close on Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeDrawer();
+      });
+
+      // Dynamic Active Tab Switcher (matches user reference design)
+      const desktopItems = document.querySelectorAll('#main-nav .nav-item');
+      const mobileItems = document.querySelectorAll('#mobile-drawer .mobile-nav-item');
+      let isClickScrolling = false;
+      let clickTimeout = null;
+
+      function setActiveNav(targetNav) {
+        desktopItems.forEach(item => {
+          const nav = item.getAttribute('data-nav');
+          const indicator = item.querySelector('.nav-indicator');
+          if (nav === targetNav) {
+            item.classList.remove('text-brand-dark', 'font-normal');
+            item.classList.add('text-brand-primary', 'font-bold');
+            if (!indicator) {
+              const ind = document.createElement('span');
+              ind.className = 'nav-indicator absolute bottom-[-6px] left-0 right-0 h-[2.5px] bg-brand-primary rounded-full';
+              item.appendChild(ind);
+            }
+          } else {
+            item.classList.remove('text-brand-primary', 'font-bold');
+            item.classList.add('text-brand-dark', 'font-normal');
+            if (indicator) {
+              indicator.remove();
+            }
+          }
+        });
+
+        mobileItems.forEach(item => {
+          const nav = item.getAttribute('data-nav');
+          if (nav === targetNav) {
+            item.classList.remove('text-white/85', 'font-normal');
+            item.classList.add('text-white', 'font-bold');
+          } else {
+            item.classList.remove('font-bold');
+            item.classList.add('text-white/85', 'font-normal');
+          }
+        });
+      }
+
+      const allNavLinks = [...desktopItems, ...mobileItems];
+      allNavLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          const targetNav = link.getAttribute('data-nav');
+          if (!targetNav) return;
+
+          setActiveNav(targetNav);
+          closeDrawer();
+
+          const targetEl = document.getElementById(targetNav);
+          if (targetEl) {
+            e.preventDefault();
+            isClickScrolling = true;
+            clearTimeout(clickTimeout);
+            clickTimeout = setTimeout(() => {
+              isClickScrolling = false;
+            }, 800);
+
+            const headerOffset = 90;
+            const elementPosition = targetEl.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+
+      // ScrollSpy: auto-highlight section as user scrolls
+      const sectionIds = ['home', 'courses', 'certifications', 'assessments', 'about', 'contact'];
+      const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+
+      window.addEventListener('scroll', () => {
+        if (isClickScrolling) return;
+        const scrollY = window.pageYOffset;
+        const offset = 120;
+
+        for (let i = sections.length - 1; i >= 0; i--) {
+          const sec = sections[i];
+          const top = sec.offsetTop - offset;
+          const height = sec.offsetHeight;
+          if (scrollY >= top && scrollY < top + height) {
+            setActiveNav(sec.id);
+            break;
+          }
+        }
+      }, { passive: true });
+    });
+  </script>
+
   <!-- Main Container -->
-  <main id="home" class="max-w-[1440px] mx-auto overflow-hidden relative">
+  <main id="home" class="w-full mx-auto overflow-hidden relative">
 
     <!-- Ambient Glow effect in Hero section -->
-    <div class="absolute top-[80px] left-1/2 -translate-x-1/2 w-[900px] h-[580px] rounded-full bg-gradient-to-b from-[#D6DFEA]/50 to-[#D6DFEA]/20 blur-[90px] pointer-events-none -z-10"></div>
+    <div class="absolute top-[40px] sm:top-[80px] left-1/2 -translate-x-1/2 w-[90%] max-w-[900px] h-[320px] sm:h-[580px] rounded-full bg-gradient-to-b from-[#D6DFEA]/50 to-[#D6DFEA]/20 blur-[60px] sm:blur-[90px] pointer-events-none -z-10"></div>
 
     <!-- ==================== 2. HERO SECTION: اختبار عجلة الحياة (#937:4162) ==================== -->
-    <section class="pt-16 pb-24 px-12 relative flex flex-col items-center">
-      
+    <section class="pt-10 sm:pt-16 pb-14 sm:pb-24 px-4 sm:px-6 md:px-12 relative flex flex-col items-center">
+
       <!-- Sparkles decorative elements -->
-      <div class="absolute top-12 right-[22%] text-[#C8A84B] text-2xl animate-pulse">
-        <i class="fa-solid fa-sparkles"></i> ✦
+      <div class="hidden sm:block absolute top-12 right-[22%]">
+        <img src="/images/icons/sparkle.svg" alt="" class="w-8 h-8 opacity-80" />
       </div>
-      <div class="absolute top-24 left-[20%] text-[#204A7A] text-xl opacity-75">
-        ✦
+      <div class="hidden sm:block absolute top-24 left-[20%]">
+        <img src="/images/icons/star-four.svg" alt="" class="w-8 h-8 opacity-60" />
       </div>
 
       <!-- Main Section Header -->
-      <div class="text-center max-w-[760px] mx-auto mb-10">
-        <h1 class="text-[43px] font-bold text-brand-primary leading-tight mb-3">
+      <div class="text-center max-w-[760px] mx-auto mb-6 sm:mb-10">
+        <h1 class="text-[26px] sm:text-[34px] md:text-[43px] font-bold text-brand-primary leading-tight mb-3">
           اكتشف نفسك ... وابدأ رحلة تطورك
         </h1>
-        <p class="text-[25px] font-normal text-[#262626] font-messiri">
+        <p class="text-[15px] sm:text-[19px] md:text-[25px] font-normal text-[#262626] font-messiri">
           قياسات ذكية لفهم ذاتك، شخصيتك، وتوازنك في الحياة.
         </p>
       </div>
 
       <!-- ==================== THE WHEEL OF LIFE (عجلة الحياة) ==================== -->
-      <div class="w-[1000px] mx-auto relative flex flex-col items-center justify-center my-6">
-        
-        <!-- Outer Radial Wheel Graphic & Interactive Buttons -->
-        <div class="relative w-[780px] h-[780px] flex items-center justify-center">
-          
-          <!-- Background concentric circles -->
-          <div class="absolute inset-0 rounded-full border border-gray-200/60 -z-10"></div>
-          <div class="absolute inset-[60px] rounded-full border border-dashed border-gray-300/80 -z-10"></div>
-          <div class="absolute inset-[130px] rounded-full border border-gray-200/60 -z-10"></div>
+      <div class="w-full max-w-[1000px] mx-auto relative flex flex-col items-center justify-center my-6 px-2">
 
-          <!-- SVG Segments Wheel matching Figma node #875:5967 -->
-          <svg class="w-[660px] h-[660px] transform -rotate-22 drop-shadow-xl" viewBox="0 0 600 600">
-            <defs>
-              <radialGradient id="grad-personal" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#9B7ED8" stop-opacity="0.95"/>
-                <stop offset="100%" stop-color="#5C3E9B" stop-opacity="0.85"/>
-              </radialGradient>
-              <radialGradient id="grad-spiritual" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#7F92DE"/>
-                <stop offset="100%" stop-color="#4C8EDB" stop-opacity="0.85"/>
-              </radialGradient>
-              <radialGradient id="grad-health" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#4DB88A" stop-opacity="0.95"/>
-                <stop offset="100%" stop-color="#328C65" stop-opacity="0.85"/>
-              </radialGradient>
-              <radialGradient id="grad-social" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#D45E8A" stop-opacity="0.95"/>
-                <stop offset="100%" stop-color="#963056" stop-opacity="0.85"/>
-              </radialGradient>
-              <radialGradient id="grad-family" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#D4874E" stop-opacity="0.95"/>
-                <stop offset="100%" stop-color="#BC7B4A" stop-opacity="0.85"/>
-              </radialGradient>
-              <radialGradient id="grad-leisure" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#D4C44E" stop-opacity="0.95"/>
-                <stop offset="100%" stop-color="#B8AA44" stop-opacity="0.85"/>
-              </radialGradient>
-              <radialGradient id="grad-financial" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#4ECDD4" stop-opacity="0.95"/>
-                <stop offset="100%" stop-color="#27797E" stop-opacity="0.85"/>
-              </radialGradient>
-              <radialGradient id="grad-career" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#3A6CA8" stop-opacity="0.95"/>
-                <stop offset="100%" stop-color="#21487B" stop-opacity="0.85"/>
-              </radialGradient>
-            </defs>
+        <!-- Outer Radial Wheel Graphic (generative, score-driven — src/lifeWheel.js) -->
+        <div class="relative w-full max-w-[800px] sm:max-w-[840px] aspect-square flex items-center justify-center overflow-visible">
+          <div class="absolute inset-[4%] rounded-full bg-white/70 shadow-[0_32px_64px_rgba(32,41,74,0.14),0_12px_24px_rgba(32,41,74,0.08)] pointer-events-none -z-0"></div>
+          <svg id="life-wheel-svg" viewBox="-85 -70 980 980" class="w-full h-full relative z-10 wheel-elevate overflow-visible" style="overflow: visible;"></svg>
+        </div>
 
-            <!-- 8 Pie Wedges (Sectors) with radius 260px -->
-            <!-- 1. Personal (Top) -->
-            <path d="M 300 300 L 300 40 A 260 260 0 0 1 483.8 116.2 Z" fill="url(#grad-personal)" class="hover:opacity-90 cursor-pointer transition-opacity" />
-            <!-- 2. Spiritual -->
-            <path d="M 300 300 L 483.8 116.2 A 260 260 0 0 1 560 300 Z" fill="url(#grad-spiritual)" class="hover:opacity-90 cursor-pointer transition-opacity" />
-            <!-- 3. Health -->
-            <path d="M 300 300 L 560 300 A 260 260 0 0 1 483.8 483.8 Z" fill="url(#grad-health)" class="hover:opacity-90 cursor-pointer transition-opacity" />
-            <!-- 4. Social -->
-            <path d="M 300 300 L 483.8 483.8 A 260 260 0 0 1 300 560 Z" fill="url(#grad-social)" class="hover:opacity-90 cursor-pointer transition-opacity" />
-            <!-- 5. Family -->
-            <path d="M 300 300 L 300 560 A 260 260 0 0 1 116.2 483.8 Z" fill="url(#grad-family)" class="hover:opacity-90 cursor-pointer transition-opacity" />
-            <!-- 6. Leisure -->
-            <path d="M 300 300 L 116.2 483.8 A 260 260 0 0 1 40 300 Z" fill="url(#grad-leisure)" class="hover:opacity-90 cursor-pointer transition-opacity" />
-            <!-- 7. Financial -->
-            <path d="M 300 300 L 40 300 A 260 260 0 0 1 116.2 116.2 Z" fill="url(#grad-financial)" class="hover:opacity-90 cursor-pointer transition-opacity" />
-            <!-- 8. Career -->
-            <path d="M 300 300 L 116.2 116.2 A 260 260 0 0 1 300 40 Z" fill="url(#grad-career)" class="hover:opacity-90 cursor-pointer transition-opacity" />
-
-            <!-- Inner White Cutout -->
-            <circle cx="300" cy="300" r="110" fill="#F6F6F6" />
-          </svg>
-
-          <!-- Central Compass & Needle Emblem (#951:5179) -->
-          <div class="absolute w-[180px] h-[180px] rounded-full bg-white shadow-2xl border-4 border-[#C8A84B] flex items-center justify-center p-3">
-            <div class="w-full h-full rounded-full border border-gray-200 relative flex items-center justify-center bg-gradient-to-tr from-gray-50 to-white">
-              <!-- Dial tick lines -->
-              <span class="absolute top-1 text-[11px] font-bold text-gray-500 font-sans">N</span>
-              <span class="absolute bottom-1 text-[11px] font-bold text-gray-500 font-sans">S</span>
-              <span class="absolute right-1 text-[11px] font-bold text-gray-500 font-sans">E</span>
-              <span class="absolute left-1 text-[11px] font-bold text-gray-500 font-sans">W</span>
-              
-              <!-- Compass Needle -->
-              <div class="w-2.5 h-24 relative flex flex-col items-center justify-center transform rotate-45 transition-transform duration-700 hover:rotate-90">
-                <div class="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[44px] border-b-[#C8A84B]"></div>
-                <div class="w-3 h-3 rounded-full bg-brand-primary border-2 border-white shadow my-[-3px] z-10"></div>
-                <div class="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[44px] border-t-gray-400"></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- The 8 Surrounding Labels & Badges matching Figma locations -->
-          <!-- 1. الشخصي (Top) -->
-          <button data-sector="personal" class="wheel-sector-btn absolute top-2 left-1/2 -translate-x-1/2 bg-white/95 px-5 py-2.5 rounded-2xl shadow-lg border border-[#5C3E9B]/30 flex flex-col items-center hover:scale-105 transition-all">
-            <span class="text-[20px] font-bold text-[#5C3E9B]">الشخصي</span>
-            <span class="text-xs text-gray-500 flex items-center gap-1"><i class="fa-solid fa-user text-[#5C3E9B]"></i> الذات والنمو</span>
+        <!-- Spin Wheel Interactive Controls -->
+        <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mt-2 mb-4 z-10">
+          <button id="spin-wheel-btn" class="px-5 sm:px-8 py-2.5 sm:py-3.5 rounded-full bg-gradient-to-r from-brand-primary to-brand-navy text-white font-bold text-[14px] sm:text-[18px] shadow-md hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-2 sm:gap-3 cursor-pointer group border border-white/20">
+            <i id="spin-btn-icon" class="fa-solid fa-arrows-rotate text-[#E6D3A0] text-base sm:text-lg transition-transform duration-700 group-hover:rotate-180"></i>
+            <span id="spin-btn-text">دوّر عجلة الحياة</span>
           </button>
 
-          <!-- 2. الروحي (Top-Left in RTL view) -->
-          <button data-sector="spiritual" class="wheel-sector-btn absolute top-[18%] left-10 bg-white/95 px-5 py-2.5 rounded-2xl shadow-lg border border-[#5B6ECC]/30 flex flex-col items-center hover:scale-105 transition-all">
-            <span class="text-[20px] font-bold text-[#5B6ECC]">الروحي</span>
-            <span class="text-xs text-gray-500 flex items-center gap-1"><i class="fa-solid fa-mosque text-[#5B6ECC]"></i> السكينة والعمق</span>
+          <button id="toggle-ambient-btn" title="تشغيل / إيقاف الدوران التلقائي" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer">
+            <i id="ambient-icon" class="fa-solid fa-play text-sm"></i>
           </button>
-
-          <!-- 3. الصحي (Left) -->
-          <button data-sector="health" class="wheel-sector-btn absolute top-1/2 left-0 -translate-y-1/2 bg-white/95 px-5 py-2.5 rounded-2xl shadow-lg border border-[#489674]/30 flex flex-col items-center hover:scale-105 transition-all">
-            <span class="text-[20px] font-bold text-[#489674]">الصحي</span>
-            <span class="text-xs text-gray-500 flex items-center gap-1"><i class="fa-solid fa-heart-pulse text-[#489674]"></i> الحيوية والعافية</span>
-          </button>
-
-          <!-- 4. الاجتماعي (Bottom-Left) -->
-          <button data-sector="social" class="wheel-sector-btn absolute bottom-[14%] left-12 bg-white/95 px-5 py-2.5 rounded-2xl shadow-lg border border-[#963056]/30 flex flex-col items-center hover:scale-105 transition-all">
-            <span class="text-[20px] font-bold text-[#963056]">الاجتماعي</span>
-            <span class="text-xs text-gray-500 flex items-center gap-1"><i class="fa-solid fa-users text-[#963056]"></i> العلاقات والتواصل</span>
-          </button>
-
-          <!-- 5. العائلي (Bottom) -->
-          <button data-sector="family" class="wheel-sector-btn absolute bottom-2 left-1/2 -translate-x-1/2 bg-white/95 px-5 py-2.5 rounded-2xl shadow-lg border border-[#BC7B4A]/30 flex flex-col items-center hover:scale-105 transition-all">
-            <span class="text-[20px] font-bold text-[#BC7B4A]">العائلي</span>
-            <span class="text-xs text-gray-500 flex items-center gap-1"><i class="fa-solid fa-people-roof text-[#BC7B4A]"></i> الدفء والقرب</span>
-          </button>
-
-          <!-- 6. الترفيهي (Bottom-Right) -->
-          <button data-sector="leisure" class="wheel-sector-btn absolute bottom-[14%] right-12 bg-white/95 px-5 py-2.5 rounded-2xl shadow-lg border border-[#B8AA44]/30 flex flex-col items-center hover:scale-105 transition-all">
-            <span class="text-[20px] font-bold text-[#B8AA44]">الترفيهي</span>
-            <span class="text-xs text-gray-500 flex items-center gap-1"><i class="fa-solid fa-gamepad text-[#B8AA44]"></i> المتعة والطاقة</span>
-          </button>
-
-          <!-- 7. المالي (Right) -->
-          <button data-sector="financial" class="wheel-sector-btn absolute top-1/2 right-0 -translate-y-1/2 bg-white/95 px-5 py-2.5 rounded-2xl shadow-lg border border-[#27797E]/30 flex flex-col items-center hover:scale-105 transition-all">
-            <span class="text-[20px] font-bold text-[#27797E]">المالي</span>
-            <span class="text-xs text-gray-500 flex items-center gap-1"><i class="fa-solid fa-coins text-[#27797E]"></i> الاستقرار والنمو</span>
-          </button>
-
-          <!-- 8. المهني (Top-Right) -->
-          <button data-sector="career" class="wheel-sector-btn absolute top-[18%] right-10 bg-white/95 px-5 py-2.5 rounded-2xl shadow-lg border border-[#21487B]/30 flex flex-col items-center hover:scale-105 transition-all">
-            <span class="text-[20px] font-bold text-[#21487B]">المهني</span>
-            <span class="text-xs text-gray-500 flex items-center gap-1"><i class="fa-solid fa-briefcase text-[#21487B]"></i> العمل والإنجاز</span>
-          </button>
-
         </div>
 
         <!-- Active Sector Interactive Information Pill -->
-        <div id="active-sector-info" class="mt-4 bg-white px-8 py-3 rounded-full shadow-md border border-gray-200 flex items-center gap-4 text-[18px]">
-          <span class="text-gray-500">الجانب المحدد:</span>
+        <div id="active-sector-info" class="mt-1 bg-white px-4 sm:px-8 py-2.5 sm:py-3.5 rounded-2xl sm:rounded-full shadow-md border border-gray-200 flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-[13px] sm:text-[18px] text-center transition-all duration-300 max-w-full">
+          <span class="text-gray-500 font-medium">الجانب المحدد:</span>
           <span id="sector-title" class="font-bold text-[#5C3E9B]">الجانب الشخصي</span>
-          <span class="w-1.5 h-1.5 rounded-full bg-gray-300"></span>
-          <span id="sector-desc" class="text-gray-700">الذات والنمو والتطوير الذاتي واكتشاف القدرات الكامنة.</span>
+          <span class="hidden sm:block w-1.5 h-1.5 rounded-full bg-gray-300"></span>
+          <span id="sector-desc" class="hidden sm:inline text-gray-700">الذات والنمو والتطوير الذاتي واكتشاف القدرات الكامنة.</span>
           <span id="sector-percent" class="px-3 py-0.5 text-xs text-white rounded-full bg-[#5C3E9B] font-sans font-bold">85%</span>
         </div>
 
       </div>
 
       <!-- Heading CTA (#875:7304) -->
-      <div class="text-center mt-12 mb-6">
-        <p class="text-[28px] font-medium text-brand-dark mb-1">
+      <div class="text-center mt-8 sm:mt-12 mb-6 px-2">
+        <p class="text-[17px] sm:text-[22px] md:text-[28px] font-medium text-brand-dark mb-1">
           اكتشف مستوى التوازن فى أهم جوانب حياتك باستخدام
         </p>
-        <h2 class="text-[38px] font-bold text-brand-primary">
+        <h2 class="text-[24px] sm:text-[30px] md:text-[38px] font-bold text-brand-primary">
           اختبار عجلة الحياة
         </h2>
       </div>
 
       <!-- CTA Offer Card (#951:4239) matching Figma -->
-      <div class="w-[797px] bg-[#F5F8FC] border border-[#204A7A]/25 rounded-[22px] px-10 py-6 flex items-center justify-between shadow-sm my-6">
-        
-        <!-- Left Gift Box Image / Vector -->
-        <div class="w-28 h-28 flex items-center justify-center bg-white/80 rounded-2xl shadow-inner border border-blue-100">
-          <i class="fa-solid fa-gift text-5xl text-[#204A7A]"></i>
+      <div class="w-full max-w-[797px] bg-transparent border border-[#204A7A]/25 rounded-[22px] px-5 sm:px-10 py-5 sm:py-6 flex flex-wrap items-center justify-center sm:justify-between gap-4 shadow-sm my-6">
+
+        <!-- Right Promotional Text (First child in RTL) -->
+        <div class="text-right flex items-center gap-4 sm:gap-6">
+          <div class="flex items-center justify-center">
+            <img src="/images/icons/alarm-clock.svg" alt="Alarm Clock" class="w-10 h-10 sm:w-16 sm:h-16 object-contain" />
+          </div>
+          <div>
+            <span class="text-[24px] sm:text-[32px] md:text-[40px] font-bold text-brand-primary block leading-none">مجاني</span>
+            <span class="text-[18px] sm:text-[24px] md:text-[32px] font-normal text-brand-primary block">لفترة محدودة</span>
+          </div>
         </div>
 
-        <!-- Right Promotional Text -->
-        <div class="text-right flex items-center gap-6">
-          <div>
-            <span class="text-[40px] font-bold text-brand-primary block leading-none">مجاني</span>
-            <span class="text-[32px] font-normal text-brand-primary block">لفترة محدودة</span>
-          </div>
-          <div class="w-16 h-16 rounded-full bg-blue-100/70 flex items-center justify-center text-brand-primary text-3xl">
-            <i class="fa-regular fa-clock"></i>
-          </div>
+        <!-- Left Gift Box Image / Vector (Last child in RTL) -->
+        <div class="w-16 h-16 sm:w-28 sm:h-28 flex items-center justify-center">
+          <img src="/images/icons/wrapped-gift.svg" alt="Gift Box" class="w-full h-full object-contain transform scale-[1.3] drop-shadow-sm" />
         </div>
+
       </div>
 
       <!-- Action Buttons (#875:6123) -->
-      <div class="flex items-center justify-center gap-8 mt-4">
+      <div class="flex flex-row items-center justify-center gap-2 sm:gap-8 mt-4 w-full sm:w-auto px-4 sm:px-0">
         <!-- Start Evaluation Button -->
-        <a href="#challenge" class="px-10 py-4 bg-brand-primary text-white rounded-[15px] font-semibold text-[21px] flex items-center gap-3 shadow-md hover:bg-brand-navy hover:shadow-lg transition-all duration-200">
+        <a href="#challenge" class="group flex-1 sm:flex-initial px-3 sm:px-10 py-2.5 sm:py-4 bg-brand-primary text-white rounded-[12px] sm:rounded-[15px] font-semibold text-[12px] sm:text-[21px] flex items-center justify-center gap-1.5 sm:gap-3 shadow-md hover:bg-[#102744] hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 border-2 border-brand-primary cursor-pointer whitespace-nowrap">
           <span>ابدأ التقييم الآن</span>
-          <i class="fa-solid fa-arrow-left text-sm"></i>
+          <i class="fa-solid fa-arrow-left text-sm group-hover:-translate-x-1.5 transition-transform duration-200"></i>
         </a>
 
         <!-- Explore Wheel Button -->
-        <a href="#assessments" class="px-10 py-4 border-2 border-brand-primary text-brand-primary rounded-[15px] font-semibold text-[21px] hover:bg-brand-primary/5 transition-all duration-200">
+        <a href="#assessments" class="flex-1 sm:flex-initial px-3 sm:px-10 py-2.5 sm:py-4 border-2 border-brand-primary text-brand-primary rounded-[12px] sm:rounded-[15px] font-semibold text-[12px] sm:text-[21px] text-center hover:bg-brand-primary hover:text-white transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer whitespace-nowrap">
           <span>اكتشف عجلة الحياة</span>
         </a>
       </div>
@@ -314,504 +350,1055 @@
     </section>
 
     <!-- ==================== 3. SECTION: أنماط الإدراك (#943:4129) ==================== -->
-    <section id="assessments" class="py-20 px-12 border-t border-gray-200/60 bg-white/60">
-      <div class="max-w-[1240px] mx-auto">
+    <section id="assessments" class="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-12 flex flex-col items-center">
+
+      <!-- Perception orbital diagram matching reference image (Figma #875:6216) -->
+      <div class="relative w-full max-w-[920px] mx-auto mb-8 sm:mb-14 select-none" style="aspect-ratio: 920/700;">
         
-        <div class="text-center mb-16">
-          <span class="text-brand-gold font-bold text-[18px] tracking-wide block mb-2">مقياس أنماط التفكير</span>
-          <h2 class="text-[40px] font-bold text-brand-primary mb-3">أنماط الإدراك الحسي</h2>
-          <p class="text-[22px] text-gray-600 max-w-[700px] mx-auto">
-            تعرف على الطريقة الفريدة التي يستقبل ويعالج بها عقلك المعلومات، لتحقيق أقصى فاعلية في التعلم والتواصل.
+        <!-- Vector Orbit Background (Concentric Circles + Subtle Gradient + Glowing Nodes) -->
+        <svg viewBox="0 0 920 700" class="absolute inset-0 w-full h-full pointer-events-none" fill="none">
+          <defs>
+            <linearGradient id="orbitGradient" x1="15%" y1="0%" x2="85%" y2="100%">
+              <stop offset="0%" stop-color="#7C3AED" stop-opacity="0.5" />
+              <stop offset="42%" stop-color="#EC4899" stop-opacity="0.5" />
+              <stop offset="85%" stop-color="#1E5AF9" stop-opacity="0.45" />
+            </linearGradient>
+
+            <filter id="dot-glow-purple" x="-100%" y="-100%" width="300%" height="300%">
+              <feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="#7C3AED" flood-opacity="0.95" />
+            </filter>
+            <filter id="dot-glow-pink" x="-100%" y="-100%" width="300%" height="300%">
+              <feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="#EC4899" flood-opacity="0.95" />
+            </filter>
+            <filter id="dot-glow-blue" x="-100%" y="-100%" width="300%" height="300%">
+              <feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="#1E5AF9" flood-opacity="0.95" />
+            </filter>
+          </defs>
+
+          <!-- Outer Orbital Circle (passes cleanly behind the badges) -->
+          <circle cx="460" cy="370" r="280" stroke="url(#orbitGradient)" stroke-width="2" />
+
+          <!-- Inner Orbital Circle (wraps close around the head) -->
+          <circle cx="460" cy="370" r="165" stroke="#4F46E5" stroke-opacity="0.28" stroke-width="1.75" />
+
+          <!-- 3 Glowing Dots on Outer Orbit -->
+          <!-- 1. Purple dot near سمعي -->
+          <circle cx="565" cy="110" r="5.5" fill="#7C3AED" filter="url(#dot-glow-purple)" />
+          <!-- 2. Pink dot near حسي -->
+          <circle cx="734" cy="312" r="5.5" fill="#EC4899" filter="url(#dot-glow-pink)" />
+          <!-- 3. Blue dot near بصري -->
+          <circle cx="213" cy="239" r="5.5" fill="#1E5AF9" filter="url(#dot-glow-blue)" />
+        </svg>
+
+        <!-- Center Head/Brain Illustration -->
+        <div class="absolute w-[140px] h-[140px] sm:w-[210px] sm:h-[210px] md:w-[285px] md:h-[285px] flex items-center justify-center pointer-events-none" style="left: 50%; top: 52.85%; transform: translate(-50%, -50%);">
+          <img src="/images/illustrations/perception-head.png" alt="أنماط الإدراك" loading="lazy" decoding="async" class="w-full h-full object-contain" />
+        </div>
+
+        <!-- 1. سمعي (Auditory) — Top -->
+        <div class="absolute flex flex-col items-center pointer-events-auto w-[130px] sm:w-[190px] md:w-[260px]" style="left: 50%; top: 13%; transform: translate(-50%, -42%);">
+          <div class="flex items-center justify-center gap-1 mb-1" dir="ltr">
+            <div class="w-[64px] h-[64px] sm:w-[85px] sm:h-[85px] md:w-[110px] md:h-[110px] relative flex items-center justify-center shrink-0">
+              <img src="/icons/perception_styles/auditory.png" alt="سمعي" loading="lazy" decoding="async" class="w-[84px] h-[84px] sm:w-[112px] sm:h-[112px] md:w-[145px] md:h-[145px] max-w-none object-contain hover:scale-110 transition-transform duration-300 drop-shadow-sm" />
+            </div>
+            <h4 class="font-bold text-[16px] sm:text-[26px] md:text-[38px] leading-none" style="color: #7C3AED;">سمعي</h4>
+          </div>
+          <p class="text-[10px] sm:text-[14px] md:text-[19px] text-[#262626] text-center font-medium leading-snug -mt-1 sm:-mt-2">
+            تسمع وتفهم<br />الأصوات.
           </p>
         </div>
 
-        <!-- 4 Patterns Cards Grid -->
-        <div class="grid grid-cols-4 gap-6">
-          
-          <!-- Card 1: النمط البصري -->
-          <div class="bg-white rounded-[28px] p-7 border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between">
-            <div>
-              <div class="w-16 h-16 rounded-2xl bg-blue-50 text-brand-primary flex items-center justify-center text-2xl mb-6">
-                <i class="fa-regular fa-eye"></i>
-              </div>
-              <h3 class="text-[26px] font-bold text-brand-dark mb-3">النمط البصري</h3>
-              <p class="text-gray-600 text-[17px] leading-relaxed mb-6 font-cairo">
-                يعتمد على الرؤية، الصور، الرسوم البيانية، والألوان في استيعاب العالم وتذكر التجارب السابقة.
-              </p>
+        <!-- 2. حسي (Sensory) — Right -->
+        <div class="absolute flex flex-col items-center pointer-events-auto w-[130px] sm:w-[190px] md:w-[260px]" style="left: 79.5%; top: 62.5%; transform: translate(-40%, -46%);">
+          <div class="flex items-center justify-center gap-1 mb-1" dir="ltr">
+            <div class="w-[64px] h-[64px] sm:w-[85px] sm:h-[85px] md:w-[110px] md:h-[110px] relative flex items-center justify-center shrink-0">
+              <img src="/icons/perception_styles/sensory.png" alt="حسي" loading="lazy" decoding="async" class="w-[84px] h-[84px] sm:w-[112px] sm:h-[112px] md:w-[145px] md:h-[145px] max-w-none object-contain hover:scale-110 transition-transform duration-300 drop-shadow-sm" />
             </div>
-            <div class="pt-4 border-t border-gray-100 flex items-center justify-between text-brand-primary font-bold">
-              <span>نسبة الانتشار</span>
-              <span class="text-lg font-sans">40%</span>
-            </div>
+            <h4 class="font-bold text-[16px] sm:text-[26px] md:text-[38px] leading-none" style="color: #EC4899;">حسي</h4>
           </div>
+          <p class="text-[10px] sm:text-[14px] md:text-[19px] text-[#262626] text-center font-medium leading-snug -mt-1 sm:-mt-2">
+            تشعر وتتفاعل مع<br />ما حولك.
+          </p>
+        </div>
 
-          <!-- Card 2: النمط السمعي -->
-          <div class="bg-white rounded-[28px] p-7 border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between">
-            <div>
-              <div class="w-16 h-16 rounded-2xl bg-purple-50 text-brand-purple flex items-center justify-center text-2xl mb-6">
-                <i class="fa-solid fa-headphones-simple"></i>
-              </div>
-              <h3 class="text-[26px] font-bold text-brand-dark mb-3">النمط السمعي</h3>
-              <p class="text-gray-600 text-[17px] leading-relaxed mb-6 font-cairo">
-                يتعلم بامتياز عبر الاستماع، النقاشات، النبرات الصوتية، والتعليمات المنطوقة بوضوح ودقة.
-              </p>
+        <!-- 3. بصري (Visual) — Left -->
+        <div class="absolute flex flex-col items-center pointer-events-auto w-[130px] sm:w-[190px] md:w-[260px]" style="left: 19.9%; top: 58.4%; transform: translate(-60%, -46%);">
+          <div class="flex items-center justify-center gap-1 mb-1" dir="ltr">
+            <div class="w-[64px] h-[64px] sm:w-[85px] sm:h-[85px] md:w-[110px] md:h-[110px] relative flex items-center justify-center shrink-0">
+              <img src="/icons/perception_styles/visual.png" alt="بصري" loading="lazy" decoding="async" class="w-[84px] h-[84px] sm:w-[112px] sm:h-[112px] md:w-[145px] md:h-[145px] max-w-none object-contain hover:scale-110 transition-transform duration-300 drop-shadow-sm" />
             </div>
-            <div class="pt-4 border-t border-gray-100 flex items-center justify-between text-brand-purple font-bold">
-              <span>نسبة الانتشار</span>
-              <span class="text-lg font-sans">30%</span>
-            </div>
+            <h4 class="font-bold text-[16px] sm:text-[26px] md:text-[38px] leading-none" style="color: #1E5AF9;">بصري</h4>
           </div>
-
-          <!-- Card 3: النمط الحسي -->
-          <div class="bg-white rounded-[28px] p-7 border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between">
-            <div>
-              <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-brand-emerald flex items-center justify-center text-2xl mb-6">
-                <i class="fa-solid fa-hand-holding-heart"></i>
-              </div>
-              <h3 class="text-[26px] font-bold text-brand-dark mb-3">النمط الحسي</h3>
-              <p class="text-gray-600 text-[17px] leading-relaxed mb-6 font-cairo">
-                يرتبط بالمشاعر والتجارب الحية والممارسة المباشرة واستشعار العواطف في كل خطوة وموقف.
-              </p>
-            </div>
-            <div class="pt-4 border-t border-gray-100 flex items-center justify-between text-brand-emerald font-bold">
-              <span>نسبة الانتشار</span>
-              <span class="text-lg font-sans">20%</span>
-            </div>
-          </div>
-
-          <!-- Card 4: النمط التحليلي / الرقمي -->
-          <div class="bg-white rounded-[28px] p-7 border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between">
-            <div>
-              <div class="w-16 h-16 rounded-2xl bg-amber-50 text-brand-gold flex items-center justify-center text-2xl mb-6">
-                <i class="fa-solid fa-chart-pie"></i>
-              </div>
-              <h3 class="text-[26px] font-bold text-brand-dark mb-3">النمط التحليلي</h3>
-              <p class="text-gray-600 text-[17px] leading-relaxed mb-6 font-cairo">
-                يبحث عن المنطق والبيانات والأرقام والخطوات المتسلسلة لتقييم القرارات بدقة فائقة.
-              </p>
-            </div>
-            <div class="pt-4 border-t border-gray-100 flex items-center justify-between text-brand-gold font-bold">
-              <span>نسبة الانتشار</span>
-              <span class="text-lg font-sans">10%</span>
-            </div>
-          </div>
-
+          <p class="text-[10px] sm:text-[14px] md:text-[19px] text-[#262626] text-center font-medium leading-snug -mt-1 sm:-mt-2">
+            ترى وتلاحظ<br />التفاصيل.
+          </p>
         </div>
 
       </div>
+
+      <!-- Heading (#875:7315) -->
+      <div class="text-center mt-4 mb-6 px-2">
+        <p class="text-[15px] sm:text-[18px] md:text-[22px] font-medium text-brand-dark mb-1">اكتشف طريقتك في فهم العالم من حولك باستخدام</p>
+        <h2 class="text-[24px] sm:text-[30px] md:text-[38px] font-bold text-brand-primary">اختبار أنماط الإدراك</h2>
+      </div>
+
+      <!-- CTA Offer Card (#875:6126) -->
+      <div class="w-full max-w-[797px] bg-transparent border border-[#204A7A]/25 rounded-[22px] px-5 sm:px-10 py-5 sm:py-6 flex flex-wrap items-center justify-center sm:justify-between gap-4 shadow-sm my-6">
+        <div class="w-16 h-16 sm:w-28 sm:h-28 flex items-center justify-center">
+          <img src="/images/icons/wrapped-gift.svg" alt="Gift Box" loading="lazy" decoding="async" class="w-full h-full object-contain transform scale-[1.3] drop-shadow-sm" />
+        </div>
+        <div class="text-right flex items-center gap-4 sm:gap-6">
+          <div>
+            <span class="text-[24px] sm:text-[32px] md:text-[40px] font-bold text-brand-primary block leading-none">مجاني</span>
+            <span class="text-[18px] sm:text-[24px] md:text-[32px] font-normal text-brand-primary block">لفترة محدودة</span>
+          </div>
+          <div class="flex items-center justify-center">
+            <img src="/images/icons/alarm-clock.svg" alt="Alarm Clock" loading="lazy" decoding="async" class="w-10 h-10 sm:w-16 sm:h-16 object-contain" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons (#875:6168) -->
+      <div class="flex flex-row items-center justify-center gap-2 sm:gap-8 mt-4 w-full sm:w-auto px-4 sm:px-0">
+        <a href="#challenge" class="group flex-1 sm:flex-initial px-3 sm:px-10 py-2.5 sm:py-4 bg-brand-primary text-white rounded-[12px] sm:rounded-[15px] font-semibold text-[12px] sm:text-[21px] flex items-center justify-center gap-1.5 sm:gap-3 shadow-md hover:bg-[#102744] hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 border-2 border-brand-primary cursor-pointer whitespace-nowrap">
+          <span>ابدأ التقييم الآن</span>
+          <i class="fa-solid fa-arrow-left text-sm group-hover:-translate-x-1.5 transition-transform duration-200"></i>
+        </a>
+        <a href="#assessments" class="flex-1 sm:flex-initial px-3 sm:px-10 py-2.5 sm:py-4 border-2 border-brand-primary text-brand-primary rounded-[12px] sm:rounded-[15px] font-semibold text-[12px] sm:text-[21px] text-center hover:bg-brand-primary hover:text-white transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer whitespace-nowrap">
+          <span>اكتشف أنماط الإدراك</span>
+        </a>
+      </div>
+
     </section>
 
     <!-- ==================== 4. SECTION: الشخصية السبعة (#943:4127) ==================== -->
-    <section class="py-20 px-12 relative">
-      <div class="max-w-[1240px] mx-auto">
-        
-        <div class="text-center mb-16">
-          <span class="text-brand-primary font-bold text-[18px] tracking-wide block mb-2">منظومة تحليل الشخصية المتقدمة</span>
-          <h2 class="text-[40px] font-bold text-brand-primary mb-3">مقياس الشخصيات السبع</h2>
-          <p class="text-[22px] text-gray-600 max-w-[750px] mx-auto">
-            مصفوفة متكاملة لتحليل الأنماط القيادية والشخصية لمساعدتك في قيادة مسيرتك المهنية والشخصية بتفوق.
-          </p>
+    <section class="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-12 relative flex flex-col items-center">
+
+      <!-- Seven Personality Keys radial diagram matching reference design -->
+      <div class="relative w-full max-w-[960px] mx-auto mb-6 sm:mb-10 aspect-[960/640]">
+
+        <!-- Integrated SVG Connector Lines, Concentric Rings, and Colored Pin Nodes -->
+        <svg class="absolute inset-0 w-full h-full pointer-events-none z-0" viewBox="0 0 960 640" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="center-disc-shadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="4" stdDeviation="12" flood-color="#000000" flood-opacity="0.06" />
+            </filter>
+          </defs>
+
+          <!-- Raised white central disc plate with soft shadow -->
+          <circle cx="480" cy="342" r="102" fill="#FFFFFF" filter="url(#center-disc-shadow)" />
+
+          <!-- Outer track ring -->
+          <circle cx="480" cy="342" r="90" fill="none" stroke="#E2E8F0" stroke-width="1.5" />
+
+          <!-- Inner track ring -->
+          <circle cx="480" cy="342" r="62" fill="none" stroke="#E2E8F0" stroke-width="1.5" />
+
+          <!-- Connector lines from pins on the outer ring to each pentagon edge -->
+          <!-- 01 البصيرة -->
+          <line x1="480" y1="252" x2="480" y2="222" stroke="#4F6EA5" stroke-width="2" stroke-linecap="round" />
+          <!-- 02 الدافع -->
+          <line x1="552.6" y1="288.4" x2="596.8" y2="257.6" stroke="#475C6F" stroke-width="2" stroke-linecap="round" />
+          <!-- 03 الصمود -->
+          <line x1="568.5" y1="359.4" x2="633.9" y2="372.2" stroke="#53A976" stroke-width="2" stroke-linecap="round" />
+          <!-- 04 الارتباط -->
+          <line x1="522.6" y1="421.5" x2="555.2" y2="485.4" stroke="#755498" stroke-width="2" stroke-linecap="round" />
+          <!-- 05 القرار -->
+          <line x1="437.4" y1="421.5" x2="404.8" y2="485.4" stroke="#CFA034" stroke-width="2" stroke-linecap="round" />
+          <!-- 06 التأثير -->
+          <line x1="391.5" y1="359.4" x2="326.1" y2="372.2" stroke="#BE5168" stroke-width="2" stroke-linecap="round" />
+          <!-- 07 الأفق -->
+          <line x1="407.4" y1="288.4" x2="363.2" y2="257.6" stroke="#924DC9" stroke-width="2" stroke-linecap="round" />
+
+          <!-- 7 Colored Pin Nodes situated directly on the outer concentric ring -->
+          <circle cx="480" cy="252" r="5" fill="#4F6EA5" />
+          <circle cx="552.6" cy="288.4" r="5" fill="#475C6F" />
+          <circle cx="568.5" cy="359.4" r="5" fill="#53A976" />
+          <circle cx="522.6" cy="421.5" r="5" fill="#755498" />
+          <circle cx="437.4" cy="421.5" r="5" fill="#CFA034" />
+          <circle cx="391.5" cy="359.4" r="5" fill="#BE5168" />
+          <circle cx="407.4" cy="288.4" r="5" fill="#924DC9" />
+        </svg>
+
+        <!-- Center 7PK emblem (#875:6260) -->
+        <div class="absolute -translate-x-1/2 -translate-y-1/2 z-10 w-[60px] h-[60px] sm:w-[82px] sm:h-[82px] md:w-[96px] md:h-[96px] lg:w-[104px] lg:h-[104px] flex items-center justify-center cursor-pointer pointer-events-auto group" style="left: 50%; top: 53.44%;">
+          <img src="/images/icons/emblem-7pk.svg" alt="7PK Emblem" loading="lazy" decoding="async" class="w-full h-full object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-300" />
         </div>
 
-        <!-- 7 Personality Cards in a neat responsive layout -->
-        <div class="grid grid-cols-7 gap-4 mb-12">
-          
-          <!-- P1 -->
-          <div class="bg-white p-5 rounded-2xl border border-gray-200 text-center hover:border-brand-primary hover:shadow-md transition-all">
-            <div class="w-12 h-12 rounded-full bg-blue-100 text-brand-primary flex items-center justify-center mx-auto mb-3 text-lg font-bold">١</div>
-            <h4 class="font-bold text-[19px] text-brand-primary mb-1">المنجز</h4>
-            <p class="text-xs text-gray-500">التركيز على النتائج والأهداف السريعة</p>
-          </div>
-
-          <!-- P2 -->
-          <div class="bg-white p-5 rounded-2xl border border-gray-200 text-center hover:border-brand-primary hover:shadow-md transition-all">
-            <div class="w-12 h-12 rounded-full bg-purple-100 text-brand-purple flex items-center justify-center mx-auto mb-3 text-lg font-bold">٢</div>
-            <h4 class="font-bold text-[19px] text-brand-purple mb-1">المفكر</h4>
-            <p class="text-xs text-gray-500">العمق التحليلي واستشراف الرؤى</p>
-          </div>
-
-          <!-- P3 -->
-          <div class="bg-white p-5 rounded-2xl border border-gray-200 text-center hover:border-brand-primary hover:shadow-md transition-all">
-            <div class="w-12 h-12 rounded-full bg-emerald-100 text-brand-emerald flex items-center justify-center mx-auto mb-3 text-lg font-bold">٣</div>
-            <h4 class="font-bold text-[19px] text-brand-emerald mb-1">القائد</h4>
-            <p class="text-xs text-gray-500">التوجيه الإستراتيجي وإلهام الفريق</p>
-          </div>
-
-          <!-- P4 -->
-          <div class="bg-white p-5 rounded-2xl border border-gray-200 text-center hover:border-brand-primary hover:shadow-md transition-all">
-            <div class="w-12 h-12 rounded-full bg-amber-100 text-brand-gold flex items-center justify-center mx-auto mb-3 text-lg font-bold">٤</div>
-            <h4 class="font-bold text-[19px] text-brand-gold mb-1">المبتكر</h4>
-            <p class="text-xs text-gray-500">توليد الحلول الإبداعية غير المألوفة</p>
-          </div>
-
-          <!-- P5 -->
-          <div class="bg-white p-5 rounded-2xl border border-gray-200 text-center hover:border-brand-primary hover:shadow-md transition-all">
-            <div class="w-12 h-12 rounded-full bg-rose-100 text-brand-pink flex items-center justify-center mx-auto mb-3 text-lg font-bold">٥</div>
-            <h4 class="font-bold text-[19px] text-brand-pink mb-1">المحاور</h4>
-            <p class="text-xs text-gray-500">بناء الجسور والعلاقات الدبلوماسية</p>
-          </div>
-
-          <!-- P6 -->
-          <div class="bg-white p-5 rounded-2xl border border-gray-200 text-center hover:border-brand-primary hover:shadow-md transition-all">
-            <div class="w-12 h-12 rounded-full bg-teal-100 text-brand-teal flex items-center justify-center mx-auto mb-3 text-lg font-bold">٦</div>
-            <h4 class="font-bold text-[19px] text-brand-teal mb-1">المُنظّم</h4>
-            <p class="text-xs text-gray-500">الجودة والالتزام والدقة التشغيلية</p>
-          </div>
-
-          <!-- P7 -->
-          <div class="bg-white p-5 rounded-2xl border border-gray-200 text-center hover:border-brand-primary hover:shadow-md transition-all">
-            <div class="w-12 h-12 rounded-full bg-indigo-100 text-brand-spiritual flex items-center justify-center mx-auto mb-3 text-lg font-bold">٧</div>
-            <h4 class="font-bold text-[19px] text-brand-spiritual mb-1">الداعم</h4>
-            <p class="text-xs text-gray-500">التعاطف وتمكين الآخرين من النجاح</p>
-          </div>
-
+        <!-- 01 البصيرة -->
+        <div class="absolute -translate-x-1/2 -translate-y-1/2 z-10 w-[19%] max-w-[185px] group cursor-pointer" style="left: 50%; top: 25.0%;">
+          <img src="/images/key_to_personality/insight.png" alt="البصيرة" loading="lazy" decoding="async" class="w-full h-auto object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-300" />
         </div>
 
+        <!-- 02 الدافع -->
+        <div class="absolute -translate-x-1/2 -translate-y-1/2 z-10 w-[19%] max-w-[185px] group cursor-pointer" style="left: 66.15%; top: 35.94%;">
+          <img src="/images/key_to_personality/motive.png" alt="الدافع" loading="lazy" decoding="async" class="w-full h-auto object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-300" />
+        </div>
+
+        <!-- 03 الصمود -->
+        <div class="absolute -translate-x-1/2 -translate-y-1/2 z-10 w-[19%] max-w-[185px] group cursor-pointer" style="left: 70.73%; top: 59.53%;">
+          <img src="/images/key_to_personality/resilience.png" alt="الصمود" loading="lazy" decoding="async" class="w-full h-auto object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-300" />
+        </div>
+
+        <!-- 04 الارتباط -->
+        <div class="absolute -translate-x-1/2 -translate-y-1/2 z-10 w-[19%] max-w-[185px] group cursor-pointer" style="left: 60.0%; top: 82.19%;">
+          <img src="/images/key_to_personality/connection.png" alt="الارتباط" loading="lazy" decoding="async" class="w-full h-auto object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-300" />
+        </div>
+
+        <!-- 05 القرار -->
+        <div class="absolute -translate-x-1/2 -translate-y-1/2 z-10 w-[19%] max-w-[185px] group cursor-pointer" style="left: 40.0%; top: 82.19%;">
+          <img src="/images/key_to_personality/decision.png" alt="القرار" loading="lazy" decoding="async" class="w-full h-auto object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-300" />
+        </div>
+
+        <!-- 06 التأثير -->
+        <div class="absolute -translate-x-1/2 -translate-y-1/2 z-10 w-[19%] max-w-[185px] group cursor-pointer" style="left: 29.27%; top: 59.53%;">
+          <img src="/images/key_to_personality/influence.png" alt="التأثير" loading="lazy" decoding="async" class="w-full h-auto object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-300" />
+        </div>
+
+        <!-- 07 الأفق -->
+        <div class="absolute -translate-x-1/2 -translate-y-1/2 z-10 w-[19%] max-w-[185px] group cursor-pointer" style="left: 33.85%; top: 35.94%;">
+          <img src="/images/key_to_personality/horizon.png" alt="الأفق" loading="lazy" decoding="async" class="w-full h-auto object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-300" />
+        </div>
       </div>
+
+      <!-- Heading (#898:3897) -->
+      <div class="text-center mt-4 mb-6 px-2">
+        <p class="text-[15px] sm:text-[18px] md:text-[22px] font-medium text-brand-dark mb-1">اكتشف سمات شخصيتك وطريقة تعاملك باستخدام</p>
+        <h2 class="text-[22px] sm:text-[28px] md:text-[38px] font-bold text-brand-primary">اختبار مفاتيح الشخصية السبعة</h2>
+        <p class="text-sm text-gray-500 font-cairo mt-1">Seven Personality Keys · 7PK</p>
+      </div>
+
+      <!-- CTA Offer Card (#875:6171) -->
+      <div class="w-full max-w-[797px] bg-transparent border border-[#204A7A]/25 rounded-[22px] px-5 sm:px-10 py-5 sm:py-6 flex flex-wrap items-center justify-center sm:justify-between gap-4 shadow-sm my-6">
+        <div class="w-16 h-16 sm:w-28 sm:h-28 flex items-center justify-center">
+          <img src="/images/icons/wrapped-gift.svg" alt="Gift Box" loading="lazy" decoding="async" class="w-full h-full object-contain transform scale-[1.3] drop-shadow-sm" />
+        </div>
+        <div class="text-right flex items-center gap-4 sm:gap-6">
+          <div>
+            <span class="text-[24px] sm:text-[32px] md:text-[40px] font-bold text-brand-primary block leading-none">مجاني</span>
+            <span class="text-[18px] sm:text-[24px] md:text-[32px] font-normal text-brand-primary block">لفترة محدودة</span>
+          </div>
+          <div class="flex items-center justify-center">
+            <img src="/images/icons/alarm-clock.svg" alt="Alarm Clock" loading="lazy" decoding="async" class="w-10 h-10 sm:w-16 sm:h-16 object-contain" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons (#875:6213) -->
+      <div class="flex flex-row items-center justify-center gap-2 sm:gap-8 mt-4 w-full sm:w-auto px-4 sm:px-0">
+        <a href="#challenge" class="group flex-1 sm:flex-initial px-3 sm:px-10 py-2.5 sm:py-4 bg-brand-primary text-white rounded-[12px] sm:rounded-[15px] font-semibold text-[12px] sm:text-[21px] flex items-center justify-center gap-1.5 sm:gap-3 shadow-md hover:bg-[#102744] hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 border-2 border-brand-primary cursor-pointer whitespace-nowrap">
+          <span>ابدأ التقييم الآن</span>
+          <i class="fa-solid fa-arrow-left text-sm group-hover:-translate-x-1.5 transition-transform duration-200"></i>
+        </a>
+        <a href="#certifications" class="flex-1 sm:flex-initial px-3 sm:px-10 py-2.5 sm:py-4 border-2 border-brand-primary text-brand-primary rounded-[12px] sm:rounded-[15px] font-semibold text-[12px] sm:text-[21px] text-center hover:bg-brand-primary hover:text-white transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer whitespace-nowrap">
+          <span>اكتشف سمات الشخصية</span>
+        </a>
+      </div>
+
     </section>
 
-    <!-- ==================== 5. SECTION: التحدي السريع (اختبار القدرات) (#943:4131) ==================== -->
-    <section id="challenge" class="py-20 px-12 flex flex-col items-center">
-      
-      <div class="text-center mb-12">
-        <span class="text-brand-gold font-bold text-[18px] tracking-wide block mb-2">محاكاة عملية فورية</span>
-        <h2 class="text-[40px] font-bold text-brand-primary mb-3">التحدي السريع (اختبار القدرات)</h2>
-        <p class="text-[22px] text-gray-600">
-          أجب عن السؤال النموذجي التالي واكتشف كيف يُحلل نظامنا الذكي أسلوب قيادتك:
-        </p>
+    <!-- ==================== 5. SECTION: التحدي السريع (#943:4131) ==================== -->
+    <section id="challenge" class="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-12 flex flex-col items-center">
+
+      <div class="text-center mb-8 sm:mb-10 px-2">
+        <p class="flex items-center justify-center gap-2 sm:gap-3 text-brand-primary font-bold text-[16px] sm:text-[22px] mb-3">
+            <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rotate-45 bg-brand-primary inline-block shrink-0"></span>
+            <span class="w-6 sm:w-16 h-px bg-brand-primary/40"></span>
+            <span class="text-[18px] sm:text-[26px]">التحدي السريع</span>
+            <span class="w-6 sm:w-16 h-px bg-brand-primary/40"></span>
+            <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rotate-45 bg-brand-primary inline-block shrink-0"></span>
+          </p>
+        <p class="text-[14px] sm:text-[17px] md:text-[20px] text-gray-600">اختبر قدرتك على ملاحظة الأنماط والتفاصيل في تحدٍ قصير.</p>
       </div>
 
-      <!-- Main Challenge Card matching Figma node #902:4016 (w:1240, h:677, r:42px) -->
-      <div class="w-[1240px] bg-white rounded-[42px] border border-[#DDE4ED] shadow-[0px_2px_12px_rgba(0,0,0,0.06)] p-12 relative flex flex-col justify-between">
-        
-        <!-- Header of the quiz card -->
-        <div class="flex items-center justify-between pb-8 border-b border-gray-100">
-          <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-brand-primary text-xl">
-              <i class="fa-solid fa-brain"></i>
-            </div>
-            <div>
-              <h3 class="text-[24px] font-bold text-brand-dark">سؤال قياس سرعة الاستجابة واتخاذ القرار</h3>
-              <p class="text-sm text-gray-500 font-cairo">مقياس القيادة المتقدمة المعتمد من دار الرؤى</p>
+      <!-- Interactive Aptitude Challenge Quiz Widget matching reference design -->
+      <div id="quiz-widget" class="w-full max-w-[820px] sm:max-w-[860px] md:max-w-[900px] bg-white rounded-[32px] sm:rounded-[40px] border border-[#DDE4ED] shadow-[0px_4px_30px_rgba(0,0,0,0.04)] p-4 sm:p-6 md:p-8 transition-all duration-300">
+
+        <!-- Question View -->
+        <div id="quiz-question-card" class="bg-[#F8FAFC] rounded-[24px] sm:rounded-[30px] p-6 sm:p-8 md:p-10 border border-[#EDF2F7] transition-all duration-200">
+          <!-- Top Bar: Progress dashes + question counter -->
+          <div class="flex items-center justify-between mb-4 sm:mb-6">
+            <span id="quiz-counter" class="text-xs sm:text-sm font-semibold text-gray-500 font-cairo">سؤال 1 من 3</span>
+            <div id="quiz-progress-dots" class="flex items-center gap-1.5 sm:gap-2" dir="ltr">
+              <span class="quiz-dash w-7 sm:w-8 h-2 sm:h-2.5 rounded-full bg-[#204A7A] transition-all duration-300"></span>
+              <span class="quiz-dash w-3.5 sm:w-4 h-1.5 sm:h-2 rounded-full bg-[#CBD5E1] transition-all duration-300"></span>
+              <span class="quiz-dash w-3.5 sm:w-4 h-1.5 sm:h-2 rounded-full bg-[#E2E8F0] transition-all duration-300"></span>
             </div>
           </div>
 
-          <div class="flex items-center gap-4">
-            <div class="px-4 py-2 rounded-full bg-amber-50 text-amber-700 text-sm font-semibold flex items-center gap-2">
-              <i class="fa-regular fa-clock"></i>
-              <span>الوقت المتبقي: 01:45</span>
-            </div>
-            <span class="text-sm font-bold text-brand-primary bg-blue-50 px-4 py-2 rounded-full">سؤال 1 من 5</span>
-          </div>
-        </div>
-
-        <!-- Question Body -->
-        <div class="my-8">
-          <h4 class="text-[26px] font-bold text-brand-dark leading-relaxed mb-8">
-            "عندما يطرأ تغيير مفاجئ وجذري في متطلبات مشروع تديره مع فريقك قبل الموعد النهائي بيومين، ما هو التصرف الأقرب لمنهجيتك؟"
+          <!-- Question title -->
+          <h4 id="quiz-question-title" class="text-[18px] sm:text-[22px] md:text-[24px] font-bold text-[#1E293B] mt-4 mb-6 text-right font-cairo leading-relaxed">
+            ما الشكل التالي في النمط؟
           </h4>
 
-          <!-- Options -->
-          <div class="space-y-4">
-            
-            <label class="challenge-option cursor-pointer flex items-center justify-between p-5 rounded-2xl border-2 border-brand-primary bg-blue-50/50 text-brand-primary transition-all">
-              <div class="flex items-center gap-4">
-                <span class="w-8 h-8 rounded-full border-2 border-brand-primary flex items-center justify-center font-bold text-sm">أ</span>
-                <span class="text-[20px] font-medium">أعقد اجتماعاً طارئاً فورياً وأعيد توزيع المهام وفق الأولويات الحرجة فقط.</span>
-              </div>
-              <span class="option-check text-brand-primary text-xl"><i class="fa-solid fa-circle-check"></i></span>
-            </label>
-
-            <label class="challenge-option cursor-pointer flex items-center justify-between p-5 rounded-2xl border-2 border-gray-200 hover:border-gray-300 bg-white transition-all">
-              <div class="flex items-center gap-4">
-                <span class="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center font-bold text-sm">ب</span>
-                <span class="text-[20px] font-medium text-gray-700">أقوم بتحليل أسباب التغيير أولاً وتقييم جدوى التفاوض لتمديد الموعد النهائي.</span>
-              </div>
-              <span class="option-check hidden text-brand-primary text-xl"><i class="fa-solid fa-circle-check"></i></span>
-            </label>
-
-            <label class="challenge-option cursor-pointer flex items-center justify-between p-5 rounded-2xl border-2 border-gray-200 hover:border-gray-300 bg-white transition-all">
-              <div class="flex items-center gap-4">
-                <span class="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center font-bold text-sm">ج</span>
-                <span class="text-[20px] font-medium text-gray-700">أتحمل الجزء الأكبر من التعديل بنفسي تجنباً للضغط النفسي على الفريق.</span>
-              </div>
-              <span class="option-check hidden text-brand-primary text-xl"><i class="fa-solid fa-circle-check"></i></span>
-            </label>
-
-            <label class="challenge-option cursor-pointer flex items-center justify-between p-5 rounded-2xl border-2 border-gray-200 hover:border-gray-300 bg-white transition-all">
-              <div class="flex items-center gap-4">
-                <span class="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center font-bold text-sm">د</span>
-                <span class="text-[20px] font-medium text-gray-700">أبتكر حلاً بديلاً ذكياً يدمج المتطلبات الجديدة بأقل مجهود تشغيلي ممكن.</span>
-              </div>
-              <span class="option-check hidden text-brand-primary text-xl"><i class="fa-solid fa-circle-check"></i></span>
-            </label>
-
-          </div>
-        </div>
-
-        <!-- Footer / Navigation of quiz -->
-        <div class="flex items-center justify-between pt-8 border-t border-gray-100">
-          <button class="px-6 py-3 rounded-xl border border-gray-300 text-gray-600 font-semibold hover:bg-gray-50 transition-colors">
-            السابق
-          </button>
-          
-          <div class="flex items-center gap-4">
-            <span class="text-sm text-gray-400 font-cairo">تقدم الاختبار: 20%</span>
-            <div class="w-32 h-2 bg-gray-100 rounded-full overflow-hidden">
-              <div class="w-1/5 h-full bg-brand-primary rounded-full"></div>
-            </div>
+          <!-- Pattern sequence illustration container (visible for pattern questions) -->
+          <div id="quiz-pattern-container" class="hidden my-6">
+            <!-- Dynamically populated if pattern question -->
           </div>
 
-          <button class="px-8 py-3.5 rounded-xl bg-brand-primary text-white font-semibold flex items-center gap-2 hover:bg-brand-navy transition-colors shadow-sm">
-            <span>السؤال التالي</span>
-            <i class="fa-solid fa-arrow-left text-xs"></i>
+          <!-- Options Grid / Row Container -->
+          <div id="quiz-options-container" class="grid grid-cols-2 gap-4 sm:gap-5 my-6 sm:my-8">
+            <!-- Dynamically populated from questions list -->
+          </div>
+
+          <!-- Action Button: ابدأ التحدي / التالي / شاهد نتيجتك -->
+          <button id="quiz-action-btn" disabled class="w-full h-[56px] sm:h-[62px] rounded-[18px] sm:rounded-[20px] bg-[#BAC7D5] text-white font-bold text-[18px] sm:text-[20px] font-cairo flex items-center justify-center gap-2.5 cursor-not-allowed transition-all duration-200 shadow-sm">
+            <span id="quiz-btn-text">ابدأ التحدي</span>
+            <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"/><circle cx="19" cy="5" r="1.5" /><circle cx="5" cy="19" r="1.5" /></svg>
           </button>
         </div>
 
-      </div>
+        <!-- Result View (Hidden initially) -->
+        <div id="quiz-result-card" class="hidden bg-[#F8FAFC] rounded-[24px] sm:rounded-[30px] p-8 sm:p-12 border border-[#EDF2F7] text-center flex flex-col items-center relative overflow-hidden">
+          <!-- Top Indicator Bar matching reference -->
+          <span class="w-12 sm:w-14 h-1.5 rounded-full bg-brand-primary block mb-6"></span>
 
-    </section>
+          <!-- 3D Golden Trophy with celebratory glow -->
+          <div class="relative mb-5 flex items-center justify-center">
+            <div class="absolute inset-0 w-28 h-28 rounded-full bg-[#F59E0B]/20 blur-xl animate-pulse pointer-events-none"></div>
+            <img id="quiz-trophy-img" src="/images/icons/trophy.png" alt="كأس التفوق" class="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 object-contain relative z-10 animate-trophy-pop trophy-glow" />
+          </div>
 
-    <!-- ==================== 6. SECTION: اكتشفت نفسك (الخدمات) (#943:4133) ==================== -->
-    <section id="courses" class="py-20 px-12 bg-white/50 border-t border-gray-200/60">
-      <div class="max-w-[1240px] mx-auto">
-        
-        <div class="text-center mb-16">
-          <span class="text-brand-gold font-bold text-[18px] tracking-wide block mb-2">مسارات الارتقاء والتطوير</span>
-          <h2 class="text-[40px] font-bold text-brand-primary mb-3">خدمات دار الرؤى للتدريب</h2>
-          <p class="text-[22px] text-gray-600 max-w-[700px] mx-auto">
-            بعد أن تكتشف ذاتك وقدراتك، نقدم لك برامج متكاملة تصنع فارقاً حقيقياً وملموساً في حياتك.
+          <!-- Result Headline -->
+          <h3 id="quiz-result-title" class="text-[26px] sm:text-[32px] md:text-[36px] font-bold text-[#102744] mb-3 font-cairo">محاولة جيدة!</h3>
+
+          <!-- Result Score Text matching user reference -->
+          <p id="quiz-score-text" class="text-[#334155] text-[17px] sm:text-[20px] md:text-[22px] font-cairo mb-8">
+            أجبت على <span id="quiz-score-num" class="text-brand-primary font-bold text-[20px] sm:text-[24px]">3</span> من <span id="quiz-total-num" class="font-bold text-[20px] sm:text-[24px]">3</span> أسئلة بشكل صحيح
           </p>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-col sm:flex-row items-center gap-4 w-full max-w-[480px]">
+            <button id="quiz-restart-btn" class="w-full h-[54px] rounded-[18px] border-2 border-brand-primary text-brand-primary font-bold hover:bg-brand-primary hover:text-white transition-all duration-200 font-cairo text-[17px] shadow-sm hover:shadow-md cursor-pointer">
+              إعادة التحدي
+            </button>
+            <a href="#assessments" class="w-full h-[54px] rounded-[18px] bg-brand-primary text-white font-bold hover:bg-[#102744] shadow-md hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 flex items-center justify-center font-cairo text-[17px] cursor-pointer border-2 border-brand-primary">
+              اكتشف مقاييسك
+            </a>
+          </div>
         </div>
 
-        <div class="grid grid-cols-3 gap-8">
-          
-          <!-- Service 1 -->
-          <div class="bg-white rounded-[32px] p-8 border border-gray-200/80 shadow-[0_4px_25px_rgba(0,0,0,0.03)] hover:shadow-xl transition-all duration-300">
-            <div class="w-16 h-16 rounded-2xl bg-blue-50 text-brand-primary flex items-center justify-center text-3xl mb-6">
-              <i class="fa-solid fa-graduation-cap"></i>
-            </div>
-            <h3 class="text-[26px] font-bold text-brand-dark mb-3">الشهادات الاحترافية الدولية</h3>
-            <p class="text-gray-600 text-[18px] leading-relaxed mb-6 font-cairo">
-              برامج معتمدة دولياً من IBTA وغيرها من كبرى الهيئات العالمية لإكسابك المهارات الوظيفية المعاصرة.
-            </p>
-            <a href="#certifications" class="text-brand-primary font-bold text-[18px] inline-flex items-center gap-2 hover:gap-3 transition-all">
-              <span>استكشف الشهادات المعتمدة</span>
-              <i class="fa-solid fa-arrow-left text-sm"></i>
-            </a>
-          </div>
+      </div>
 
-          <!-- Service 2 -->
-          <div class="bg-white rounded-[32px] p-8 border border-gray-200/80 shadow-[0_4px_25px_rgba(0,0,0,0.03)] hover:shadow-xl transition-all duration-300">
-            <div class="w-16 h-16 rounded-2xl bg-purple-50 text-brand-purple flex items-center justify-center text-3xl mb-6">
-              <i class="fa-solid fa-comments"></i>
-            </div>
-            <h3 class="text-[26px] font-bold text-brand-dark mb-3">الجلسات الاستشارية (Coaching)</h3>
-            <p class="text-gray-600 text-[18px] leading-relaxed mb-6 font-cairo">
-              جلسات فردية مخصصة مع نخبة من الخبراء والمعتمدين لتطوير مهاراتك القيادية وحل تحدياتك المهنية.
-            </p>
-            <a href="#contact" class="text-brand-purple font-bold text-[18px] inline-flex items-center gap-2 hover:gap-3 transition-all">
-              <span>احجز جلستك الاستشارية</span>
-              <i class="fa-solid fa-arrow-left text-sm"></i>
-            </a>
-          </div>
+    </section>
 
-          <!-- Service 3 -->
-          <div class="bg-white rounded-[32px] p-8 border border-gray-200/80 shadow-[0_4px_25px_rgba(0,0,0,0.03)] hover:shadow-xl transition-all duration-300">
-            <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-brand-emerald flex items-center justify-center text-3xl mb-6">
-              <i class="fa-solid fa-laptop-code"></i>
+    <!-- ==================== 6. SECTION: اكتشفت نفسك... طوّرها الآن (#943:4133) ==================== -->
+    <section id="courses" class="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-12">
+      <div class="max-w-[1240px] mx-auto">
+
+        <div class="text-center mb-8 sm:mb-12 px-2">
+          <p class="flex items-center justify-center gap-2 sm:gap-3 text-brand-primary font-bold text-[16px] sm:text-[22px] mb-3">
+            <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rotate-45 bg-brand-primary inline-block shrink-0"></span>
+            <span class="w-6 sm:w-16 h-px bg-brand-primary/40"></span>
+            <span class="text-[18px] sm:text-[26px]">اكتشفت نفسك... طوّرها الآن</span>
+            <span class="w-6 sm:w-16 h-px bg-brand-primary/40"></span>
+            <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rotate-45 bg-brand-primary inline-block shrink-0"></span>
+          </p>
+          <p class="text-[14px] sm:text-[17px] md:text-[20px] text-gray-600">اختر من بين خدماتنا المتنوعة، لتساعدك في رحلتك نحو التطوير والنمو.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
+
+          <!-- Service 1: الدورات التدريبية (Rightmost in RTL) -->
+          <a href="#courses" class="group flex items-center justify-between p-4 sm:p-5 rounded-[22px] sm:rounded-[26px] bg-[#F8FAFD] border-[1.5px] border-[#4A749D]/50 hover:border-[#204A7A] hover:shadow-md transition-all duration-300">
+            <!-- Icon on the right (first in RTL) -->
+            <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-[16px] bg-[#EBF2FA] flex items-center justify-center shrink-0">
+              <svg class="w-6 h-6 text-[#4A749D]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+              </svg>
             </div>
-            <h3 class="text-[26px] font-bold text-brand-dark mb-3">الدورات التدريبية المتقدمة</h3>
-            <p class="text-gray-600 text-[18px] leading-relaxed mb-6 font-cairo">
-              ورش عمل ودورات متخصصة في الإدارة، الذكاء العاطفي، القيادة الفعالة، والتحول الرقمي.
-            </p>
-            <a href="#courses" class="text-brand-emerald font-bold text-[18px] inline-flex items-center gap-2 hover:gap-3 transition-all">
-              <span>تصفح دليل الدورات</span>
-              <i class="fa-solid fa-arrow-left text-sm"></i>
-            </a>
-          </div>
+
+            <!-- Text in center -->
+            <div class="flex-1 px-3 sm:px-4 text-right">
+              <h3 class="text-[17px] sm:text-[19px] font-bold text-[#1E293B] font-cairo mb-1 group-hover:text-[#4A749D] transition-colors">الدورات التدريبية</h3>
+              <p class="text-gray-500 text-[12px] sm:text-[13px] font-cairo leading-snug">جرب اختبارات تجريبية موثوقة لاجتياز أشهر الشهادات الاحترافية.</p>
+            </div>
+
+            <!-- Arrow button on the left (last in RTL) -->
+            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#EBF2FA] group-hover:bg-[#4A749D] text-[#4A749D] group-hover:text-white flex items-center justify-center group-hover:-translate-x-1 transition-all duration-200 shrink-0 shadow-sm">
+              <i class="fa-solid fa-chevron-left text-xs sm:text-sm"></i>
+            </div>
+          </a>
+
+          <!-- Service 2: الشهادات الاحترافية (Middle in RTL) -->
+          <a href="#certifications" class="group flex items-center justify-between p-4 sm:p-5 rounded-[22px] sm:rounded-[26px] bg-[#FCF8F9] border-[1.5px] border-[#BE5D6F]/50 hover:border-[#A64557] hover:shadow-md transition-all duration-300">
+            <!-- Icon on the right (first in RTL) -->
+            <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-[16px] bg-[#FCECEF] flex items-center justify-center shrink-0">
+              <svg class="w-6 h-6 text-[#BE5D6F]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="8" r="6"/>
+                <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
+              </svg>
+            </div>
+
+            <!-- Text in center -->
+            <div class="flex-1 px-3 sm:px-4 text-right">
+              <h3 class="text-[17px] sm:text-[19px] font-bold text-[#1E293B] font-cairo mb-1 group-hover:text-[#BE5D6F] transition-colors">الشهادات الاحترافية</h3>
+              <p class="text-gray-500 text-[12px] sm:text-[13px] font-cairo leading-snug">جرب اختبارات تجريبية موثوقة لاجتياز أشهر الشهادات الاحترافية.</p>
+            </div>
+
+            <!-- Arrow button on the left (last in RTL) -->
+            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#FCECEF] group-hover:bg-[#BE5D6F] text-[#BE5D6F] group-hover:text-white flex items-center justify-center group-hover:-translate-x-1 transition-all duration-200 shrink-0 shadow-sm">
+              <i class="fa-solid fa-chevron-left text-xs sm:text-sm"></i>
+            </div>
+          </a>
+
+          <!-- Service 3: الاختبارات المهنية والشخصية (Leftmost in RTL) -->
+          <a href="#assessments" class="group flex items-center justify-between p-4 sm:p-5 rounded-[22px] sm:rounded-[26px] bg-[#FAF7FD] border-[1.5px] border-[#7853A4]/50 hover:border-[#623E8C] hover:shadow-md transition-all duration-300">
+            <!-- Icon on the right (first in RTL) -->
+            <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-[16px] bg-[#F2ECFA] flex items-center justify-center shrink-0">
+              <svg class="w-6 h-6 text-[#7853A4]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <circle cx="12" cy="12" r="6"/>
+                <circle cx="12" cy="12" r="2"/>
+              </svg>
+            </div>
+
+            <!-- Text in center -->
+            <div class="flex-1 px-3 sm:px-4 text-right">
+              <h3 class="text-[17px] sm:text-[19px] font-bold text-[#1E293B] font-cairo mb-1 group-hover:text-[#7853A4] transition-colors">الاختبارات المهنية والشخصية</h3>
+              <p class="text-gray-500 text-[12px] sm:text-[13px] font-cairo leading-snug">اكتشف قدراتك وميولك من خلال مقاييس علمية موثوقة</p>
+            </div>
+
+            <!-- Arrow button on the left (last in RTL) -->
+            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#F2ECFA] group-hover:bg-[#7853A4] text-[#7853A4] group-hover:text-white flex items-center justify-center group-hover:-translate-x-1 transition-all duration-200 shrink-0 shadow-sm">
+              <i class="fa-solid fa-chevron-left text-xs sm:text-sm"></i>
+            </div>
+          </a>
 
         </div>
 
       </div>
     </section>
 
-    <!-- ==================== 7. SECTION: الإعتمادات (#943:4134) ==================== -->
-    <section id="certifications" class="py-20 px-12">
+    <!-- ==================== 7. SECTION: الاعتمادات المحلية والدولية (#943:4134) ==================== -->
+    <section id="certifications" class="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-12">
       <div class="max-w-[1240px] mx-auto text-center">
-        
-        <div class="mb-14">
-          <span class="text-brand-gold font-bold text-[18px] tracking-wide block mb-2">ثقة واعتماد عالمي ومحلي</span>
-          <h2 class="text-[40px] font-bold text-brand-primary mb-3">الاعتمادات والممثلون الرسميون</h2>
-          <p class="text-[22px] text-gray-600 max-w-[700px] mx-auto">
-            نلتزم بأعلى معايير الجودة العالمية في تقديم الشهادات والمقاييس المعتمدة.
+
+        <div class="mb-8 sm:mb-12 px-2">
+          <p class="flex items-center justify-center gap-2 sm:gap-3 text-brand-primary font-bold text-[16px] sm:text-[22px]">
+            <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rotate-45 bg-brand-primary inline-block shrink-0"></span>
+            <span class="w-6 sm:w-16 h-px bg-brand-primary/40"></span>
+            <span class="text-[16px] sm:text-[26px]">الاعتمادات المحلية والدولية</span>
+            <span class="w-6 sm:w-16 h-px bg-brand-primary/40"></span>
+            <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rotate-45 bg-brand-primary inline-block shrink-0"></span>
           </p>
         </div>
 
-        <!-- Accreditation Badges Container (#875:7066) -->
-        <div class="w-full bg-white rounded-[36px] p-10 border border-[#DDE4ED] shadow-sm flex items-center justify-around gap-8">
-          
-          <div class="flex flex-col items-center">
-            <div class="w-24 h-24 rounded-2xl bg-blue-50/70 border border-blue-100 flex items-center justify-center text-4xl text-brand-primary mb-3 shadow-inner">
-              <i class="fa-solid fa-award"></i>
+        <!-- Official Accreditations Moving Marquee Track -->
+        <div class="w-full overflow-hidden relative py-6 sm:py-10" dir="ltr">
+          <!-- Marquee Track -->
+          <div class="flex items-center gap-10 sm:gap-14 md:gap-16 w-max animate-marquee-right hover:[animation-play-state:paused]">
+
+            <!-- Set 1 -->
+            <div class="flex items-center gap-10 sm:gap-14 md:gap-16 shrink-0">
+              <img src="/images/logos/accreditations/national-elearning-center.png" alt="المركز الوطني للتعليم الإلكتروني" loading="lazy" decoding="async" class="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 object-contain shrink-0 transition-transform duration-300 hover:scale-105 cursor-pointer drop-shadow-sm" />
+              <img src="/images/logos/accreditations/tvtc.png" alt="المؤسسة العامة للتدريب التقني والمهني" loading="lazy" decoding="async" class="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 object-contain shrink-0 transition-transform duration-300 hover:scale-105 cursor-pointer drop-shadow-sm" />
+              <img src="/images/logos/accreditations/paul-scheele-institute.png" alt="Paul Scheele Institute" loading="lazy" decoding="async" class="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 object-contain shrink-0 transition-transform duration-300 hover:scale-105 cursor-pointer drop-shadow-sm" />
+              <img src="/images/logos/accreditations/ibta.png" alt="IBTA" loading="lazy" decoding="async" class="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 object-contain shrink-0 transition-transform duration-300 hover:scale-105 cursor-pointer drop-shadow-sm" />
+              <img src="/images/logos/accreditations/pecb.png" alt="PECB" loading="lazy" decoding="async" class="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 object-contain shrink-0 transition-transform duration-300 hover:scale-105 cursor-pointer drop-shadow-sm" />
+              <img src="/images/logos/accreditations/certiport.png" alt="Certiport" loading="lazy" decoding="async" class="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 object-contain shrink-0 transition-transform duration-300 hover:scale-105 cursor-pointer drop-shadow-sm" />
             </div>
-            <h4 class="font-bold text-[22px] text-brand-dark">IBTA المعتمدة</h4>
-            <p class="text-sm text-gray-500 font-cairo">International Business Training</p>
-          </div>
 
-          <div class="w-px h-20 bg-gray-200"></div>
-
-          <div class="flex flex-col items-center">
-            <div class="w-24 h-24 rounded-2xl bg-amber-50/70 border border-amber-100 flex items-center justify-center text-4xl text-brand-gold mb-3 shadow-inner">
-              <i class="fa-solid fa-stamp"></i>
+            <!-- Set 2 -->
+            <div class="flex items-center gap-10 sm:gap-14 md:gap-16 shrink-0">
+              <img src="/images/logos/accreditations/national-elearning-center.png" alt="المركز الوطني للتعليم الإلكتروني" loading="lazy" decoding="async" class="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 object-contain shrink-0 transition-transform duration-300 hover:scale-105 cursor-pointer drop-shadow-sm" />
+              <img src="/images/logos/accreditations/tvtc.png" alt="المؤسسة العامة للتدريب التقني والمهني" loading="lazy" decoding="async" class="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 object-contain shrink-0 transition-transform duration-300 hover:scale-105 cursor-pointer drop-shadow-sm" />
+              <img src="/images/logos/accreditations/paul-scheele-institute.png" alt="Paul Scheele Institute" loading="lazy" decoding="async" class="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 object-contain shrink-0 transition-transform duration-300 hover:scale-105 cursor-pointer drop-shadow-sm" />
+              <img src="/images/logos/accreditations/ibta.png" alt="IBTA" loading="lazy" decoding="async" class="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 object-contain shrink-0 transition-transform duration-300 hover:scale-105 cursor-pointer drop-shadow-sm" />
+              <img src="/images/logos/accreditations/pecb.png" alt="PECB" loading="lazy" decoding="async" class="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 object-contain shrink-0 transition-transform duration-300 hover:scale-105 cursor-pointer drop-shadow-sm" />
+              <img src="/images/logos/accreditations/certiport.png" alt="Certiport" loading="lazy" decoding="async" class="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 object-contain shrink-0 transition-transform duration-300 hover:scale-105 cursor-pointer drop-shadow-sm" />
             </div>
-            <h4 class="font-bold text-[22px] text-brand-dark">ترخيص رسمي معتمد</h4>
-            <p class="text-sm text-gray-500 font-cairo">مرخصة وفق الأنظمة والمعايير</p>
-          </div>
 
-          <div class="w-px h-20 bg-gray-200"></div>
-
-          <div class="flex flex-col items-center">
-            <div class="w-24 h-24 rounded-2xl bg-emerald-50/70 border border-emerald-100 flex items-center justify-center text-4xl text-brand-emerald mb-3 shadow-inner">
-              <i class="fa-solid fa-shield-halved"></i>
+            <!-- Set 3 -->
+            <div class="flex items-center gap-10 sm:gap-14 md:gap-16 shrink-0">
+              <img src="/images/logos/accreditations/national-elearning-center.png" alt="المركز الوطني للتعليم الإلكتروني" loading="lazy" decoding="async" class="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 object-contain shrink-0 transition-transform duration-300 hover:scale-105 cursor-pointer drop-shadow-sm" />
+              <img src="/images/logos/accreditations/tvtc.png" alt="المؤسسة العامة للتدريب التقني والمهني" loading="lazy" decoding="async" class="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 object-contain shrink-0 transition-transform duration-300 hover:scale-105 cursor-pointer drop-shadow-sm" />
+              <img src="/images/logos/accreditations/paul-scheele-institute.png" alt="Paul Scheele Institute" loading="lazy" decoding="async" class="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 object-contain shrink-0 transition-transform duration-300 hover:scale-105 cursor-pointer drop-shadow-sm" />
+              <img src="/images/logos/accreditations/ibta.png" alt="IBTA" loading="lazy" decoding="async" class="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 object-contain shrink-0 transition-transform duration-300 hover:scale-105 cursor-pointer drop-shadow-sm" />
+              <img src="/images/logos/accreditations/pecb.png" alt="PECB" loading="lazy" decoding="async" class="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 object-contain shrink-0 transition-transform duration-300 hover:scale-105 cursor-pointer drop-shadow-sm" />
+              <img src="/images/logos/accreditations/certiport.png" alt="Certiport" loading="lazy" decoding="async" class="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 object-contain shrink-0 transition-transform duration-300 hover:scale-105 cursor-pointer drop-shadow-sm" />
             </div>
-            <h4 class="font-bold text-[22px] text-brand-dark">شهادات قابلة للتحقق</h4>
-            <p class="text-sm text-gray-500 font-cairo">نظام تحقق إلكتروني مباشر بالباركود</p>
+
           </div>
-
-          <div class="w-px h-20 bg-gray-200"></div>
-
-          <div class="flex flex-col items-center">
-            <div class="w-24 h-24 rounded-2xl bg-purple-50/70 border border-purple-100 flex items-center justify-center text-4xl text-brand-purple mb-3 shadow-inner">
-              <i class="fa-solid fa-globe"></i>
-            </div>
-            <h4 class="font-bold text-[22px] text-brand-dark">اعتراف إقليمي ودولي</h4>
-            <p class="text-sm text-gray-500 font-cairo">في أكثر من 40 دولة حول العالم</p>
-          </div>
-
         </div>
 
       </div>
     </section>
 
-    <!-- ==================== 8. SECTION: آراء المعتمدين (#952:4234) ==================== -->
-    <section class="py-20 px-12 bg-white/70 border-t border-gray-200/60">
+    <!-- ==================== 8. SECTION: آراء المتدربين (#952:4234) ==================== -->
+    <section id="about" class="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-12 relative">
+      <!-- Top dashed lines like in design -->
+      <div class="absolute top-0 left-0 w-full h-[1px] border-t border-dashed border-brand-primary/30"></div>
+
       <div class="max-w-[1240px] mx-auto">
-        
-        <div class="text-center mb-16">
-          <span class="text-brand-gold font-bold text-[18px] tracking-wide block mb-2">قصص نجاح حقيقية</span>
-          <h2 class="text-[40px] font-bold text-brand-primary mb-3">آراء المتدربين والمعتمدين</h2>
-          <p class="text-[22px] text-gray-600">
-            تجارب ملهمة لأشخاص صنعوا الفارق في مساراتهم عبر مقاييس وبرامج دار الرؤى.
+
+        <div class="text-center mb-8 sm:mb-14 relative inline-block px-4 mx-auto w-full">
+          <p class="flex items-center justify-center gap-2 sm:gap-3 text-brand-primary font-bold text-[16px] sm:text-[22px]">
+            <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rotate-45 bg-brand-primary inline-block shrink-0"></span>
+            <span class="w-6 sm:w-16 h-px bg-brand-primary/40"></span>
+            <span class="text-[18px] sm:text-[26px]">آراء المتدربين</span>
+            <span class="w-6 sm:w-16 h-px bg-brand-primary/40"></span>
+            <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rotate-45 bg-brand-primary inline-block shrink-0"></span>
           </p>
         </div>
 
-        <!-- Testimonial Cards Grid -->
-        <div class="grid grid-cols-3 gap-8">
+        <!-- Testimonial Slider Container -->
+        <div class="relative overflow-hidden w-full py-4">
+          <div id="testimonials-slider" class="flex gap-4 sm:gap-6 overflow-x-auto snap-x snap-mandatory no-scrollbar scroll-smooth py-4 items-center">
+            
+            <!-- Card 1 -->
+            <div class="testimonial-card bg-white rounded-[22px] sm:rounded-[28px] p-5 sm:p-7 border border-[#E2E8F0] shadow-[0_4px_24px_rgba(0,0,0,0.03)] flex flex-col justify-between shrink-0 w-[78vw] sm:w-[320px] max-w-[320px] md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:max-w-none snap-center transition-all duration-300 select-none cursor-pointer">
+              <div>
+                <p class="text-[#1E293B] text-[14px] sm:text-[16px] leading-[1.75] font-cairo text-right mb-3 font-semibold">
+                  «دار الرؤى غيّرت مسيرتي المهنية. حصلت على شهادة CBP وترقيت في منصبي خلال ستة أشهر فقط من إتمام البرنامج.»
+                </p>
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center gap-1 text-[#F59E0B] text-xs sm:text-sm">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                  </div>
+                  <div class="flex gap-1 select-none opacity-80">
+                    <span class="w-1.5 h-3.5 rounded-[2px] bg-[#EFE3C8]"></span>
+                    <span class="w-1.5 h-3.5 rounded-[2px] bg-[#EFE3C8]"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 pt-2 mt-auto text-right">
+                <img src="/images/testimonials/user1.jpg" alt="أحمد الراشد" loading="lazy" decoding="async" class="w-11 h-11 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-white shadow-sm shrink-0" />
+                <div class="min-w-0 flex-1">
+                  <h4 class="font-bold text-[14px] sm:text-[16px] text-[#204A7A] truncate">أحمد الراشد</h4>
+                  <p class="text-[11px] sm:text-[12px] text-gray-400 font-cairo truncate">مدير موارد بشرية - أرامكو السعودية</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="testimonial-card bg-white rounded-[22px] sm:rounded-[28px] p-5 sm:p-7 border border-[#E2E8F0] shadow-[0_4px_24px_rgba(0,0,0,0.03)] flex flex-col justify-between shrink-0 w-[78vw] sm:w-[320px] max-w-[320px] md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:max-w-none snap-center transition-all duration-300 select-none cursor-pointer">
+              <div>
+                <p class="text-[#1E293B] text-[14px] sm:text-[16px] leading-[1.75] font-cairo text-right mb-3 font-semibold">
+                  «تجربة تدريبية استثنائية! بفضل دورات القيادة المتقدمة تمكنت من تطوير استراتيجيات فعالة لفريقي وتحسين الأداء العام.»
+                </p>
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center gap-1 text-[#F59E0B] text-xs sm:text-sm">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                  </div>
+                  <div class="flex gap-1 select-none opacity-80">
+                    <span class="w-1.5 h-3.5 rounded-[2px] bg-[#EFE3C8]"></span>
+                    <span class="w-1.5 h-3.5 rounded-[2px] bg-[#EFE3C8]"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 pt-2 mt-auto text-right">
+                <img src="/images/testimonials/user2.jpg" alt="خالد المطيري" loading="lazy" decoding="async" class="w-11 h-11 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-white shadow-sm shrink-0" />
+                <div class="min-w-0 flex-1">
+                  <h4 class="font-bold text-[14px] sm:text-[16px] text-[#204A7A] truncate">خالد المطيري</h4>
+                  <p class="text-[11px] sm:text-[12px] text-gray-400 font-cairo truncate">رئيس قسم التسويق - شركة STC</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="testimonial-card bg-white rounded-[22px] sm:rounded-[28px] p-5 sm:p-7 border border-[#E2E8F0] shadow-[0_4px_24px_rgba(0,0,0,0.03)] flex flex-col justify-between shrink-0 w-[78vw] sm:w-[320px] max-w-[320px] md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:max-w-none snap-center transition-all duration-300 select-none cursor-pointer">
+              <div>
+                <p class="text-[#1E293B] text-[14px] sm:text-[16px] leading-[1.75] font-cairo text-right mb-3 font-semibold">
+                  «المدربون هنا يتميزون بخبرة واسعة واحترافية عالية. المعسكر التدريبي كان نقطة تحول حقيقية في مسيرتي التقنية.»
+                </p>
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center gap-1 text-[#F59E0B] text-xs sm:text-sm">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                  </div>
+                  <div class="flex gap-1 select-none opacity-80">
+                    <span class="w-1.5 h-3.5 rounded-[2px] bg-[#EFE3C8]"></span>
+                    <span class="w-1.5 h-3.5 rounded-[2px] bg-[#EFE3C8]"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-end justify-between pt-2 mt-auto text-right">
+                <div class="flex items-center gap-3">
+                  <img src="/images/testimonials/user3.jpg" alt="د. عبدالله السالم" loading="lazy" decoding="async" class="w-11 h-11 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-white shadow-sm shrink-0" />
+                  <div class="min-w-0 flex-1">
+                    <h4 class="font-bold text-[14px] sm:text-[16px] text-[#204A7A] truncate">د. عبدالله السالم</h4>
+                    <p class="text-[11px] sm:text-[12px] text-gray-400 font-cairo truncate">مستشار تقنية معلومات - وزارة الصحة</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="testimonial-card bg-white rounded-[22px] sm:rounded-[28px] p-5 sm:p-7 border border-[#E2E8F0] shadow-[0_4px_24px_rgba(0,0,0,0.03)] flex flex-col justify-between shrink-0 w-[78vw] sm:w-[320px] max-w-[320px] md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:max-w-none snap-center transition-all duration-300 select-none cursor-pointer">
+              <div>
+                <p class="text-[#1E293B] text-[14px] sm:text-[16px] leading-[1.75] font-cairo text-right mb-3 font-semibold">
+                  «محتوى غني وعملي جداً. أنصح بشدة ببرامج الشهادات الدولية المقدمة من دار الرؤى لكل طموح يسعى للتميز المهني.»
+                </p>
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center gap-1 text-[#F59E0B] text-xs sm:text-sm">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                  </div>
+                  <div class="flex gap-1 select-none opacity-80">
+                    <span class="w-1.5 h-3.5 rounded-[2px] bg-[#EFE3C8]"></span>
+                    <span class="w-1.5 h-3.5 rounded-[2px] bg-[#EFE3C8]"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 pt-2 mt-auto text-right">
+                <img src="/images/testimonials/user1.jpg" alt="فهد العتيبي" loading="lazy" decoding="async" class="w-11 h-11 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-white shadow-sm shrink-0" />
+                <div class="min-w-0 flex-1">
+                  <h4 class="font-bold text-[14px] sm:text-[16px] text-[#204A7A] truncate">فهد العتيبي</h4>
+                  <p class="text-[11px] sm:text-[12px] text-gray-400 font-cairo truncate">مدير مشاريع - البنك العربي</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 5 -->
+            <div class="testimonial-card bg-white rounded-[22px] sm:rounded-[28px] p-5 sm:p-7 border border-[#E2E8F0] shadow-[0_4px_24px_rgba(0,0,0,0.03)] flex flex-col justify-between shrink-0 w-[78vw] sm:w-[320px] max-w-[320px] md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:max-w-none snap-center transition-all duration-300 select-none cursor-pointer">
+              <div>
+                <p class="text-[#1E293B] text-[14px] sm:text-[16px] leading-[1.75] font-cairo text-right mb-3 font-semibold">
+                  «البيئة التدريبية التفاعلية ساعدتني على بناء شبكة علاقات قوية واكتساب مهارات لا تقدر بثمن في وقت قياسي.»
+                </p>
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center gap-1 text-[#F59E0B] text-xs sm:text-sm">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                  </div>
+                  <div class="flex gap-1 select-none opacity-80">
+                    <span class="w-1.5 h-3.5 rounded-[2px] bg-[#EFE3C8]"></span>
+                    <span class="w-1.5 h-3.5 rounded-[2px] bg-[#EFE3C8]"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 pt-2 mt-auto text-right">
+                <img src="/images/testimonials/user2.jpg" alt="سلطان الدوسري" loading="lazy" decoding="async" class="w-11 h-11 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-white shadow-sm shrink-0" />
+                <div class="min-w-0 flex-1">
+                  <h4 class="font-bold text-[14px] sm:text-[16px] text-[#204A7A] truncate">سلطان الدوسري</h4>
+                  <p class="text-[11px] sm:text-[12px] text-gray-400 font-cairo truncate">أخصائي تدريب وتطوير - الرياض</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 6 -->
+            <div class="testimonial-card bg-white rounded-[22px] sm:rounded-[28px] p-5 sm:p-7 border border-[#E2E8F0] shadow-[0_4px_24px_rgba(0,0,0,0.03)] flex flex-col justify-between shrink-0 w-[78vw] sm:w-[320px] max-w-[320px] md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:max-w-none snap-center transition-all duration-300 select-none cursor-pointer">
+              <div>
+                <p class="text-[#1E293B] text-[14px] sm:text-[16px] leading-[1.75] font-cairo text-right mb-3 font-semibold">
+                  «منهجية التدريب متطورة وتواكب أحدث متطلبات سوق العمل. شكراً لفريق دار الرؤى على هذا الإبداع والتميز.»
+                </p>
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center gap-1 text-[#F59E0B] text-xs sm:text-sm">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                  </div>
+                  <div class="flex gap-1 select-none opacity-80">
+                    <span class="w-1.5 h-3.5 rounded-[2px] bg-[#EFE3C8]"></span>
+                    <span class="w-1.5 h-3.5 rounded-[2px] bg-[#EFE3C8]"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 pt-2 mt-auto text-right">
+                <img src="/images/testimonials/user3.jpg" alt="محمد القحطاني" loading="lazy" decoding="async" class="w-11 h-11 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-white shadow-sm shrink-0" />
+                <div class="min-w-0 flex-1">
+                  <h4 class="font-bold text-[14px] sm:text-[16px] text-[#204A7A] truncate">محمد القحطاني</h4>
+                  <p class="text-[11px] sm:text-[12px] text-gray-400 font-cairo truncate">محلل بيانات - مصرف الراجحي</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 7 -->
+            <div class="testimonial-card bg-white rounded-[22px] sm:rounded-[28px] p-5 sm:p-7 border border-[#E2E8F0] shadow-[0_4px_24px_rgba(0,0,0,0.03)] flex flex-col justify-between shrink-0 w-[78vw] sm:w-[320px] max-w-[320px] md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:max-w-none snap-center transition-all duration-300 select-none cursor-pointer">
+              <div>
+                <p class="text-[#1E293B] text-[14px] sm:text-[16px] leading-[1.75] font-cairo text-right mb-3 font-semibold">
+                  «استفدت كثيراً من جلسات التوجيه المهني. المقاييس دقيقة جداً وأضاءت لي جوانب مهمة في شخصيتي لم أكن أدركها.»
+                </p>
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center gap-1 text-[#F59E0B] text-xs sm:text-sm">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                  </div>
+                  <div class="flex gap-1 select-none opacity-80">
+                    <span class="w-1.5 h-3.5 rounded-[2px] bg-[#EFE3C8]"></span>
+                    <span class="w-1.5 h-3.5 rounded-[2px] bg-[#EFE3C8]"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 pt-2 mt-auto text-right">
+                <img src="/images/testimonials/user1.jpg" alt="صالح الزهراني" loading="lazy" decoding="async" class="w-11 h-11 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-white shadow-sm shrink-0" />
+                <div class="min-w-0 flex-1">
+                  <h4 class="font-bold text-[14px] sm:text-[16px] text-[#204A7A] truncate">صالح الزهراني</h4>
+                  <p class="text-[11px] sm:text-[12px] text-gray-400 font-cairo truncate">مدير تخطيط استراتيجي - جدة</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 8 -->
+            <div class="testimonial-card bg-white rounded-[22px] sm:rounded-[28px] p-5 sm:p-7 border border-[#E2E8F0] shadow-[0_4px_24px_rgba(0,0,0,0.03)] flex flex-col justify-between shrink-0 w-[78vw] sm:w-[320px] max-w-[320px] md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:max-w-none snap-center transition-all duration-300 select-none cursor-pointer">
+              <div>
+                <p class="text-[#1E293B] text-[14px] sm:text-[16px] leading-[1.75] font-cairo text-right mb-3 font-semibold">
+                  «أفضل استثمار في الذات! الشهادة التي حصلت عليها فتحت لي أبواباً جديدة وفرص وظيفية لم أكن أتوقعها.»
+                </p>
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center gap-1 text-[#F59E0B] text-xs sm:text-sm">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                  </div>
+                  <div class="flex gap-1 select-none opacity-80">
+                    <span class="w-1.5 h-3.5 rounded-[2px] bg-[#EFE3C8]"></span>
+                    <span class="w-1.5 h-3.5 rounded-[2px] bg-[#EFE3C8]"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 pt-2 mt-auto text-right">
+                <img src="/images/testimonials/user2.jpg" alt="طارق الحربي" loading="lazy" decoding="async" class="w-11 h-11 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-white shadow-sm shrink-0" />
+                <div class="min-w-0 flex-1">
+                  <h4 class="font-bold text-[14px] sm:text-[16px] text-[#204A7A] truncate">طارق الحربي</h4>
+                  <p class="text-[11px] sm:text-[12px] text-gray-400 font-cairo truncate">مدير علاقات عامة - وزارة التجارة</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 9 -->
+            <div class="testimonial-card bg-white rounded-[22px] sm:rounded-[28px] p-5 sm:p-7 border border-[#E2E8F0] shadow-[0_4px_24px_rgba(0,0,0,0.03)] flex flex-col justify-between shrink-0 w-[78vw] sm:w-[320px] max-w-[320px] md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:max-w-none snap-center transition-all duration-300 select-none cursor-pointer">
+              <div>
+                <p class="text-[#1E293B] text-[14px] sm:text-[16px] leading-[1.75] font-cairo text-right mb-3 font-semibold">
+                  «احترافية في التعامل، دقة في المواعيد، وقيمة علمية عالية. دار الرؤى هي الخيار الأول للتدريب والتطوير.»
+                </p>
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center gap-1 text-[#F59E0B] text-xs sm:text-sm">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                  </div>
+                  <div class="flex gap-1 select-none opacity-80">
+                    <span class="w-1.5 h-3.5 rounded-[2px] bg-[#EFE3C8]"></span>
+                    <span class="w-1.5 h-3.5 rounded-[2px] bg-[#EFE3C8]"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 pt-2 mt-auto text-right">
+                <img src="/images/testimonials/user3.jpg" alt="عبدالمجيد الغامدي" loading="lazy" decoding="async" class="w-11 h-11 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-white shadow-sm shrink-0" />
+                <div class="min-w-0 flex-1">
+                  <h4 class="font-bold text-[14px] sm:text-[16px] text-[#204A7A] truncate">عبدالمجيد الغامدي</h4>
+                  <p class="text-[11px] sm:text-[12px] text-gray-400 font-cairo truncate">مستشار قانوني - الدمام</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Pagination controls matching Figma layout (hidden on mobile, visible on desktop) -->
+        <div class="hidden md:flex items-center justify-center gap-4 mt-6 sm:mt-10" dir="ltr">
+          <button id="testi-prev" aria-label="السابق" class="w-10 h-10 rounded-full border border-gray-200 text-gray-300 flex items-center justify-center transition-all duration-200 bg-white cursor-default shrink-0 z-10 shadow-sm"><i class="fa-solid fa-chevron-left text-xs"></i></button>
           
-          <!-- Review 1 -->
-          <div class="bg-white rounded-[30px] p-8 border border-gray-100 shadow-[0_5px_20px_rgba(0,0,0,0.04)] flex flex-col justify-between">
-            <div>
-              <div class="flex items-center gap-1 text-amber-400 text-lg mb-4">
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-              </div>
-              <p class="text-gray-700 text-[19px] leading-relaxed mb-6 font-cairo">
-                "مقياس عجلة الحياة وأنماط الإدراك كان نقطة تحول حقيقية في فهمي لقراراتي اليومية وكيفية توجيه فريقي التنفيذي بمرونة واحترافية."
-              </p>
-            </div>
-            <div class="flex items-center gap-4 pt-4 border-t border-gray-100">
-              <div class="w-12 h-12 rounded-full bg-blue-100 text-brand-primary flex items-center justify-center font-bold text-xl">
-                أ.س
-              </div>
-              <div>
-                <h4 class="font-bold text-[19px] text-brand-dark">م. أحمد السيّد</h4>
-                <p class="text-xs text-gray-400 font-cairo">مدير تنفيذي - حاصل على اعتماد القيادة</p>
-              </div>
-            </div>
+          <div id="testi-dots" class="flex items-center gap-2 cursor-pointer select-none">
+            <!-- Dots generated dynamically via JS for exact responsive behavior -->
           </div>
-
-          <!-- Review 2 -->
-          <div class="bg-white rounded-[30px] p-8 border border-gray-100 shadow-[0_5px_20px_rgba(0,0,0,0.04)] flex flex-col justify-between">
-            <div>
-              <div class="flex items-center gap-1 text-amber-400 text-lg mb-4">
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-              </div>
-              <p class="text-gray-700 text-[19px] leading-relaxed mb-6 font-cairo">
-                "الدقة في تحليل الشخصيات السبع مذهلة! التقرير النهائي أعطاني خطة عملية واضحة لتطوير جوانب القوة وعلاج نقاط التراجع في عملي."
-              </p>
-            </div>
-            <div class="flex items-center gap-4 pt-4 border-t border-gray-100">
-              <div class="w-12 h-12 rounded-full bg-purple-100 text-brand-purple flex items-center justify-center font-bold text-xl">
-                د.ن
-              </div>
-              <div>
-                <h4 class="font-bold text-[19px] text-brand-dark">د. نورة القحطاني</h4>
-                <p class="text-xs text-gray-400 font-cairo">مستشارة تدريب وتطوير مؤسسي</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Review 3 -->
-          <div class="bg-white rounded-[30px] p-8 border border-gray-100 shadow-[0_5px_20px_rgba(0,0,0,0.04)] flex flex-col justify-between">
-            <div>
-              <div class="flex items-center gap-1 text-amber-400 text-lg mb-4">
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-              </div>
-              <p class="text-gray-700 text-[19px] leading-relaxed mb-6 font-cairo">
-                "سهولة المنصة، وسرعة استخراج الشهادة المعتمدة مع الدعم الراقي من فريق دار الرؤى جعل التجربة من أفضل ما خضت في عالم التدريب."
-              </p>
-            </div>
-            <div class="flex items-center gap-4 pt-4 border-t border-gray-100">
-              <div class="w-12 h-12 rounded-full bg-emerald-100 text-brand-emerald flex items-center justify-center font-bold text-xl">
-                خ.م
-              </div>
-              <div>
-                <h4 class="font-bold text-[19px] text-brand-dark">خالد المنصور</h4>
-                <p class="text-xs text-gray-400 font-cairo">مدرب محترف معتمد</p>
-              </div>
-            </div>
-          </div>
-
+          
+          <button id="testi-next" aria-label="التالي" class="w-10 h-10 rounded-full border-2 border-brand-primary text-brand-primary flex items-center justify-center hover:bg-brand-primary hover:text-white transition-all duration-200 bg-white cursor-pointer shrink-0 z-10 shadow-sm hover:shadow-md"><i class="fa-solid fa-chevron-right text-xs"></i></button>
         </div>
 
       </div>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const slider = document.getElementById('testimonials-slider');
+          if (!slider) return;
+
+          const cards = Array.from(slider.querySelectorAll('.testimonial-card'));
+          const dotsContainer = document.getElementById('testi-dots');
+          const btnNext = document.getElementById('testi-next');
+          const btnPrev = document.getElementById('testi-prev');
+
+          if (cards.length === 0) return;
+
+          let activeIndex = 0;
+          let isTouching = false;
+          let isDragging = false;
+          let startX = 0;
+          let scrollLeft = 0;
+
+          // Render pagination dots
+          function renderDots() {
+            if (!dotsContainer) return;
+            dotsContainer.innerHTML = '';
+            
+            const isMobile = window.innerWidth < 1024;
+            const dotCount = isMobile ? cards.length : Math.ceil(cards.length / 3);
+
+            for (let i = 0; i < dotCount; i++) {
+              const dot = document.createElement('span');
+              dot.className = i === 0
+                ? 'w-7 h-2 rounded-full bg-brand-primary transition-all duration-300 block cursor-pointer'
+                : 'w-2 h-2 rounded-full bg-[#DCE4EE] hover:bg-gray-300 transition-all duration-300 block cursor-pointer';
+              dot.setAttribute('data-index', i);
+              dot.addEventListener('click', () => {
+                if (isMobile) {
+                  scrollToCard(i);
+                } else {
+                  scrollToPage(i);
+                }
+              });
+              dotsContainer.appendChild(dot);
+            }
+          }
+
+          function updateActiveDot(index) {
+            if (!dotsContainer) return;
+            const isMobile = window.innerWidth < 1024;
+            const dots = Array.from(dotsContainer.children);
+            const targetDotIndex = isMobile ? index : Math.floor(index / 3);
+
+            dots.forEach((dot, i) => {
+              dot.className = i === targetDotIndex
+                ? 'w-7 h-2 rounded-full bg-brand-primary transition-all duration-300 block cursor-pointer'
+                : 'w-2 h-2 rounded-full bg-[#DCE4EE] hover:bg-gray-300 transition-all duration-300 block cursor-pointer';
+            });
+          }
+
+          // Adjust slider padding so Card 0 and Card N-1 sit dead-center on mobile
+          function adjustSliderPadding() {
+            if (window.innerWidth < 1024) {
+              const cardWidth = cards[0].offsetWidth;
+              const pad = Math.max(0, (slider.offsetWidth - cardWidth) / 2);
+              slider.style.paddingLeft = `${pad}px`;
+              slider.style.paddingRight = `${pad}px`;
+            } else {
+              slider.style.paddingLeft = '';
+              slider.style.paddingRight = '';
+            }
+          }
+
+          // Smoothly scroll a specific card into center
+          function scrollToCard(index, smooth = true) {
+            if (index < 0 || index >= cards.length) return;
+            activeIndex = index;
+            const targetCard = cards[index];
+            if (targetCard) {
+              targetCard.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'nearest', inline: 'center' });
+              updateActiveDot(index);
+              updateCardTransforms();
+            }
+          }
+
+          function scrollToPage(pageIndex) {
+            const targetIndex = pageIndex * 3;
+            scrollToCard(targetIndex);
+          }
+
+          // Dynamic Scale & Opacity update based on proximity to center (coverflow effect)
+          function updateCardTransforms() {
+            if (window.innerWidth >= 1024) {
+              cards.forEach(card => {
+                card.style.transform = '';
+                card.style.opacity = '';
+                card.style.zIndex = '';
+                card.classList.remove('shadow-[0_8px_30px_rgba(0,0,0,0.06)]');
+              });
+              return;
+            }
+
+            const sliderRect = slider.getBoundingClientRect();
+            const sliderCenter = sliderRect.left + sliderRect.width / 2;
+            const maxDist = sliderRect.width * 0.65;
+
+            let closestIdx = 0;
+            let minDist = Infinity;
+
+            cards.forEach((card, i) => {
+              const cardRect = card.getBoundingClientRect();
+              const cardCenter = cardRect.left + cardRect.width / 2;
+              const dist = Math.abs(sliderCenter - cardCenter);
+
+              if (dist < minDist) {
+                minDist = dist;
+                closestIdx = i;
+              }
+
+              const progress = Math.min(dist / maxDist, 1);
+              const eased = Math.sin((progress * Math.PI) / 2);
+
+              // Center card: scale 1.0, opacity 1.0
+              // Side cards: scale 0.88, opacity 0.45
+              const scale = 1 - eased * 0.12;
+              const opacity = 1 - eased * 0.55;
+
+              card.style.transform = `scale(${scale})`;
+              card.style.opacity = opacity;
+              card.style.transformOrigin = 'center center';
+              card.style.transition = (isTouching || isDragging)
+                ? 'none'
+                : 'transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.25s cubic-bezier(0.25, 1, 0.5, 1)';
+
+              if (dist < cardRect.width / 2) {
+                card.style.zIndex = '10';
+                card.classList.add('shadow-[0_8px_30px_rgba(0,0,0,0.06)]');
+              } else {
+                card.style.zIndex = '1';
+                card.classList.remove('shadow-[0_8px_30px_rgba(0,0,0,0.06)]');
+              }
+            });
+
+            activeIndex = closestIdx;
+            updateActiveDot(closestIdx);
+
+            // Desktop arrow buttons state
+            if (btnPrev && btnNext) {
+              const maxPage = Math.ceil(cards.length / 3) - 1;
+              const curPage = Math.floor(closestIdx / 3);
+              const activeClass = 'hidden md:flex w-10 h-10 rounded-full border-2 border-brand-primary text-brand-primary items-center justify-center hover:bg-brand-primary hover:text-white transition-all duration-200 bg-white cursor-pointer shrink-0 z-10 shadow-sm hover:shadow-md';
+              const disabledClass = 'hidden md:flex w-10 h-10 rounded-full border border-gray-200 text-gray-300 items-center justify-center transition-all duration-200 bg-white cursor-default shrink-0 z-10 shadow-sm';
+
+              btnPrev.className = curPage === 0 ? disabledClass : activeClass;
+              btnNext.className = curPage >= maxPage ? disabledClass : activeClass;
+            }
+          }
+
+          // Scroll listener with requestAnimationFrame for 60/120fps smoothness
+          let ticking = false;
+          slider.addEventListener('scroll', () => {
+            if (!ticking) {
+              window.requestAnimationFrame(() => {
+                updateCardTransforms();
+                ticking = false;
+              });
+              ticking = true;
+            }
+          }, { passive: true });
+
+          // Touch tracking
+          slider.addEventListener('touchstart', () => {
+            isTouching = true;
+          }, { passive: true });
+
+          slider.addEventListener('touchend', () => {
+            isTouching = false;
+            setTimeout(updateCardTransforms, 120);
+          }, { passive: true });
+
+          // Mouse drag support for desktop browser testing
+          slider.addEventListener('mousedown', (e) => {
+            if (window.innerWidth >= 1024) return;
+            isDragging = true;
+            startX = e.pageX - slider.offsetLeft;
+            scrollLeft = slider.scrollLeft;
+            slider.classList.remove('scroll-smooth', 'snap-x');
+          });
+
+          window.addEventListener('mouseup', () => {
+            if (!isDragging) return;
+            isDragging = false;
+            slider.classList.add('scroll-smooth', 'snap-x');
+            scrollToCard(activeIndex);
+          });
+
+          slider.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            const x = e.pageX - slider.offsetLeft;
+            const walk = (x - startX) * 1.2;
+            slider.scrollLeft = scrollLeft - walk;
+          });
+
+          // Clicking on side cards centers them
+          cards.forEach((card, i) => {
+            card.addEventListener('click', () => {
+              if (window.innerWidth < 1024 && i !== activeIndex) {
+                scrollToCard(i);
+              }
+            });
+          });
+
+          // Desktop arrow buttons
+          if (btnNext) {
+            btnNext.addEventListener('click', () => {
+              if (window.innerWidth < 1024) {
+                scrollToCard(activeIndex + 1);
+              } else {
+                const curPage = Math.floor(activeIndex / 3);
+                scrollToPage(curPage + 1);
+              }
+            });
+          }
+
+          if (btnPrev) {
+            btnPrev.addEventListener('click', () => {
+              if (window.innerWidth < 1024) {
+                scrollToCard(activeIndex - 1);
+              } else {
+                const curPage = Math.floor(activeIndex / 3);
+                scrollToPage(curPage - 1);
+              }
+            });
+          }
+
+          // Initial setup
+          const init = () => {
+            adjustSliderPadding();
+            renderDots();
+            updateCardTransforms();
+          };
+
+          init();
+          window.addEventListener('resize', init);
+          if (window.innerWidth < 1024) {
+            // Start on the second opinion (index 1) so peek cards appear on both sides
+            scrollToCard(1, false);
+            setTimeout(() => scrollToCard(1, false), 80);
+          }
+        });
+      </script>
     </section>
 
     <!-- ==================== 9. SECTION: شركاء النجاح (#943:4137) ==================== -->
-    <section class="py-16 px-12">
+    <section class="py-10 sm:py-16 px-4 sm:px-6 md:px-12">
       <div class="max-w-[1240px] mx-auto text-center">
-        <h3 class="text-[28px] font-bold text-brand-primary mb-10">شركاء النجاح</h3>
-        
-        <div id="partners-track" class="flex items-center justify-between gap-10 overflow-x-auto no-scrollbar py-4 opacity-80 grayscale hover:grayscale-0 transition-all">
-          <div class="flex items-center gap-3 font-bold text-xl text-gray-600 whitespace-nowrap bg-white px-8 py-5 rounded-2xl border border-gray-200">
-            <i class="fa-solid fa-landmark text-brand-primary text-2xl"></i>
-            <span>المركز الوطني للتعليم الإلكتروني</span>
+        <p class="flex items-center justify-center gap-2 sm:gap-3 text-brand-primary font-bold text-[16px] sm:text-[22px] mb-6 sm:mb-10 px-2">
+            <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rotate-45 bg-brand-primary inline-block shrink-0"></span>
+            <span class="w-6 sm:w-16 h-px bg-brand-primary/40"></span>
+            <span class="text-[18px] sm:text-[26px]">شركاء النجاح</span>
+            <span class="w-6 sm:w-16 h-px bg-brand-primary/40"></span>
+            <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rotate-45 bg-brand-primary inline-block shrink-0"></span>
+          </p>
+
+          <!-- Partners (#875:7146) — real partner logos exported from Figma -->
+          <div class="w-full overflow-hidden relative py-4" dir="ltr">
+            <div class="flex items-center gap-10 sm:gap-20 w-max animate-marquee-right hover:[animation-play-state:paused]">
+
+              <!-- Set 1 -->
+              <div class="flex items-center gap-10 sm:gap-20 shrink-0">
+                <img src="/images/logos/partners/stc.png" alt="STC" loading="lazy" decoding="async" class="h-12 sm:h-20 w-auto object-contain shrink-0" />
+                <img src="/images/logos/partners/ministry-of-commerce.png" alt="وزارة التجارة" loading="lazy" decoding="async" class="h-14 sm:h-24 w-auto object-contain shrink-0" />
+                <img src="/images/logos/partners/ministry-of-foreign-affairs.png" alt="وزارة الخارجية" loading="lazy" decoding="async" class="h-14 sm:h-24 w-auto object-contain shrink-0" />
+                <img src="/images/logos/partners/ministry-of-health.png" alt="وزارة الصحة" loading="lazy" decoding="async" class="h-14 sm:h-24 w-auto object-contain shrink-0" />
+                <img src="/images/logos/partners/ministry-of-justice.png" alt="وزارة العدل" loading="lazy" decoding="async" class="h-14 sm:h-24 w-auto object-contain shrink-0" />
+                <img src="/images/logos/partners/anb.png" alt="anb" loading="lazy" decoding="async" class="h-10 sm:h-16 w-auto object-contain shrink-0" />
+                <img src="/images/logos/partners/alrajhi-bank.png" alt="Al Rajhi Bank" loading="lazy" decoding="async" class="h-9 sm:h-14 w-auto object-contain shrink-0" />
+                <img src="/images/logos/partners/saudi-aramco.png" alt="Saudi Aramco" loading="lazy" decoding="async" class="h-12 sm:h-20 w-auto object-contain shrink-0" />
+                <img src="/images/logos/partners/hrdf.png" alt="HRDF" loading="lazy" decoding="async" class="h-12 sm:h-20 w-auto object-contain shrink-0" />
+                <img src="/images/logos/partners/bank-partner.png" alt="Bank" loading="lazy" decoding="async" class="h-10 sm:h-16 w-auto object-contain shrink-0" />
+              </div>
+
+              <!-- Set 2 -->
+              <div class="flex items-center gap-10 sm:gap-20 shrink-0">
+                <img src="/images/logos/partners/stc.png" alt="STC" loading="lazy" decoding="async" class="h-12 sm:h-20 w-auto object-contain shrink-0" />
+                <img src="/images/logos/partners/ministry-of-commerce.png" alt="وزارة التجارة" loading="lazy" decoding="async" class="h-14 sm:h-24 w-auto object-contain shrink-0" />
+                <img src="/images/logos/partners/ministry-of-foreign-affairs.png" alt="وزارة الخارجية" loading="lazy" decoding="async" class="h-14 sm:h-24 w-auto object-contain shrink-0" />
+                <img src="/images/logos/partners/ministry-of-health.png" alt="وزارة الصحة" loading="lazy" decoding="async" class="h-14 sm:h-24 w-auto object-contain shrink-0" />
+                <img src="/images/logos/partners/ministry-of-justice.png" alt="وزارة العدل" loading="lazy" decoding="async" class="h-14 sm:h-24 w-auto object-contain shrink-0" />
+                <img src="/images/logos/partners/anb.png" alt="anb" loading="lazy" decoding="async" class="h-10 sm:h-16 w-auto object-contain shrink-0" />
+                <img src="/images/logos/partners/alrajhi-bank.png" alt="Al Rajhi Bank" loading="lazy" decoding="async" class="h-9 sm:h-14 w-auto object-contain shrink-0" />
+                <img src="/images/logos/partners/saudi-aramco.png" alt="Saudi Aramco" loading="lazy" decoding="async" class="h-12 sm:h-20 w-auto object-contain shrink-0" />
+                <img src="/images/logos/partners/hrdf.png" alt="HRDF" loading="lazy" decoding="async" class="h-12 sm:h-20 w-auto object-contain shrink-0" />
+                <img src="/images/logos/partners/bank-partner.png" alt="Bank" loading="lazy" decoding="async" class="h-10 sm:h-16 w-auto object-contain shrink-0" />
+              </div>
+
+              <!-- Set 3 -->
+              <div class="flex items-center gap-10 sm:gap-20 shrink-0">
+                <img src="/images/logos/partners/stc.png" alt="STC" loading="lazy" decoding="async" class="h-12 sm:h-20 w-auto object-contain shrink-0" />
+                <img src="/images/logos/partners/ministry-of-commerce.png" alt="وزارة التجارة" loading="lazy" decoding="async" class="h-14 sm:h-24 w-auto object-contain shrink-0" />
+                <img src="/images/logos/partners/ministry-of-foreign-affairs.png" alt="وزارة الخارجية" loading="lazy" decoding="async" class="h-14 sm:h-24 w-auto object-contain shrink-0" />
+                <img src="/images/logos/partners/ministry-of-health.png" alt="وزارة الصحة" loading="lazy" decoding="async" class="h-14 sm:h-24 w-auto object-contain shrink-0" />
+                <img src="/images/logos/partners/ministry-of-justice.png" alt="وزارة العدل" loading="lazy" decoding="async" class="h-14 sm:h-24 w-auto object-contain shrink-0" />
+                <img src="/images/logos/partners/anb.png" alt="anb" loading="lazy" decoding="async" class="h-10 sm:h-16 w-auto object-contain shrink-0" />
+                <img src="/images/logos/partners/alrajhi-bank.png" alt="Al Rajhi Bank" loading="lazy" decoding="async" class="h-9 sm:h-14 w-auto object-contain shrink-0" />
+                <img src="/images/logos/partners/saudi-aramco.png" alt="Saudi Aramco" loading="lazy" decoding="async" class="h-12 sm:h-20 w-auto object-contain shrink-0" />
+                <img src="/images/logos/partners/hrdf.png" alt="HRDF" loading="lazy" decoding="async" class="h-12 sm:h-20 w-auto object-contain shrink-0" />
+                <img src="/images/logos/partners/bank-partner.png" alt="Bank" loading="lazy" decoding="async" class="h-10 sm:h-16 w-auto object-contain shrink-0" />
+              </div>
+
+            </div>
           </div>
-          <div class="flex items-center gap-3 font-bold text-xl text-gray-600 whitespace-nowrap bg-white px-8 py-5 rounded-2xl border border-gray-200">
-            <i class="fa-solid fa-certificate text-brand-gold text-2xl"></i>
-            <span>المؤسسة العامة للتدريب</span>
-          </div>
-          <div class="flex items-center gap-3 font-bold text-xl text-gray-600 whitespace-nowrap bg-white px-8 py-5 rounded-2xl border border-gray-200">
-            <i class="fa-solid fa-building-columns text-brand-purple text-2xl"></i>
-            <span>هيئة تقويم التعليم والتدريب</span>
-          </div>
-          <div class="flex items-center gap-3 font-bold text-xl text-gray-600 whitespace-nowrap bg-white px-8 py-5 rounded-2xl border border-gray-200">
-            <i class="fa-solid fa-handshake-angle text-brand-emerald text-2xl"></i>
-            <span>مجلس التدريب الدولي IBTA</span>
-          </div>
-        </div>
 
       </div>
     </section>
@@ -819,70 +1406,81 @@
   </main>
 
   <!-- ==================== 10. FOOTER & RIGHTS (#875:5871) ==================== -->
-  <footer id="contact" class="w-full bg-[#1A3B62] text-white pt-16 pb-8 px-12 border-t-4 border-brand-gold">
+  <footer id="contact" class="w-full bg-[#1A3B62] text-white pt-10 sm:pt-16 pb-8 px-4 sm:px-6 md:px-12">
     <div class="max-w-[1240px] mx-auto">
-      
-      <div class="grid grid-cols-4 gap-12 mb-12">
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-10 lg:mb-12">
         
-        <!-- Col 1: Brand & Bio -->
+        <!-- Col 1 (Far Right): Brand & Bio -->
         <div>
           <div class="flex items-center gap-3 mb-6">
             <img src="/images/logo.png" alt="دار الرؤى للتدريب" class="h-16 w-auto brightness-0 invert" />
           </div>
-          <p class="text-gray-300 text-[17px] leading-relaxed mb-6 font-cairo">
-            دار الرؤى للتدريب والاستشارات، ريادة في تقديم المقاييس الذكية، وتطوير الكفاءات البشرية عبر أرقى المناهج والشهادات الدولية المعتمدة.
+          <p class="text-gray-300 text-[15px] leading-relaxed mb-6 font-cairo">
+            مع دار الرؤى للتدريب.. نصنع مستقبلك بخبرات علمية ومهارات عملية.
           </p>
           <div class="flex items-center gap-4 text-xl">
-            <a href="#" class="w-10 h-10 rounded-full bg-white/10 hover:bg-brand-gold flex items-center justify-center transition-colors"><i class="fa-brands fa-x-twitter"></i></a>
-            <a href="#" class="w-10 h-10 rounded-full bg-white/10 hover:bg-brand-gold flex items-center justify-center transition-colors"><i class="fa-brands fa-linkedin-in"></i></a>
-            <a href="#" class="w-10 h-10 rounded-full bg-white/10 hover:bg-brand-gold flex items-center justify-center transition-colors"><i class="fa-brands fa-instagram"></i></a>
-            <a href="#" class="w-10 h-10 rounded-full bg-white/10 hover:bg-brand-gold flex items-center justify-center transition-colors"><i class="fa-brands fa-youtube"></i></a>
+            <a href="#" class="w-10 h-10 rounded-sm border border-white/30 hover:border-brand-gold hover:text-brand-gold flex items-center justify-center transition-all"><i class="fa-brands fa-twitter"></i></a>
+            <a href="#" class="w-10 h-10 rounded-sm border border-white/30 hover:border-brand-gold hover:text-brand-gold flex items-center justify-center transition-all"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" class="w-10 h-10 rounded-sm border border-white/30 hover:border-brand-gold hover:text-brand-gold flex items-center justify-center transition-all"><i class="fa-brands fa-youtube"></i></a>
           </div>
         </div>
 
-        <!-- Col 2: Quick Links -->
+        <!-- Col 2 (Middle Right): خدماتنا (Services) -->
         <div>
-          <h4 class="text-[22px] font-bold text-white mb-6 border-b border-white/20 pb-3">روابط سريعة</h4>
-          <ul class="space-y-3 text-gray-300 text-[18px] font-cairo">
+          <div class="flex items-center gap-0 mb-8">
+            <h4 class="text-[20px] font-bold text-white whitespace-nowrap ml-4">خدماتنا</h4>
+            <div class="h-[2px] bg-[#d3b259] w-12"></div>
+            <div class="w-1.5 h-1.5 rounded-full bg-[#d3b259]"></div>
+          </div>
+          <ul class="space-y-4 text-gray-300 text-[16px] font-cairo">
+            <li><a href="#courses" class="hover:text-brand-gold transition-colors">التدريب الفردي</a></li>
+            <li><a href="#courses" class="hover:text-brand-gold transition-colors">التدريب المؤسسي</a></li>
+            <li><a href="#courses" class="hover:text-brand-gold transition-colors">التعلم الإلكتروني</a></li>
+            <li><a href="#certifications" class="hover:text-brand-gold transition-colors">الشهادات الدولية</a></li>
+            <li><a href="#assessments" class="hover:text-brand-gold transition-colors">المقاييس والتقييم</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3 (Middle Left): روابط سريعة (Quick Links) -->
+        <div>
+          <div class="flex items-center gap-0 mb-8">
+            <h4 class="text-[20px] font-bold text-white whitespace-nowrap ml-4">روابط سريعة</h4>
+            <div class="h-[2px] bg-[#d3b259] w-12"></div>
+            <div class="w-1.5 h-1.5 rounded-full bg-[#d3b259]"></div>
+          </div>
+          <ul class="space-y-4 text-gray-300 text-[16px] font-cairo">
             <li><a href="#home" class="hover:text-brand-gold transition-colors">الرئيسية</a></li>
-            <li><a href="#assessments" class="hover:text-brand-gold transition-colors">مقياس عجلة الحياة</a></li>
-            <li><a href="#assessments" class="hover:text-brand-gold transition-colors">أنماط الإدراك الحسي</a></li>
-            <li><a href="#challenge" class="hover:text-brand-gold transition-colors">التحدي السريع</a></li>
-            <li><a href="#certifications" class="hover:text-brand-gold transition-colors">الاعتمادات والتراخيص</a></li>
+            <li><a href="#courses" class="hover:text-brand-gold transition-colors">الدورات</a></li>
+            <li><a href="#certifications" class="hover:text-brand-gold transition-colors">الشهادات</a></li>
+            <li><a href="#assessments" class="hover:text-brand-gold transition-colors">المقاييس</a></li>
+            <li><a href="#about" class="hover:text-brand-gold transition-colors">عن دار الرؤى</a></li>
           </ul>
         </div>
 
-        <!-- Col 3: Programs & Certs -->
+        <!-- Col 4 (Far Left): تواصل معنا (Contact Us) -->
         <div>
-          <h4 class="text-[22px] font-bold text-white mb-6 border-b border-white/20 pb-3">الشهادات الاحترافية</h4>
-          <ul class="space-y-3 text-gray-300 text-[18px] font-cairo">
-            <li><a href="#certifications" class="hover:text-brand-gold transition-colors">شهادة القيادة المعتمدة (IBTA)</a></li>
-            <li><a href="#certifications" class="hover:text-brand-gold transition-colors">إدارة المشاريع الاحترافية</a></li>
-            <li><a href="#certifications" class="hover:text-brand-gold transition-colors">تدريب المدربين المعتمدين (TOT)</a></li>
-            <li><a href="#certifications" class="hover:text-brand-gold transition-colors">ممارس الذكاء العاطفي</a></li>
-            <li><a href="#certifications" class="hover:text-brand-gold transition-colors">خدمة العملاء الاحترافية</a></li>
-          </ul>
-        </div>
-
-        <!-- Col 4: Contact Info -->
-        <div>
-          <h4 class="text-[22px] font-bold text-white mb-6 border-b border-white/20 pb-3">تواصل معنا</h4>
-          <ul class="space-y-4 text-gray-300 text-[17px] font-cairo">
-            <li class="flex items-start gap-3">
-              <i class="fa-solid fa-location-dot text-brand-gold text-lg mt-1"></i>
-              <span>المملكة العربية السعودية - الرياض</span>
+          <div class="flex items-center gap-0 mb-8">
+            <h4 class="text-[20px] font-bold text-white whitespace-nowrap ml-4">تواصل معنا</h4>
+            <div class="h-[2px] bg-[#d3b259] w-12"></div>
+            <div class="w-1.5 h-1.5 rounded-full bg-[#d3b259]"></div>
+          </div>
+          <ul class="space-y-5 text-gray-300 text-[15px] font-cairo">
+            <li class="flex items-start gap-4">
+              <i class="fa-solid fa-location-dot text-white text-lg mt-1"></i>
+              <span>الرياض - المملكة العربية السعودية</span>
             </li>
-            <li class="flex items-center gap-3">
-              <i class="fa-solid fa-phone text-brand-gold text-lg"></i>
-              <span dir="ltr">+966 50 000 0000</span>
+            <li class="flex items-center gap-4">
+              <i class="fa-solid fa-phone text-white text-lg"></i>
+              <span dir="ltr" class="text-right w-full">+966 55 759 5769</span>
             </li>
-            <li class="flex items-center gap-3">
-              <i class="fa-solid fa-envelope text-brand-gold text-lg"></i>
-              <span>info@dar-alruya.com</span>
+            <li class="flex items-center gap-4">
+              <i class="fa-regular fa-envelope text-white text-lg"></i>
+              <span dir="ltr" class="text-right w-full">info@alruaa.com</span>
             </li>
-            <li class="flex items-center gap-3">
-              <i class="fa-solid fa-clock text-brand-gold text-lg"></i>
-              <span>الأحد - الخميس: 9:00 ص - 5:00 م</span>
+            <li class="flex items-center gap-4">
+              <i class="fa-regular fa-clock text-white text-lg"></i>
+              <span>الأحد-الخميس: 9ص-6م</span>
             </li>
           </ul>
         </div>
@@ -890,15 +1488,14 @@
       </div>
 
       <!-- Divider line (#875:5877) -->
-      <div class="w-full h-px bg-white/20 my-8"></div>
+      <div class="w-full h-px bg-white/10 my-8"></div>
 
       <!-- Rights (#875:5872) -->
-      <div class="flex items-center justify-between text-sm text-gray-400 font-cairo">
-        <p>جميع الحقوق محفوظة لـ دار الرؤى للتدريب © 2026</p>
-        <div class="flex items-center gap-6">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 text-center text-[12px] sm:text-[13px] text-gray-300 font-cairo">
+        <p>جميع الحقوق محفوظة لـ مركز دار الرؤى للتدريب © 2026</p>
+        <div class="flex items-center gap-6 sm:gap-8">
           <a href="#" class="hover:text-white transition-colors">سياسة الخصوصية</a>
           <a href="#" class="hover:text-white transition-colors">الشروط والأحكام</a>
-          <a href="#" class="hover:text-white transition-colors">خريطة الموقع</a>
         </div>
       </div>
 
@@ -906,6 +1503,7 @@
   </footer>
 
   <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>
