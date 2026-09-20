@@ -1257,27 +1257,34 @@
           if (cards.length === 0) return;
 
           let activeIndex = 0;
-          let isTouching = false;
           let isDragging = false;
-          let startX = 0;
-          let scrollLeft = 0;
+          let startX, scrollLeft;
+          let isTouching = false;
+          let lastClickedBtn = 'next'; // Tracks last clicked button for styling
 
-          // Render pagination dots
+          function updatePaginationButtons() {
+            if (!btnPrev || !btnNext) return;
+            const activeClass = 'hidden md:flex w-[50px] h-[50px] rounded-full border-[1.5px] border-[#204A7A] text-[#204A7A] items-center justify-center hover:bg-[#204A7A] hover:text-white transition-all duration-200 bg-white cursor-pointer shrink-0 z-10';
+            const inactiveClass = 'hidden md:flex w-[50px] h-[50px] rounded-full border-[1.5px] border-[#DEDEDE] text-[#DEDEDE] items-center justify-center hover:bg-[#204A7A] hover:text-white hover:border-[#204A7A] transition-all duration-200 bg-white cursor-pointer shrink-0 z-10';
+            
+            btnNext.className = (lastClickedBtn === 'next') ? activeClass : inactiveClass;
+            btnPrev.className = (lastClickedBtn === 'prev') ? activeClass : inactiveClass;
+          }
+
           function renderDots() {
             if (!dotsContainer) return;
             dotsContainer.innerHTML = '';
+            // For desktop we step by 3 cards, for mobile by 1
+            const count = window.innerWidth < 1024 ? cards.length : Math.ceil(cards.length / 3);
             
-            const isMobile = window.innerWidth < 1024;
-            const dotCount = isMobile ? cards.length : Math.ceil(cards.length / 3);
-
-            for (let i = 0; i < dotCount; i++) {
+            for (let i = 0; i < count; i++) {
               const dot = document.createElement('span');
-              dot.className = i === 0
-                ? 'w-7 h-2 rounded-full bg-brand-primary transition-all duration-300 block cursor-pointer'
+              dot.className = i === 0 
+                ? 'w-7 h-2 rounded-full bg-brand-primary transition-all duration-300 block cursor-pointer' 
                 : 'w-2 h-2 rounded-full bg-[#DCE4EE] hover:bg-gray-300 transition-all duration-300 block cursor-pointer';
-              dot.setAttribute('data-index', i);
+              
               dot.addEventListener('click', () => {
-                if (isMobile) {
+                if (window.innerWidth < 1024) {
                   scrollToCard(i);
                 } else {
                   scrollToPage(i);
@@ -1300,7 +1307,6 @@
             });
           }
 
-          // Adjust slider padding so Card 0 and Card N-1 sit dead-center on mobile
           function adjustSliderPadding() {
             if (window.innerWidth < 1024) {
               const cardWidth = cards[0].offsetWidth;
@@ -1313,7 +1319,6 @@
             }
           }
 
-          // Smoothly scroll a specific card into center
           function scrollToCard(index, smooth = true) {
             if (index < 0 || index >= cards.length) return;
             activeIndex = index;
@@ -1326,11 +1331,17 @@
           }
 
           function scrollToPage(pageIndex) {
-            const targetIndex = pageIndex * 3;
-            scrollToCard(targetIndex);
+            const maxPage = Math.ceil(cards.length / 3) - 1;
+            if (pageIndex < 0) pageIndex = maxPage;
+            else if (pageIndex > maxPage) pageIndex = 0;
+
+            const targetIndex = Math.min(pageIndex * 3, cards.length - 1);
+            if(cards[targetIndex]) {
+                cards[targetIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: window.innerWidth < 1024 ? 'center' : 'start' });
+            }
+            updateActiveDot(Math.floor(targetIndex / 3));
           }
 
-          // Dynamic Scale & Opacity update based on proximity to center (coverflow effect)
           function updateCardTransforms() {
             if (window.innerWidth >= 1024) {
               cards.forEach(card => {
@@ -1362,8 +1373,6 @@
               const progress = Math.min(dist / maxDist, 1);
               const eased = Math.sin((progress * Math.PI) / 2);
 
-              // Center card: scale 1.0, opacity 1.0
-              // Side cards: scale 0.88, opacity 0.45
               const scale = 1 - eased * 0.12;
               const opacity = 1 - eased * 0.55;
 
@@ -1385,20 +1394,8 @@
 
             activeIndex = closestIdx;
             updateActiveDot(closestIdx);
-
-            // Desktop arrow buttons state
-            if (btnPrev && btnNext) {
-              const maxPage = Math.ceil(cards.length / 3) - 1;
-              const curPage = Math.floor(closestIdx / 3);
-              const activeClass = 'hidden md:flex w-[50px] h-[50px] rounded-full border-[1.5px] border-[#204A7A] text-[#204A7A] items-center justify-center hover:bg-[#204A7A] hover:text-white transition-all duration-200 bg-white cursor-pointer shrink-0 z-10';
-              const disabledClass = 'hidden md:flex w-[50px] h-[50px] rounded-full border-[1.5px] border-[#DEDEDE] text-[#DEDEDE] items-center justify-center hover:bg-[#204A7A] hover:text-white hover:border-[#204A7A] transition-all duration-200 bg-white cursor-pointer shrink-0 z-10';
-
-              btnPrev.className = curPage === 0 ? disabledClass : activeClass;
-              btnNext.className = curPage >= maxPage ? disabledClass : activeClass;
-            }
           }
 
-          // Scroll listener with requestAnimationFrame for 60/120fps smoothness
           let ticking = false;
           slider.addEventListener('scroll', () => {
             if (!ticking) {
@@ -1410,7 +1407,6 @@
             }
           }, { passive: true });
 
-          // Touch tracking
           slider.addEventListener('touchstart', () => {
             isTouching = true;
           }, { passive: true });
@@ -1420,7 +1416,6 @@
             setTimeout(updateCardTransforms, 120);
           }, { passive: true });
 
-          // Mouse drag support for desktop browser testing
           slider.addEventListener('mousedown', (e) => {
             if (window.innerWidth >= 1024) return;
             isDragging = true;
@@ -1444,7 +1439,6 @@
             slider.scrollLeft = scrollLeft - walk;
           });
 
-          // Clicking on side cards centers them
           cards.forEach((card, i) => {
             card.addEventListener('click', () => {
               if (window.innerWidth < 1024 && i !== activeIndex) {
@@ -1453,11 +1447,14 @@
             });
           });
 
-          // Desktop arrow buttons
           if (btnNext) {
             btnNext.addEventListener('click', () => {
+              lastClickedBtn = 'next';
+              updatePaginationButtons();
               if (window.innerWidth < 1024) {
-                scrollToCard(activeIndex + 1);
+                let target = activeIndex + 1;
+                if (target >= cards.length) target = 0;
+                scrollToCard(target);
               } else {
                 const curPage = Math.floor(activeIndex / 3);
                 scrollToPage(curPage + 1);
@@ -1467,8 +1464,12 @@
 
           if (btnPrev) {
             btnPrev.addEventListener('click', () => {
+              lastClickedBtn = 'prev';
+              updatePaginationButtons();
               if (window.innerWidth < 1024) {
-                scrollToCard(activeIndex - 1);
+                let target = activeIndex - 1;
+                if (target < 0) target = cards.length - 1;
+                scrollToCard(target);
               } else {
                 const curPage = Math.floor(activeIndex / 3);
                 scrollToPage(curPage - 1);
@@ -1476,17 +1477,16 @@
             });
           }
 
-          // Initial setup
           const init = () => {
             adjustSliderPadding();
             renderDots();
             updateCardTransforms();
+            updatePaginationButtons();
           };
 
           init();
           window.addEventListener('resize', init);
           if (window.innerWidth < 1024) {
-            // Start on the second opinion (index 1) so peek cards appear on both sides
             scrollToCard(1, false);
             setTimeout(() => scrollToCard(1, false), 80);
           }
