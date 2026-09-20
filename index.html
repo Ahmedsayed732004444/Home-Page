@@ -1225,8 +1225,9 @@
 
         <!-- Pagination controls matching Figma layout (hidden on mobile, visible on desktop) -->
         <div class="hidden md:flex items-center justify-center gap-[20px] mt-8" dir="ltr">
-          <!-- Disabled state initial (Prev) -->
-          <button id="testi-prev" aria-label="السابق" class="hidden md:flex w-[50px] h-[50px] rounded-full border-[1.5px] border-[#DEDEDE] text-[#DEDEDE] items-center justify-center transition-all duration-200 bg-white cursor-default shrink-0 z-10">
+          <!-- Visual Left Button: In RTL, moving left means going to the NEXT page. So this is testi-next. -->
+          <!-- Active state initial (since we start on the right and want to go left) -->
+          <button id="testi-next" aria-label="التالي" class="hidden md:flex w-[50px] h-[50px] rounded-full border-[1.5px] border-[#204A7A] text-[#204A7A] items-center justify-center hover:bg-[#204A7A] hover:text-white transition-all duration-200 bg-white cursor-pointer shrink-0 z-10">
             <i class="fa-solid fa-chevron-left text-[14px]"></i>
           </button>
           
@@ -1234,8 +1235,9 @@
             <!-- Dots generated dynamically via JS -->
           </div>
           
-          <!-- Active state initial (Next) -->
-          <button id="testi-next" aria-label="التالي" class="hidden md:flex w-[50px] h-[50px] rounded-full border-[1.5px] border-[#204A7A] text-[#204A7A] items-center justify-center hover:bg-[#204A7A] hover:text-white transition-all duration-200 bg-white cursor-pointer shrink-0 z-10">
+          <!-- Visual Right Button: In RTL, moving right means going to the PREVIOUS page. So this is testi-prev. -->
+          <!-- Disabled state initial (since we are already at the far right start) -->
+          <button id="testi-prev" aria-label="السابق" class="hidden md:flex w-[50px] h-[50px] rounded-full border-[1.5px] border-[#DEDEDE] text-[#DEDEDE] items-center justify-center transition-all duration-200 bg-white cursor-default shrink-0 z-10">
             <i class="fa-solid fa-chevron-right text-[14px]"></i>
           </button>
         </div>
