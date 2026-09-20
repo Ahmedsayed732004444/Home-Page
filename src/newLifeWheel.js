@@ -4,7 +4,7 @@ export function initNewLifeWheel() {
    إعدادات عامة للعجلة
    ============================================================ */
 const SETTINGS = {
-  center: { x: 400, y: 400 },
+  center: { x: 417.215, y: 434.875 }, // تم التعديل لتتناسب مع أبعاد figma
   innerRadius: 60,
   outerRadius: 330, // تصغير العجلة قليلا لإعطاء مساحة أكبر للنصوص والأيقونات
   numRings: 5,
