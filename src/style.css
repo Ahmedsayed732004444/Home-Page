@@ -233,7 +233,7 @@
     font-weight:700;
     text-anchor:middle; dominant-baseline:middle;
   }
-  .grid-cell{ stroke-width:1.6; }
+  .grid-cell{ fill:none; stroke-width:1.6; }
   .center-circle{ fill:var(--wheel-center-bg); stroke-width:1.6; }
   .fill-cell{ stroke-width:1; }
   .center-hit{ cursor:pointer; }
