@@ -172,8 +172,8 @@ function lighten(hex, amt) { return mixHex(hex, "#ffffff", amt); }
 function darken(hex, amt)  { return mixHex(hex, "#000000", amt); }
 
 function getGradientEnds(axis) {
-  const lightShade = lighten(axis.color, 0.55);
-  const darkShade  = darken(axis.color, 0.35);
+  const lightShade = lighten(axis.color, 0.35); // تفتيح أقل للحفاظ على زهوة اللون
+  const darkShade  = darken(axis.color, 0.05);  // تغميق بسيط جداً
   if (axis.direction === "light-to-dark") {
     return { start: lightShade, end: darkShade };
   }
