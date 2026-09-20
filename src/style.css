@@ -171,7 +171,7 @@
     --control-bg: #ffffff;
     --control-border: #d7dbe6;
     --control-hover: #eef1f8;
-    --wheel-center-bg: #ffffff;
+    --wheel-center-bg: transparent;
     --grid-color: #2c3e50;
   }
   @media (prefers-color-scheme: dark){
@@ -184,7 +184,7 @@
       --control-bg: #1b232c;
       --control-border: #384454;
       --control-hover: #232e3a;
-      --wheel-center-bg: #1b232c;
+      --wheel-center-bg: transparent;
       --grid-color: #cbd5e1;
     }
   }
@@ -197,7 +197,7 @@
     --control-bg: #1b232c;
     --control-border: #384454;
     --control-hover: #232e3a;
-    --wheel-center-bg: #1b232c;
+    --wheel-center-bg: transparent;
     --grid-color: #cbd5e1;
   }
 
