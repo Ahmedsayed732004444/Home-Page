@@ -6,13 +6,13 @@ export function initNewLifeWheel() {
 const SETTINGS = {
   center: { x: 400, y: 400 },
   innerRadius: 60,
-  outerRadius: 380,
+  outerRadius: 330, // تصغير العجلة قليلا لإعطاء مساحة أكبر للنصوص والأيقونات
   numRings: 5,
   gapWidth: 14,
   showLabels: true,
-  labelOffset: 56,
-  iconOffset: 20,
-  iconSize: 26,
+  labelOffset: 65,  // زيادة المسافة بين العجلة والنص
+  iconOffset: 20,   // (لم تعد مستخدمة بشكل منفصل، لكن نبقيها)
+  iconSize: 34,     // تكبير حجم الأيقونات
   gridStrokeColor: "#2c3e50",
   emptyGridStrokeOpacity: 0,
   filledGridStrokeOpacity: 0.18
@@ -291,53 +291,41 @@ function drawWheel() {
     svg.appendChild(img);
   }
 
-  // أسماء المحاور - بتتحرك حوالين العجلة مع الدوران بس بتفضل مكتوبة سليمة (مش بتتلف هي نفسها)
+  // أسماء المحاور والأيقونات مجمعة معاً لضبط المحاذاة العمودية (النص فوق الأيقونة)
   if (showLabels) {
     axesState.forEach((axis, i) => {
       const mid = i * sectorAngle + sectorAngle / 2 + rotationAngle;
-      const pos = polarToCartesian(cx, cy, outerRadius + labelOffset, mid);
+      // نحدد نقطة الأساس حول العجلة (على مسافة ثابتة من الحافة)
+      const basePos = polarToCartesian(cx, cy, outerRadius + labelOffset, mid);
+      
+      // رسم النص
       const text = document.createElementNS(svgNS, "text");
-      text.setAttribute("x", pos.x);
-      text.setAttribute("y", pos.y);
+      text.setAttribute("x", basePos.x);
+      text.setAttribute("y", basePos.y - 12); // رفع النص قليلا للأعلى
       text.setAttribute("class", "axis-label");
       text.setAttribute("fill", getAxisAccentColor(axis, 0.38));
+      text.setAttribute("font-size", "22px");
+      text.setAttribute("font-weight", "bold");
+      text.setAttribute("text-anchor", "middle");
       text.textContent = axis.label || "";
       svg.appendChild(text);
+
+      // رسم الأيقونة
+      if (!axis.icon || axis.icon === "none") return;
+      if (axis.icon === "custom" && axis.customIconUrl) {
+        const img = document.createElementNS(svgNS, "image");
+        img.setAttributeNS("http://www.w3.org/1999/xlink", "href", axis.customIconUrl);
+        img.setAttribute("href", axis.customIconUrl);
+        // توسيط الأيقونة تحت النص
+        img.setAttribute("x", basePos.x - iconSize / 2);
+        img.setAttribute("y", basePos.y + 6); // وضع الأيقونة أسفل النص
+        img.setAttribute("width", iconSize);
+        img.setAttribute("height", iconSize);
+        img.setAttribute("preserveAspectRatio", "xMidYMid meet");
+        svg.appendChild(img);
+      }
     });
   }
-
-  // أيقونة كل محور - بتتموضع بين الحلقة الملونة واسم المحور، وبتتحرك مع الدوران زي النص
-  axesState.forEach((axis, i) => {
-    if (!axis.icon || axis.icon === "none") return;
-    const mid = i * sectorAngle + sectorAngle / 2 + rotationAngle;
-    const pos = polarToCartesian(cx, cy, outerRadius + iconOffset, mid);
-
-    if (axis.icon === "custom") {
-      if (!axis.customIconUrl) return;
-      const img = document.createElementNS(svgNS, "image");
-      img.setAttributeNS("http://www.w3.org/1999/xlink", "href", axis.customIconUrl);
-      img.setAttribute("href", axis.customIconUrl);
-      img.setAttribute("x", pos.x - iconSize / 2);
-      img.setAttribute("y", pos.y - iconSize / 2);
-      img.setAttribute("width", iconSize);
-      img.setAttribute("height", iconSize);
-      img.setAttribute("preserveAspectRatio", "xMidYMid meet");
-      svg.appendChild(img);
-      return;
-    }
-
-    const shapeSet = ICONS[axis.icon];
-    if (!shapeSet) return;
-    const color = getAxisAccentColor(axis, 0.15);
-    const g = document.createElementNS(svgNS, "g");
-    g.setAttribute("transform", `translate(${pos.x - iconSize / 2} ${pos.y - iconSize / 2}) scale(${iconSize / 24})`);
-    shapeSet(color).forEach(shape => {
-      const el = document.createElementNS(svgNS, shape.tag);
-      Object.entries(shape.attrs).forEach(([k, v]) => el.setAttribute(k, v));
-      g.appendChild(el);
-    });
-    svg.appendChild(g);
-  });
 
   // مؤشر ثابت فوق العجلة (تم إخفاؤه بناءً على طلب العميل)
   /*
