@@ -253,6 +253,8 @@ function drawWheel() {
         const pathEmpty = document.createElementNS(svgNS, "path");
         pathEmpty.setAttribute("d", dEmpty);
         pathEmpty.setAttribute("class", "grid-cell");
+        pathEmpty.setAttribute("fill", shade);
+        pathEmpty.setAttribute("fill-opacity", "0.2"); // تلوين الخلية بلون المحور باهت
         pathEmpty.setAttribute("stroke", gridStrokeColor);
         pathEmpty.setAttribute("stroke-opacity", emptyGridStrokeOpacity);
         rotatableGroup.appendChild(pathEmpty);
