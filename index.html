@@ -694,10 +694,12 @@
           </div>
 
           <!-- Action Button: ابدأ التحدي / التالي / شاهد نتيجتك -->
-          <button id="quiz-action-btn" disabled class="w-full h-[56px] sm:h-[62px] rounded-[18px] sm:rounded-[20px] bg-[#BAC7D5] text-white font-bold text-[18px] sm:text-[20px] font-cairo flex items-center justify-center gap-2.5 cursor-not-allowed transition-all duration-200 shadow-sm">
-            <span id="quiz-btn-text">ابدأ التحدي</span>
-            <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"/><circle cx="19" cy="5" r="1.5" /><circle cx="5" cy="19" r="1.5" /></svg>
-          </button>
+          <div class="flex justify-center w-full mt-6 sm:mt-8">
+            <button id="quiz-action-btn" disabled class="w-full max-w-[671px] h-[56px] md:h-[71px] rounded-[14px] md:rounded-[18px] bg-[#BAC7D5] text-white font-bold text-[18px] sm:text-[22px] font-cairo flex items-center justify-center gap-2.5 cursor-not-allowed transition-all duration-200 shadow-sm">
+              <span id="quiz-btn-text">ابدأ التحدي</span>
+              <svg class="w-4 h-4 sm:w-5 sm:h-5 fill-current shrink-0" viewBox="0 0 24 24"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"/><circle cx="19" cy="5" r="1.5" /><circle cx="5" cy="19" r="1.5" /></svg>
+            </button>
+          </div>
         </div>
 
         <!-- Result View (Hidden initially) -->
@@ -764,62 +766,61 @@
           </div>
 
           <!-- Subtitle -->
-          <p class="text-[15px] sm:text-[22px] md:text-[30px] font-medium text-brand-dark leading-none" style="font-family: 'El Messiri', sans-serif; font-weight: 500;">
-            اختر من بين خدماتنا المتنوعة، لتساعدك في رحلتك نحو التطوير والنمو.
-          </p>
-        </div>
+        <!-- Cards Container -->
+        <div class="flex flex-wrap md:flex-nowrap justify-center gap-[10px] md:gap-[20px] lg:gap-[30px] w-full">
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
-
-          <!-- Service 1: الدورات التدريبية (Rightmost in RTL) -->
-          <a href="#courses" class="group flex items-center justify-between p-4 sm:p-5 rounded-[22px] sm:rounded-[26px] bg-[#F8FAFD] border-[1.5px] border-[#4A749D]/50 hover:border-[#204A7A] hover:shadow-md transition-all duration-300">
+          <!-- Card 1: الدورات التدريبية (Rightmost in RTL) -->
+          <!-- Figma: 393x168, Radius 17px, Border 1px #4F6EA5 All Sides -->
+          <a href="#courses" class="group flex items-center justify-between w-full max-w-[393px] h-[168px] rounded-[17px] border border-[#4F6EA5] hover:shadow-md transition-all duration-300 p-4">
             <!-- Icon on the right (first in RTL) -->
-            <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-[16px] bg-[#EBF2FA] flex items-center justify-center shrink-0">
-              <svg class="w-6 h-6 text-[#4A749D]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <div class="w-14 h-14 rounded-[16px] bg-[#EBF2FA] flex items-center justify-center shrink-0">
+              <svg class="w-6 h-6 text-[#4F6EA5]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
                 <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
               </svg>
             </div>
 
             <!-- Text in center -->
-            <div class="flex-1 px-3 sm:px-4 text-right">
-              <h3 class="text-[17px] sm:text-[19px] font-bold text-[#1E293B] font-cairo mb-1 group-hover:text-[#4A749D] transition-colors">الدورات التدريبية</h3>
-              <p class="text-gray-500 text-[12px] sm:text-[13px] font-cairo leading-snug">جرب اختبارات تجريبية موثوقة لاجتياز أشهر الشهادات الاحترافية.</p>
+            <div class="flex-1 px-4 text-right">
+              <h3 class="text-[20px] sm:text-[22px] font-bold text-[#1E293B] mb-2 group-hover:text-[#4F6EA5] transition-colors" style="font-family: 'El Messiri', sans-serif;">الدورات التدريبية</h3>
+              <p class="text-[17px] leading-none text-[#565656]" style="font-family: 'El Messiri', sans-serif; font-weight: 500;">جرب اختبارات تجريبية موثوقة لاجتياز أشهر الشهادات الإحترافية.</p>
             </div>
 
             <!-- Arrow button on the left (last in RTL) -->
-            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#EBF2FA] group-hover:bg-[#4A749D] text-[#4A749D] group-hover:text-white flex items-center justify-center group-hover:-translate-x-1 transition-all duration-200 shrink-0 shadow-sm">
-              <i class="fa-solid fa-chevron-left text-xs sm:text-sm"></i>
+            <div class="w-10 h-10 rounded-full bg-[#EBF2FA] group-hover:bg-[#4F6EA5] text-[#4F6EA5] group-hover:text-white flex items-center justify-center group-hover:-translate-x-1 transition-all duration-200 shrink-0 shadow-sm">
+              <i class="fa-solid fa-chevron-left text-sm"></i>
             </div>
           </a>
 
-          <!-- Service 2: الشهادات الاحترافية (Middle in RTL) -->
-          <a href="#certifications" class="group flex items-center justify-between p-4 sm:p-5 rounded-[22px] sm:rounded-[26px] bg-[#FCF8F9] border-[1.5px] border-[#BE5D6F]/50 hover:border-[#A64557] hover:shadow-md transition-all duration-300">
+          <!-- Card 2: الشهادات الإحترافية (Middle in RTL) -->
+          <!-- Figma: 396x168, Radius 19px, Border Left 3px #B35769, Bg #F9F7F7 -->
+          <a href="#certifications" class="group flex items-center justify-between w-full max-w-[396px] h-[168px] bg-[#F9F7F7] rounded-[19px] border-l-[3px] border-[#B35769] hover:shadow-md transition-all duration-300 p-4">
             <!-- Icon on the right (first in RTL) -->
-            <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-[16px] bg-[#FCECEF] flex items-center justify-center shrink-0">
-              <svg class="w-6 h-6 text-[#BE5D6F]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <div class="w-14 h-14 rounded-[16px] bg-[#FCECEF] flex items-center justify-center shrink-0">
+              <svg class="w-6 h-6 text-[#B35769]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="8" r="6"/>
                 <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
               </svg>
             </div>
 
             <!-- Text in center -->
-            <div class="flex-1 px-3 sm:px-4 text-right">
-              <h3 class="text-[17px] sm:text-[19px] font-bold text-[#1E293B] font-cairo mb-1 group-hover:text-[#BE5D6F] transition-colors">الشهادات الاحترافية</h3>
-              <p class="text-gray-500 text-[12px] sm:text-[13px] font-cairo leading-snug">جرب اختبارات تجريبية موثوقة لاجتياز أشهر الشهادات الاحترافية.</p>
+            <div class="flex-1 px-4 text-right">
+              <h3 class="text-[20px] sm:text-[22px] font-bold text-[#1E293B] mb-2 group-hover:text-[#B35769] transition-colors" style="font-family: 'El Messiri', sans-serif;">الشهادات الإحترافية</h3>
+              <p class="text-[17px] leading-none text-[#565656]" style="font-family: 'El Messiri', sans-serif; font-weight: 500;">جرب اختبارات تجريبية موثوقة لاجتياز أشهر الشهادات الإحترافية.</p>
             </div>
 
             <!-- Arrow button on the left (last in RTL) -->
-            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#FCECEF] group-hover:bg-[#BE5D6F] text-[#BE5D6F] group-hover:text-white flex items-center justify-center group-hover:-translate-x-1 transition-all duration-200 shrink-0 shadow-sm">
-              <i class="fa-solid fa-chevron-left text-xs sm:text-sm"></i>
+            <div class="w-10 h-10 rounded-full bg-[#FCECEF] group-hover:bg-[#B35769] text-[#B35769] group-hover:text-white flex items-center justify-center group-hover:-translate-x-1 transition-all duration-200 shrink-0 shadow-sm">
+              <i class="fa-solid fa-chevron-left text-sm"></i>
             </div>
           </a>
 
-          <!-- Service 3: الاختبارات المهنية والشخصية (Leftmost in RTL) -->
-          <a href="#assessments" class="group flex items-center justify-between p-4 sm:p-5 rounded-[22px] sm:rounded-[26px] bg-[#FAF7FD] border-[1.5px] border-[#7853A4]/50 hover:border-[#623E8C] hover:shadow-md transition-all duration-300">
+          <!-- Card 3: الاختبارات المهنية والشخصية (Leftmost in RTL) -->
+          <!-- Figma: 396x168, Radius 19px, Border Left 3px #735297, Bg #F5EFFF -->
+          <a href="#assessments" class="group flex items-center justify-between w-full max-w-[396px] h-[168px] bg-[#F5EFFF] rounded-[19px] border-l-[3px] border-[#735297] hover:shadow-md transition-all duration-300 p-4">
             <!-- Icon on the right (first in RTL) -->
-            <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-[16px] bg-[#F2ECFA] flex items-center justify-center shrink-0">
-              <svg class="w-6 h-6 text-[#7853A4]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <div class="w-14 h-14 rounded-[16px] bg-[#EBE4F7] flex items-center justify-center shrink-0">
+              <svg class="w-6 h-6 text-[#735297]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="10"/>
                 <circle cx="12" cy="12" r="6"/>
                 <circle cx="12" cy="12" r="2"/>
@@ -827,14 +828,14 @@
             </div>
 
             <!-- Text in center -->
-            <div class="flex-1 px-3 sm:px-4 text-right">
-              <h3 class="text-[17px] sm:text-[19px] font-bold text-[#1E293B] font-cairo mb-1 group-hover:text-[#7853A4] transition-colors">الاختبارات المهنية والشخصية</h3>
-              <p class="text-gray-500 text-[12px] sm:text-[13px] font-cairo leading-snug">اكتشف قدراتك وميولك من خلال مقاييس علمية موثوقة</p>
+            <div class="flex-1 px-4 text-right">
+              <h3 class="text-[20px] sm:text-[22px] font-bold text-[#1E293B] mb-2 group-hover:text-[#735297] transition-colors" style="font-family: 'El Messiri', sans-serif;">الاختبارات المهنية والشخصية</h3>
+              <p class="text-[17px] leading-none text-[#565656]" style="font-family: 'El Messiri', sans-serif; font-weight: 500;">اكتشف قدراتك وميولك من خلال مقاييس علمية موثوقة.</p>
             </div>
 
             <!-- Arrow button on the left (last in RTL) -->
-            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#F2ECFA] group-hover:bg-[#7853A4] text-[#7853A4] group-hover:text-white flex items-center justify-center group-hover:-translate-x-1 transition-all duration-200 shrink-0 shadow-sm">
-              <i class="fa-solid fa-chevron-left text-xs sm:text-sm"></i>
+            <div class="w-10 h-10 rounded-full bg-[#EBE4F7] group-hover:bg-[#735297] text-[#735297] group-hover:text-white flex items-center justify-center group-hover:-translate-x-1 transition-all duration-200 shrink-0 shadow-sm">
+              <i class="fa-solid fa-chevron-left text-sm"></i>
             </div>
           </a>
 
