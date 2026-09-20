@@ -339,7 +339,8 @@ function drawWheel() {
     svg.appendChild(g);
   });
 
-  // مؤشر ثابت فوق العجلة بيحدد نقطة "الفوز" وقت السبين العشوائي
+  // مؤشر ثابت فوق العجلة (تم إخفاؤه بناءً على طلب العميل)
+  /*
   const pointerTip = polarToCartesian(cx, cy, outerRadius + 6, 0);
   const pointerLeft = polarToCartesian(cx, cy, outerRadius + 26, -8);
   const pointerRight = polarToCartesian(cx, cy, outerRadius + 26, 8);
@@ -348,6 +349,7 @@ function drawWheel() {
   pointerMark.setAttribute("fill", gridStrokeColor);
   pointerMark.setAttribute("class", "pointer-mark");
   svg.appendChild(pointerMark);
+  */
 
   // دائرة شفافة فوق منتصف العجلة (وفوق صورة المنتصف لو موجودة) عشان تلتقط الضغط وتشغّل السبين العشوائي
   const centerHit = document.createElementNS(svgNS, "circle");
