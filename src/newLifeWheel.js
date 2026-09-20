@@ -20,14 +20,14 @@ const SETTINGS = {
 
 /* بيانات كل محور - كل محور ليه أيقونة افتراضية تقدر تغيّرها */
 let axesState = [
-  { label: "الجانب الصحي", color: "#489674", percent: 92, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/health.png" },
-  { label: "الجانب الاجتماعي", color: "#963056", percent: 55, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/social.png" },
-  { label: "الجانب العائلي", color: "#BC7B4A", percent: 95, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/family.png" },
-  { label: "الجانب الترفيهي", color: "#B8AA44", percent: 50, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/leisure.png" },
-  { label: "الجانب المالي", color: "#27797E", percent: 90, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/financial.png" },
-  { label: "الجانب المهني", color: "#21487B", percent: 54, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/career.png" },
-  { label: "الجانب الشخصي", color: "#5C3E9B", percent: 95, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/personal.png" },
-  { label: "الجانب الروحي", color: "#5B6ECC", percent: 52, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/spiritual.png" }
+  { label: "الجانب الصحي", color: "#43A074", percent: 92, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/health.png" },
+  { label: "الجانب الاجتماعي", color: "#C53664", percent: 55, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/social.png" },
+  { label: "الجانب العائلي", color: "#D98344", percent: 95, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/family.png" },
+  { label: "الجانب الترفيهي", color: "#C9B642", percent: 50, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/leisure.png" },
+  { label: "الجانب المالي", color: "#3CB1B3", percent: 90, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/financial.png" },
+  { label: "الجانب المهني", color: "#4474D0", percent: 54, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/career.png" },
+  { label: "الجانب الشخصي", color: "#7844D0", percent: 95, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/personal.png" },
+  { label: "الجانب الروحي", color: "#5875E5", percent: 52, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/spiritual.png" }
 ];
 
 /* حالة الدوران والصورة في المنتصف */
