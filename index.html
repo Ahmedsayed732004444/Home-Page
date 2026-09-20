@@ -1224,14 +1224,20 @@
           </div>
 
         <!-- Pagination controls matching Figma layout (hidden on mobile, visible on desktop) -->
-        <div class="hidden md:flex items-center justify-center gap-4 mt-6 sm:mt-10" dir="ltr">
-          <button id="testi-prev" aria-label="السابق" class="w-10 h-10 rounded-full border border-gray-200 text-gray-300 flex items-center justify-center transition-all duration-200 bg-white cursor-default shrink-0 z-10 shadow-sm"><i class="fa-solid fa-chevron-left text-xs"></i></button>
+        <div class="hidden md:flex items-center justify-center gap-[20px] mt-8" dir="ltr">
+          <!-- Disabled state initial (Prev) -->
+          <button id="testi-prev" aria-label="السابق" class="hidden md:flex w-[50px] h-[50px] rounded-full border-[1.5px] border-[#DEDEDE] text-[#DEDEDE] items-center justify-center transition-all duration-200 bg-white cursor-default shrink-0 z-10">
+            <i class="fa-solid fa-chevron-left text-[14px]"></i>
+          </button>
           
-          <div id="testi-dots" class="flex items-center gap-2 cursor-pointer select-none">
-            <!-- Dots generated dynamically via JS for exact responsive behavior -->
+          <div id="testi-dots" class="flex items-center gap-[6px] cursor-pointer select-none">
+            <!-- Dots generated dynamically via JS -->
           </div>
           
-          <button id="testi-next" aria-label="التالي" class="w-10 h-10 rounded-full border-2 border-brand-primary text-brand-primary flex items-center justify-center hover:bg-brand-primary hover:text-white transition-all duration-200 bg-white cursor-pointer shrink-0 z-10 shadow-sm hover:shadow-md"><i class="fa-solid fa-chevron-right text-xs"></i></button>
+          <!-- Active state initial (Next) -->
+          <button id="testi-next" aria-label="التالي" class="hidden md:flex w-[50px] h-[50px] rounded-full border-[1.5px] border-[#204A7A] text-[#204A7A] items-center justify-center hover:bg-[#204A7A] hover:text-white transition-all duration-200 bg-white cursor-pointer shrink-0 z-10">
+            <i class="fa-solid fa-chevron-right text-[14px]"></i>
+          </button>
         </div>
 
       </div>
@@ -1382,8 +1388,8 @@
             if (btnPrev && btnNext) {
               const maxPage = Math.ceil(cards.length / 3) - 1;
               const curPage = Math.floor(closestIdx / 3);
-              const activeClass = 'hidden md:flex w-10 h-10 rounded-full border-2 border-brand-primary text-brand-primary items-center justify-center hover:bg-brand-primary hover:text-white transition-all duration-200 bg-white cursor-pointer shrink-0 z-10 shadow-sm hover:shadow-md';
-              const disabledClass = 'hidden md:flex w-10 h-10 rounded-full border border-gray-200 text-gray-300 items-center justify-center transition-all duration-200 bg-white cursor-default shrink-0 z-10 shadow-sm';
+              const activeClass = 'hidden md:flex w-[50px] h-[50px] rounded-full border-[1.5px] border-[#204A7A] text-[#204A7A] items-center justify-center hover:bg-[#204A7A] hover:text-white transition-all duration-200 bg-white cursor-pointer shrink-0 z-10';
+              const disabledClass = 'hidden md:flex w-[50px] h-[50px] rounded-full border-[1.5px] border-[#DEDEDE] text-[#DEDEDE] items-center justify-center transition-all duration-200 bg-white cursor-default shrink-0 z-10';
 
               btnPrev.className = curPage === 0 ? disabledClass : activeClass;
               btnNext.className = curPage >= maxPage ? disabledClass : activeClass;
