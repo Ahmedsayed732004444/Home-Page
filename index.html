@@ -1237,7 +1237,7 @@
           
           <!-- Visual Right Button: In RTL, moving right means going to the PREVIOUS page. So this is testi-prev. -->
           <!-- Disabled state initial (since we are already at the far right start) -->
-          <button id="testi-prev" aria-label="السابق" class="hidden md:flex w-[50px] h-[50px] rounded-full border-[1.5px] border-[#DEDEDE] text-[#DEDEDE] items-center justify-center transition-all duration-200 bg-white cursor-default shrink-0 z-10">
+          <button id="testi-prev" aria-label="السابق" class="hidden md:flex w-[50px] h-[50px] rounded-full border-[1.5px] border-[#DEDEDE] text-[#DEDEDE] items-center justify-center hover:bg-[#204A7A] hover:text-white hover:border-[#204A7A] transition-all duration-200 bg-white cursor-pointer shrink-0 z-10">
             <i class="fa-solid fa-chevron-right text-[14px]"></i>
           </button>
         </div>
@@ -1391,7 +1391,7 @@
               const maxPage = Math.ceil(cards.length / 3) - 1;
               const curPage = Math.floor(closestIdx / 3);
               const activeClass = 'hidden md:flex w-[50px] h-[50px] rounded-full border-[1.5px] border-[#204A7A] text-[#204A7A] items-center justify-center hover:bg-[#204A7A] hover:text-white transition-all duration-200 bg-white cursor-pointer shrink-0 z-10';
-              const disabledClass = 'hidden md:flex w-[50px] h-[50px] rounded-full border-[1.5px] border-[#DEDEDE] text-[#DEDEDE] items-center justify-center transition-all duration-200 bg-white cursor-default shrink-0 z-10';
+              const disabledClass = 'hidden md:flex w-[50px] h-[50px] rounded-full border-[1.5px] border-[#DEDEDE] text-[#DEDEDE] items-center justify-center hover:bg-[#204A7A] hover:text-white hover:border-[#204A7A] transition-all duration-200 bg-white cursor-pointer shrink-0 z-10';
 
               btnPrev.className = curPage === 0 ? disabledClass : activeClass;
               btnNext.className = curPage >= maxPage ? disabledClass : activeClass;
