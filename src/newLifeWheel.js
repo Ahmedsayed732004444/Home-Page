@@ -35,7 +35,7 @@ let rotationAngle = 0;      // بالدرجات - قيمة معروضة محصو
 let autoSpinOn = false;
 let autoSpinSpeed = 20;     // درجة/ثانية
 let spinDirection = "cw";   // cw = يمين (مع عقارب الساعة) / ccw = شمال (عكسها)
-let centerImageDataUrl = null;
+let centerImageDataUrl = "/images/Frame%202147238562.png";
 let autoSpinTimer = null;
 let isSpinning = false;     // true أثناء تشغيل أنيميشن السبين العشوائي
 let audioCtx = null;
