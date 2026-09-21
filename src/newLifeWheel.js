@@ -11,7 +11,7 @@ const SETTINGS = {
   numRings: 5,
   gapWidth: 14,
   showLabels: true,
-  labelOffset: 65,  // زيادة المسافة بين العجلة والنص
+  labelOffset: 68,  // مسافة ثابتة بين طرف المحور الفعلي والأيقونة والاسم
   iconOffset: 20,   // (لم تعد مستخدمة بشكل منفصل، لكن نبقيها)
   iconSize: 34,     // تكبير حجم الأيقونات
   gridStrokeColor: "#2c3e50",
@@ -297,8 +297,14 @@ function drawWheel() {
   if (showLabels) {
     axesState.forEach((axis, i) => {
       const mid = i * sectorAngle + sectorAngle / 2 + rotationAngle;
-      // نحدد نقطة الأساس حول العجلة (على مسافة ثابتة من الحافة)
-      const basePos = polarToCartesian(cx, cy, outerRadius + labelOffset, mid);
+      
+      // حساب نصف القطر الفعلي للمحور بناءً على نسبته الحالية
+      const fillFraction = Math.max(0, Math.min(100, axis.percent !== undefined ? axis.percent : 50)) / 100;
+      const currentFillRadius = innerRadius + fillFraction * (outerRadius - innerRadius);
+      
+      // مسافة ثابتة بين طرف المحور الملون والاسم والأيقونة (تتبع المحور في الزيادة والنقصان)
+      const targetRadius = Math.max(innerRadius + 45, currentFillRadius + labelOffset);
+      const basePos = polarToCartesian(cx, cy, targetRadius, mid);
       
       // رسم النص
       const text = document.createElementNS(svgNS, "text");
