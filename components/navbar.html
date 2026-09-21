@@ -51,23 +51,23 @@
   <div id="mobile-drawer-backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[99] opacity-0 pointer-events-none transition-opacity duration-300 ease-in-out lg:hidden"></div>
 
   <!-- Off-Canvas Drawer (Full Height Sidebar, slides in from the right edge, hidden on desktop) -->
-  <aside id="mobile-drawer" class="fixed top-0 right-0 bottom-0 h-screen h-[100dvh] w-[252px] max-w-[85vw] bg-[#1A3B62] shadow-[-4px_0_25px_rgba(0,0,0,0.35)] z-[100] flex flex-col translate-x-full transition-transform duration-300 ease-in-out select-none lg:hidden" aria-label="القائمة الجانبية">
+  <aside id="mobile-drawer" class="fixed top-0 right-0 bottom-0 h-screen h-[100dvh] w-[252px] max-w-[85vw] bg-[#1A3B62] shadow-[-4px_0_25px_rgba(0,0,0,0.35)] z-[100] flex flex-col translate-x-full transition-transform duration-300 ease-in-out select-none overflow-hidden lg:hidden" aria-label="القائمة الجانبية">
     <!-- Top Row: Close Button (Positioned at top-left inside drawer: x=22, y=19, 16x16px icon) -->
-    <button id="mobile-drawer-close" aria-label="إغلاق القائمة" class="absolute top-[18px] left-[20px] w-[32px] h-[32px] flex items-center justify-center text-white/90 hover:text-white hover:bg-white/10 rounded-full active:scale-95 transition-all cursor-pointer">
+    <button id="mobile-drawer-close" aria-label="إغلاق القائمة" class="absolute top-[20px] left-[20px] w-[32px] h-[32px] flex items-center justify-center text-white/90 hover:text-white hover:bg-white/10 rounded-full active:scale-95 transition-all cursor-pointer">
       <svg class="w-[16px] h-[16px] text-white pointer-events-none" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <line x1="2" y1="2" x2="14" y2="14" />
         <line x1="14" y1="2" x2="2" y2="14" />
       </svg>
     </button>
 
-    <!-- Navigation Links List (#934:5763: x=49, y=54, width=174px, gap=19px, El Messiri 21px) -->
-    <nav class="pt-[54px] pr-[29px] pl-[49px] flex flex-col gap-[19px] text-right font-messiri overflow-y-auto">
-      <a href="#home" data-nav="home" class="mobile-nav-item text-white font-bold text-[21px] leading-[1.5] transition-colors cursor-pointer">الرئيسية</a>
-      <a href="#courses" data-nav="courses" class="mobile-nav-item text-white font-normal text-[21px] leading-[1.5] hover:text-[#E6B844] transition-colors cursor-pointer">الدورات</a>
-      <a href="#certifications" data-nav="certifications" class="mobile-nav-item text-white font-normal text-[21px] leading-[1.5] hover:text-[#E6B844] transition-colors cursor-pointer">الشهادات الإحترافية</a>
-      <a href="#assessments" data-nav="assessments" class="mobile-nav-item text-white font-normal text-[21px] leading-[1.5] hover:text-[#E6B844] transition-colors cursor-pointer">المقاييس</a>
-      <a href="#about" data-nav="about" class="mobile-nav-item text-white font-normal text-[21px] leading-[1.5] hover:text-[#E6B844] transition-colors cursor-pointer">عن دار الرؤى</a>
-      <a href="#contact" data-nav="contact" class="mobile-nav-item text-white font-normal text-[21px] leading-[1.5] hover:text-[#E6B844] transition-colors cursor-pointer">تواصل معنا</a>
+    <!-- Navigation Links List (#934:5763: x=49, y=54, width=174px, gap=19px, El Messiri) -->
+    <nav class="pt-[56px] pr-[28px] pl-[20px] flex flex-col gap-[20px] text-right font-messiri overflow-hidden">
+      <a href="#home" data-nav="home" class="mobile-nav-item text-white font-bold text-[19px] leading-[1.5] whitespace-nowrap transition-colors cursor-pointer">الرئيسية</a>
+      <a href="#courses" data-nav="courses" class="mobile-nav-item text-white font-normal text-[19px] leading-[1.5] whitespace-nowrap hover:text-[#E6B844] transition-colors cursor-pointer">الدورات</a>
+      <a href="#certifications" data-nav="certifications" class="mobile-nav-item text-white font-normal text-[19px] leading-[1.5] whitespace-nowrap hover:text-[#E6B844] transition-colors cursor-pointer">الشهادات الإحترافية</a>
+      <a href="#assessments" data-nav="assessments" class="mobile-nav-item text-white font-normal text-[19px] leading-[1.5] whitespace-nowrap hover:text-[#E6B844] transition-colors cursor-pointer">المقاييس</a>
+      <a href="#about" data-nav="about" class="mobile-nav-item text-white font-normal text-[19px] leading-[1.5] whitespace-nowrap hover:text-[#E6B844] transition-colors cursor-pointer">عن دار الرؤى</a>
+      <a href="#contact" data-nav="contact" class="mobile-nav-item text-white font-normal text-[19px] leading-[1.5] whitespace-nowrap hover:text-[#E6B844] transition-colors cursor-pointer">تواصل معنا</a>
     </nav>
   </aside>
 
