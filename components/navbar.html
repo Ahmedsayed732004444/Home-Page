@@ -1,21 +1,21 @@
-<!-- ==================== 1. FLOATING NAV-BAR (#875:7147) ==================== -->
-  <header class="sticky top-[17px] mt-[17px] sm:mt-4 sm:top-4 z-40 w-[363px] sm:w-[92%] max-w-[calc(100%-24px)] sm:max-w-[1240px] mx-auto h-[58px] sm:h-[76px] rounded-[109px] bg-white/65 sm:bg-white/95 backdrop-blur-md sm:backdrop-blur-xl border border-[#E2E8F0]/80 shadow-[0_6px_25px_rgba(0,0,0,0.06)] px-3.5 sm:px-6 lg:px-8 flex items-center justify-between transition-all duration-300">
+<!-- ==================== 1. FLOATING NAV-BAR (#875:7147 / #934:5750) ==================== -->
+  <header class="sticky top-[17px] mt-[17px] lg:mt-4 lg:top-4 z-40 w-[361px] max-w-[calc(100%-24px)] lg:max-w-[1240px] lg:w-[92%] mx-auto h-[57px] lg:h-[76px] rounded-[109px] lg:rounded-[48px] bg-white/65 lg:bg-white/66 backdrop-blur-md lg:backdrop-blur-xl border border-[#E2E8F0]/80 shadow-[0_6px_25px_rgba(0,0,0,0.06)] px-[16px] lg:px-[24px] flex items-center justify-between transition-all duration-300">
 
-    <!-- RIGHT SIDE IN RTL: Logo & Mobile Hamburger Menu -->
-    <div class="flex items-center gap-1.5 sm:gap-3">
-      <!-- MOBILE MENU TOGGLE (Mobile only, 40x40px, #cuida:menu-outline) -->
-      <button id="mobile-menu-btn" aria-label="فتح القائمة" aria-expanded="false" class="lg:hidden w-[40px] h-[40px] rounded-full flex items-center justify-center text-brand-navy hover:bg-black/5 active:scale-95 transition-all cursor-pointer">
-        <i class="fa-solid fa-bars text-xl text-brand-navy"></i>
+    <!-- RIGHT SIDE IN RTL: Logo & Mobile Hamburger Menu (#934:5756 / #656:3820) -->
+    <div class="flex items-center gap-[3px] lg:gap-3">
+      <!-- MOBILE MENU TOGGLE (Mobile only, 40x40px, #cuida:menu-outline #934:5758) -->
+      <button id="mobile-menu-btn" aria-label="فتح القائمة" aria-expanded="false" class="lg:hidden w-[40px] h-[40px] rounded-full flex items-center justify-center text-[#204A7A] hover:bg-black/5 active:scale-95 transition-all cursor-pointer">
+        <i class="fa-solid fa-bars text-[20px] text-[#204A7A]"></i>
       </button>
 
-      <!-- LOGO (58x45 on mobile, shifted slightly to the right via gap-1.5) -->
+      <!-- LOGO (58x45 on mobile #934:5757, scaled up to 86x79 on desktop #656:3820) -->
       <a href="#home" data-nav="home" class="flex items-center">
-        <img src="/images/logo.png" alt="شعار دار الرؤى للتدريب" loading="eager" fetchpriority="high" decoding="async" class="w-[58px] h-[45px] sm:w-auto sm:h-[46px] lg:h-[54px] object-contain drop-shadow-sm" />
+        <img src="/images/logo.png" alt="شعار دار الرؤى للتدريب" loading="eager" fetchpriority="high" decoding="async" class="w-[58px] h-[45px] lg:w-auto lg:h-[58px] object-contain drop-shadow-sm" />
       </a>
     </div>
 
-    <!-- Center Navigation Links (desktop) (#Frame 2147223985) -->
-    <nav id="main-nav" class="hidden lg:flex items-center lg:gap-[20px] xl:gap-[32px] text-[18px] xl:text-[21px] font-messiri leading-none h-[38px]">
+    <!-- Center Navigation Links (desktop) (#I875:7147;656:3882) -->
+    <nav id="main-nav" class="hidden lg:flex items-center gap-[24px] xl:gap-[32px] text-[18px] xl:text-[21px] font-messiri leading-none h-[38px]">
       <a href="#home" data-nav="home" class="nav-item relative py-1 text-[#204A7A] font-bold transition-colors cursor-pointer">
         <span class="nav-text">الرئيسية</span>
         <span class="nav-indicator absolute bottom-[-4px] left-0 right-0 h-[2.5px] bg-[#204A7A] rounded-full"></span>
@@ -37,10 +37,11 @@
       </a>
     </nav>
 
-    <!-- LEFT SIDE IN RTL: Outline Button (تسجيل دخول) -->
+    <!-- LEFT SIDE IN RTL: Outline Button (#954:5878 mobile / #656:3810 desktop) -->
     <div class="flex items-center justify-end">
-      <a href="#login" class="h-[34px] sm:h-auto px-3.5 sm:px-5 lg:px-7 py-0 sm:py-2 rounded-[9px] sm:rounded-full border border-[#204A7A] text-[#204A7A] font-messiri font-semibold text-[13px] sm:text-[14px] lg:text-[18px] hover:bg-[#204A7A] hover:text-white transition-all duration-200 shadow-sm flex items-center justify-center whitespace-nowrap">
-        <span class="leading-none">تسجيل دخول</span>
+      <a href="#login" class="w-[80px] h-[28px] lg:w-[193px] lg:h-[56px] rounded-[5px] lg:rounded-[20px] border border-[#204A7A] text-[#204A7A] font-messiri lg:font-cairo font-semibold text-[10px] lg:text-[17px] hover:bg-[#204A7A] hover:text-white transition-all duration-200 shadow-sm flex items-center justify-center whitespace-nowrap">
+        <span class="leading-none lg:hidden">تسجيل دخول</span>
+        <span class="leading-none hidden lg:inline">تسجيل الدخول</span>
       </a>
     </div>
   </header>
