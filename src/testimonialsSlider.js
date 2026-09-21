@@ -75,7 +75,7 @@ export function initTestimonialsSlider() {
     function adjustSliderPadding() {
       if (window.innerWidth < 1024) {
         const card = cards[0];
-        const cardWidth = card ? card.getBoundingClientRect().width : (window.innerWidth >= 390 ? 298 : 280);
+        const cardWidth = (card && card.offsetWidth) ? card.offsetWidth : (window.innerWidth >= 410 ? 295 : (window.innerWidth >= 390 ? 280 : (window.innerWidth >= 370 ? 272 : 260)));
         const sliderWidth = slider.getBoundingClientRect().width || window.innerWidth;
         const pad = Math.max(16, (sliderWidth - cardWidth) / 2);
         slider.style.paddingLeft = `${pad}px`;
@@ -146,7 +146,7 @@ export function initTestimonialsSlider() {
           closestIdx = i;
         }
 
-        const cardW = cardRect.width || 280;
+        const cardW = card.offsetWidth || 275;
         const ratio = Math.min(dist / cardW, 1);
         const eased = Math.sin((ratio * Math.PI) / 2);
 
