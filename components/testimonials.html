@@ -1,11 +1,11 @@
 <!-- ==================== 8. SECTION: آراء المتدربين (#952:4234 / #954:7735) ==================== -->
-<section id="about" class="py-8 sm:py-12 md:py-16 px-3 sm:px-6 md:px-12 relative">
+<section id="about" class="py-8 sm:py-12 md:py-16 px-0 md:px-12 relative overflow-hidden">
   <!-- Top dashed line like in design -->
   <div class="absolute top-0 left-0 w-full h-[1px] border-t border-dashed border-brand-primary/30"></div>
 
   <div class="max-w-[1240px] mx-auto">
 
-    <div class="text-center mb-6 sm:mb-8 md:mb-12 w-full flex flex-col items-center">
+    <div class="text-center mb-6 sm:mb-8 md:mb-12 w-full flex flex-col items-center px-4 md:px-0">
       <!-- Title and Marks Block -->
       <div class="flex flex-row items-center justify-center gap-1.5 sm:gap-4 md:gap-[30px] w-full max-w-[361px] md:max-w-none mx-auto">
         
@@ -33,7 +33,7 @@
 
     <!-- Testimonial Slider Container -->
     <div class="relative overflow-hidden w-full py-2 md:py-4">
-      <div id="testimonials-slider" class="flex gap-[17px] md:gap-[18px] overflow-x-auto snap-x snap-mandatory no-scrollbar scroll-smooth py-4 items-center">
+      <div id="testimonials-slider" class="flex gap-[17px] md:gap-[18px] overflow-x-auto snap-x snap-mandatory no-scrollbar scroll-smooth py-4 items-center" style="padding-inline: max(16px, calc((100% - 315px) / 2));">
         
         <!-- Card 1 -->
         <div class="testimonial-card rounded-[14px] md:rounded-[25px] bg-gradient-to-r from-[#AFCAEA] to-[#6485AC] p-[0.5px] hover:shadow-lg transition-all duration-300 w-[315px] md:w-[400px] h-auto md:h-[356px] shrink-0 snap-center cursor-pointer flex-none">
@@ -325,18 +325,19 @@
 
       </div>
 
-      <!-- Pagination controls matching Figma layout (hidden on mobile, visible on desktop) -->
-      <div class="hidden md:flex items-center justify-center gap-[20px] mt-8" dir="ltr">
-        <!-- Visual Left Button: Prev (<) -->
+      <!-- Pagination controls matching Figma layout: Dots visible on both Mobile and Desktop -->
+      <div class="flex items-center justify-center gap-[16px] md:gap-[20px] mt-2 md:mt-8 px-4 md:px-0" dir="ltr">
+        <!-- Visual Left Button: Prev (<) (Desktop only) -->
         <button id="testi-prev" aria-label="السابق" class="hidden md:flex w-[50px] h-[50px] rounded-full border-[1.5px] border-[#204A7A] text-[#204A7A] items-center justify-center hover:bg-[#204A7A] hover:text-white transition-all duration-200 bg-white cursor-pointer shrink-0 z-10">
           <i class="fa-solid fa-chevron-left text-[14px]"></i>
         </button>
         
+        <!-- Dots Container (Visible on Mobile AND Desktop) -->
         <div id="testi-dots" class="flex items-center gap-[6px] cursor-pointer select-none" dir="ltr">
-          <!-- Dots generated dynamically via JS -->
+          <!-- 4 Dots generated dynamically via JS: 1 active pill (w-7 h-2) + 3 inactive dots (w-2 h-2) -->
         </div>
         
-        <!-- Visual Right Button: Next (>) -->
+        <!-- Visual Right Button: Next (>) (Desktop only) -->
         <button id="testi-next" aria-label="التالي" class="hidden md:flex w-[50px] h-[50px] rounded-full border-[1.5px] border-[#204A7A] text-[#204A7A] items-center justify-center hover:bg-[#204A7A] hover:text-white transition-all duration-200 bg-white cursor-pointer shrink-0 z-10">
           <i class="fa-solid fa-chevron-right text-[14px]"></i>
         </button>
