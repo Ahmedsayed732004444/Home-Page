@@ -59,17 +59,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Handle navigation active state for mobile
-  const activeSectorDisplay = document.getElementById('active-sector-info');
-  if (activeSectorDisplay) {
-      activeSectorDisplay.style.display = 'none'; // hide old wheel extra UI since new wheel doesn't use it
-  }
-
-  // Also hide old wheel buttons
-  const oldSpinBtn = document.getElementById('spin-wheel-btn');
-  const oldToggleAmbient = document.getElementById('toggle-ambient-btn');
-  if (oldSpinBtn) oldSpinBtn.style.display = 'none';
-  if (oldToggleAmbient) oldToggleAmbient.style.display = 'none';
-
   console.log('دار الرؤى للتدريب - تم تحميل واجهة الموقع بنجاح');
 });

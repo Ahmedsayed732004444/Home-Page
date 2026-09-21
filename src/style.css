@@ -48,7 +48,7 @@
   animation: pulseGlow 5s ease-in-out infinite;
 }
 
-/* Life Wheel — generative, score-driven wedges (src/lifeWheel.js) */
+/* Life Wheel — generative, score-driven wedges (src/newLifeWheel.js) */
 
 #wheel-rotor {
   will-change: transform;
