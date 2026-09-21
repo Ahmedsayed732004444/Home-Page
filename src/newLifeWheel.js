@@ -19,16 +19,16 @@ const SETTINGS = {
   filledGridStrokeOpacity: 0.18
 };
 
-/* بيانات كل محور - كل محور ليه أيقونة افتراضية تقدر تغيّرها */
+/* بيانات كل محور - الترتيب يبدأ من المحور الشخصي في أعلى العجلة مع عقارب الساعة تماماً كما في Figma */
 let axesState = [
+  { label: "الشخصي", color: "#7844D0", percent: 95, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/personal.png" },
+  { label: "الروحي", color: "#5875E5", percent: 52, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/spiritual.png" },
   { label: "الصحي", color: "#43A074", percent: 92, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/health.png" },
   { label: "الاجتماعي", color: "#C53664", percent: 55, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/social.png" },
   { label: "العائلي", color: "#D98344", percent: 95, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/family.png" },
   { label: "الترفيهي", color: "#C9B642", percent: 50, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/leisure.png" },
   { label: "المالي", color: "#3CB1B3", percent: 90, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/financial.png" },
-  { label: "المهني", color: "#4474D0", percent: 54, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/career.png" },
-  { label: "الشخصي", color: "#7844D0", percent: 95, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/personal.png" },
-  { label: "الروحي", color: "#5875E5", percent: 52, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/spiritual.png" }
+  { label: "المهني", color: "#4474D0", percent: 54, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/career.png" }
 ];
 
 /* حالة الدوران والصورة في المنتصف */
@@ -293,16 +293,16 @@ function drawWheel() {
     svg.appendChild(img);
   }
 
-  // أسماء المحاور والأيقونات مجمعة معاً لضبط المحاذاة العمودية (النص فوق الأيقونة)
+  // أسماء المحاور والأيقونات مجمعة معاً لضبط المحاذاة العمودية (النص فوق الأيقونة دائماً مع مسافة ثابتة من طرف المحور الملون)
   if (showLabels) {
     const isMobile = window.innerWidth < 640 || (svg.clientWidth && svg.clientWidth < 500);
     // قياسات مطابقة لـ Figma Dev Mode:
     // على الجوال: حجم الخط 12px (أي 31.4px بوحدات الـ SVG)، وحجم الأيقونة 24px (أي 62.8px بوحدات الـ SVG)
-    const effectiveFontSize = isMobile ? 32 : 24;
-    const effectiveIconSize = isMobile ? 63 : iconSize;
-    const effectiveLabelOffset = isMobile ? 55 : labelOffset;
-    const textYOffset = isMobile ? -18 : -12;
-    const iconYOffset = isMobile ? 6 : 6;
+    const effectiveFontSize = isMobile ? 31 : 24;
+    const effectiveIconSize = isMobile ? 62 : 42;
+    const effectiveLabelOffset = isMobile ? 68 : 62;
+    const textYOffset = isMobile ? -12 : -10;
+    const iconYOffset = isMobile ? 2 : 2;
 
     axesState.forEach((axis, i) => {
       const mid = i * sectorAngle + sectorAngle / 2 + rotationAngle;
@@ -312,10 +312,10 @@ function drawWheel() {
       const currentFillRadius = innerRadius + fillFraction * (outerRadius - innerRadius);
       
       // مسافة ثابتة بين طرف المحور الملون والاسم والأيقونة (تتبع المحور في الزيادة والنقصان)
-      const targetRadius = Math.max(innerRadius + 45, currentFillRadius + effectiveLabelOffset);
+      const targetRadius = Math.max(innerRadius + 50, currentFillRadius + effectiveLabelOffset);
       const basePos = polarToCartesian(cx, cy, targetRadius, mid);
       
-      // رسم النص
+      // رسم النص (دائماً في الأعلى)
       const text = document.createElementNS(svgNS, "text");
       text.setAttribute("x", basePos.x);
       text.setAttribute("y", basePos.y + textYOffset);
@@ -328,7 +328,7 @@ function drawWheel() {
       text.textContent = axis.label || "";
       svg.appendChild(text);
 
-      // رسم الأيقونة
+      // رسم الأيقونة (دائماً تحت النص)
       if (!axis.icon || axis.icon === "none") return;
       if (axis.icon === "custom" && axis.customIconUrl) {
         const img = document.createElementNS(svgNS, "image");

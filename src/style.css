@@ -220,7 +220,7 @@
   }
   #wheel-wrap{
     width:100%;
-    max-width:760px;
+    height:100%;
     cursor:grab;
     touch-action:none;
   }

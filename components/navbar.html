@@ -1,24 +1,16 @@
 <!-- ==================== 1. FLOATING NAV-BAR (#875:7147) ==================== -->
-  <header class="sticky top-2 sm:top-4 z-40 w-[95%] sm:w-[92%] max-w-[1240px] mx-auto h-[64px] sm:h-[76px] rounded-full bg-white/95 backdrop-blur-xl border border-[#E2E8F0] shadow-[0_6px_25px_rgba(0,0,0,0.06)] px-4 sm:px-6 lg:px-8 flex items-center justify-between transition-all duration-300">
+  <header class="sticky top-[17px] sm:top-4 z-40 w-[361px] sm:w-[92%] max-w-[calc(100%-32px)] sm:max-w-[1240px] mx-auto h-[57px] sm:h-[76px] rounded-[109px] bg-white/65 sm:bg-white/95 backdrop-blur-md sm:backdrop-blur-xl border border-[#E2E8F0]/80 shadow-[0_6px_25px_rgba(0,0,0,0.06)] px-4 sm:px-6 lg:px-8 flex items-center justify-between transition-all duration-300">
 
-    <!-- DESKTOP LOGO (First child in RTL: Right side on desktop, hidden on mobile) -->
-    <div class="hidden lg:flex items-center gap-3">
-      <a href="#home" class="flex items-center gap-2">
-        <img src="/images/logo.png" alt="شعار دار الرؤى للتدريب" loading="eager" fetchpriority="high" decoding="async" class="h-[46px] sm:h-[54px] w-auto object-contain drop-shadow-sm" />
-      </a>
-    </div>
-
-    <!-- MOBILE MENU TOGGLE (First child in RTL on mobile: Right side, hidden on lg) -->
-    <div class="flex lg:hidden items-center w-[95px] justify-start">
-      <button id="mobile-menu-btn" aria-label="فتح القائمة" aria-expanded="false" class="w-10 h-10 -mr-1 rounded-full flex items-center justify-center text-brand-navy hover:bg-black/5 active:scale-95 transition-all cursor-pointer">
+    <!-- RIGHT SIDE IN RTL: Logo & Mobile Hamburger Menu -->
+    <div class="flex items-center gap-3">
+      <!-- MOBILE MENU TOGGLE (Mobile only, on far right in RTL) -->
+      <button id="mobile-menu-btn" aria-label="فتح القائمة" aria-expanded="false" class="lg:hidden w-9 h-9 rounded-full flex items-center justify-center text-brand-navy hover:bg-black/5 active:scale-95 transition-all cursor-pointer">
         <i class="fa-solid fa-bars text-xl text-brand-navy"></i>
       </button>
-    </div>
 
-    <!-- MOBILE LOGO (Centered on mobile, hidden on lg) -->
-    <div class="flex lg:hidden items-center justify-center flex-1">
+      <!-- LOGO -->
       <a href="#home" class="flex items-center">
-        <img src="/images/logo.png" alt="شعار دار الرؤى للتدريب" loading="eager" fetchpriority="high" decoding="async" class="h-[38px] w-auto object-contain drop-shadow-sm" />
+        <img src="/images/logo.png" alt="شعار دار الرؤى للتدريب" loading="eager" fetchpriority="high" decoding="async" class="h-[36px] sm:h-[46px] lg:h-[54px] w-auto object-contain drop-shadow-sm" />
       </a>
     </div>
 
@@ -45,10 +37,10 @@
       </a>
     </nav>
 
-    <!-- Left Action Button: Login (Last child in RTL: Left side on mobile & desktop) -->
-    <div class="flex items-center w-[95px] lg:w-auto justify-end">
-      <a href="#login" class="px-4 sm:px-5 lg:px-7 py-1.5 lg:py-2 rounded-full border border-[#204A7A] text-[#204A7A] font-messiri font-semibold text-[14px] lg:text-[18px] hover:bg-[#204A7A] hover:text-white transition-all duration-200 shadow-sm flex items-center justify-center whitespace-nowrap">
-        <span>تسجيل الدخول</span>
+    <!-- LEFT SIDE IN RTL: Login Button -->
+    <div class="flex items-center justify-end">
+      <a href="#login" class="px-3.5 sm:px-5 lg:px-7 py-1.5 lg:py-2 rounded-[10px] sm:rounded-full border border-[#204A7A] text-[#204A7A] font-messiri font-semibold text-[13.5px] sm:text-[14px] lg:text-[18px] hover:bg-[#204A7A] hover:text-white transition-all duration-200 shadow-sm flex items-center justify-center whitespace-nowrap">
+        <span>تسجيل دخول</span>
       </a>
     </div>
   </header>
