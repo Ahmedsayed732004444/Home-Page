@@ -1,0 +1,82 @@
+<!-- ==================== 1. FLOATING NAV-BAR (#875:7147) ==================== -->
+  <header class="sticky top-2 sm:top-4 z-40 w-[95%] sm:w-[92%] max-w-[1240px] mx-auto h-[64px] sm:h-[76px] rounded-full bg-white/95 backdrop-blur-xl border border-[#E2E8F0] shadow-[0_6px_25px_rgba(0,0,0,0.06)] px-4 sm:px-6 lg:px-8 flex items-center justify-between transition-all duration-300">
+
+    <!-- DESKTOP LOGO (First child in RTL: Right side on desktop, hidden on mobile) -->
+    <div class="hidden lg:flex items-center gap-3">
+      <a href="#home" class="flex items-center gap-2">
+        <img src="/images/logo.png" alt="شعار دار الرؤى للتدريب" loading="eager" fetchpriority="high" decoding="async" class="h-[46px] sm:h-[54px] w-auto object-contain drop-shadow-sm" />
+      </a>
+    </div>
+
+    <!-- MOBILE MENU TOGGLE (First child in RTL on mobile: Right side, hidden on lg) -->
+    <div class="flex lg:hidden items-center w-[95px] justify-start">
+      <button id="mobile-menu-btn" aria-label="فتح القائمة" aria-expanded="false" class="w-10 h-10 -mr-1 rounded-full flex items-center justify-center text-brand-navy hover:bg-black/5 active:scale-95 transition-all cursor-pointer">
+        <i class="fa-solid fa-bars text-xl text-brand-navy"></i>
+      </button>
+    </div>
+
+    <!-- MOBILE LOGO (Centered on mobile, hidden on lg) -->
+    <div class="flex lg:hidden items-center justify-center flex-1">
+      <a href="#home" class="flex items-center">
+        <img src="/images/logo.png" alt="شعار دار الرؤى للتدريب" loading="eager" fetchpriority="high" decoding="async" class="h-[38px] w-auto object-contain drop-shadow-sm" />
+      </a>
+    </div>
+
+    <!-- Center Navigation Links (desktop) (#Frame 2147223985) -->
+    <nav id="main-nav" class="hidden lg:flex items-center lg:gap-[20px] xl:gap-[32px] text-[18px] xl:text-[21px] font-messiri leading-none h-[38px]">
+      <a href="#home" data-nav="home" class="nav-item relative py-1 text-[#204A7A] font-bold transition-colors cursor-pointer">
+        <span class="nav-text">الرئيسية</span>
+        <span class="nav-indicator absolute bottom-[-4px] left-0 right-0 h-[2.5px] bg-[#204A7A] rounded-full"></span>
+      </a>
+      <a href="#courses" data-nav="courses" class="nav-item relative py-1 text-[#1D1D1D] font-medium hover:text-[#204A7A] transition-colors cursor-pointer">
+        <span class="nav-text">الدورات</span>
+      </a>
+      <a href="#certifications" data-nav="certifications" class="nav-item relative py-1 text-[#1D1D1D] font-medium hover:text-[#204A7A] transition-colors cursor-pointer">
+        <span class="nav-text">الشهادات الاحترافية</span>
+      </a>
+      <a href="#assessments" data-nav="assessments" class="nav-item relative py-1 text-[#1D1D1D] font-medium hover:text-[#204A7A] transition-colors cursor-pointer">
+        <span class="nav-text">المقاييس</span>
+      </a>
+      <a href="#about" data-nav="about" class="nav-item relative py-1 text-[#1D1D1D] font-medium hover:text-[#204A7A] transition-colors cursor-pointer">
+        <span class="nav-text">عن دار الرؤى</span>
+      </a>
+      <a href="#contact" data-nav="contact" class="nav-item relative py-1 text-[#1D1D1D] font-medium hover:text-[#204A7A] transition-colors cursor-pointer">
+        <span class="nav-text">تواصل معنا</span>
+      </a>
+    </nav>
+
+    <!-- Left Action Button: Login (Last child in RTL: Left side on mobile & desktop) -->
+    <div class="flex items-center w-[95px] lg:w-auto justify-end">
+      <a href="#login" class="px-4 sm:px-5 lg:px-7 py-1.5 lg:py-2 rounded-full border border-[#204A7A] text-[#204A7A] font-messiri font-semibold text-[14px] lg:text-[18px] hover:bg-[#204A7A] hover:text-white transition-all duration-200 shadow-sm flex items-center justify-center whitespace-nowrap">
+        <span>تسجيل الدخول</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- ==================== MOBILE OFF-CANVAS DRAWER (#Frame 214723) ==================== -->
+  <!-- Backdrop Overlay -->
+  <div id="mobile-drawer-backdrop" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 opacity-0 pointer-events-none transition-opacity duration-300 ease-in-out"></div>
+
+  <!-- Off-Canvas Drawer (Solid navy brand color, right-anchored RTL slide-in) -->
+  <aside id="mobile-drawer" class="fixed top-0 right-0 bottom-0 h-full w-[240px] sm:w-[260px] max-w-[80vw] bg-[#1A3B62] z-[51] p-6 sm:p-7 flex flex-col shadow-2xl translate-x-full transition-transform duration-300 ease-in-out font-cairo select-none" aria-label="القائمة الجانبية">
+    <!-- Top Row: Close Button (Positioned at top-left inside drawer, exactly as in Figma Frame 214723) -->
+    <div dir="ltr" class="flex items-center justify-start mb-8 pt-1">
+      <button id="mobile-drawer-close" aria-label="إغلاق القائمة" class="w-9 h-9 rounded-full flex items-center justify-center text-white/90 hover:text-white hover:bg-white/10 active:scale-95 transition-all cursor-pointer">
+        <i class="fa-solid fa-xmark text-2xl text-white"></i>
+      </button>
+    </div>
+
+    <!-- Navigation Links List (Right-aligned, clean vertical spacing, no dividing lines) -->
+    <nav class="flex flex-col gap-6 text-right font-messiri">
+      <a href="#home" data-nav="home" class="mobile-nav-item text-white font-bold text-[18px] transition-colors py-1 cursor-pointer">الرئيسية</a>
+      <a href="#courses" data-nav="courses" class="mobile-nav-item text-white/85 hover:text-white font-normal text-[17px] transition-colors py-1 cursor-pointer">الدورات</a>
+      <a href="#certifications" data-nav="certifications" class="mobile-nav-item text-white/85 hover:text-white font-normal text-[17px] transition-colors py-1 cursor-pointer">الشهادات الإحترافية</a>
+      <a href="#assessments" data-nav="assessments" class="mobile-nav-item text-white/85 hover:text-white font-normal text-[17px] transition-colors py-1 cursor-pointer">المقاييس</a>
+      <a href="#about" data-nav="about" class="mobile-nav-item text-white/85 hover:text-white font-normal text-[17px] transition-colors py-1 cursor-pointer">عن دار الرؤى</a>
+      <a href="#contact" data-nav="contact" class="mobile-nav-item text-white/85 hover:text-white font-normal text-[17px] transition-colors py-1 cursor-pointer">تواصل معنا</a>
+    </nav>
+  </aside>
+
+  
+
+  <!-- Main Container -->
