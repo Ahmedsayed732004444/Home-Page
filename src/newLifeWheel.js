@@ -5,7 +5,8 @@ export function initNewLifeWheel() {
    ============================================================ */
 const SETTINGS = {
   center: { x: 417.215, y: 434.875 }, // تم التعديل لتتناسب مع أبعاد figma
-  innerRadius: 60,
+  centerImageRadius: 58, // نصف قطر صورة البوصلة
+  innerRadius: 82,       // نصف قطر بداية المحاور لخلق فاصل أبيض واضح بينها وبين البوصلة
   outerRadius: 330, // تصغير العجلة قليلا لإعطاء مساحة أكبر للنصوص والأيقونات
   numRings: 5,
   gapWidth: 14,
@@ -213,6 +214,14 @@ function drawWheel() {
   const rotatableGroup = document.createElementNS(svgNS, "g");
   rotatableGroup.setAttribute("transform", `rotate(${rotationAngle} ${cx} ${cy})`);
 
+  // خلفية بيضاء نقية لفاصل المنتصف بين المحاور وصورة البوصلة
+  const centerBacking = document.createElementNS(svgNS, "circle");
+  centerBacking.setAttribute("cx", cx);
+  centerBacking.setAttribute("cy", cy);
+  centerBacking.setAttribute("r", innerRadius);
+  centerBacking.setAttribute("fill", "#ffffff");
+  rotatableGroup.appendChild(centerBacking);
+
   const centerCircle = document.createElementNS(svgNS, "circle");
   centerCircle.setAttribute("cx", cx);
   centerCircle.setAttribute("cy", cy);
@@ -272,20 +281,21 @@ function drawWheel() {
     }
     const clipPath = document.createElementNS(svgNS, "clipPath");
     clipPath.setAttribute("id", clipId);
+    const imgRadius = SETTINGS.centerImageRadius || 58;
     const clipCircle = document.createElementNS(svgNS, "circle");
     clipCircle.setAttribute("cx", cx);
     clipCircle.setAttribute("cy", cy);
-    clipCircle.setAttribute("r", innerRadius - 2);
+    clipCircle.setAttribute("r", imgRadius);
     clipPath.appendChild(clipCircle);
     defs.appendChild(clipPath);
 
     const img = document.createElementNS(svgNS, "image");
     img.setAttributeNS("http://www.w3.org/1999/xlink", "href", centerImageDataUrl);
     img.setAttribute("href", centerImageDataUrl);
-    img.setAttribute("x", cx - innerRadius);
-    img.setAttribute("y", cy - innerRadius);
-    img.setAttribute("width", innerRadius * 2);
-    img.setAttribute("height", innerRadius * 2);
+    img.setAttribute("x", cx - imgRadius);
+    img.setAttribute("y", cy - imgRadius);
+    img.setAttribute("width", imgRadius * 2);
+    img.setAttribute("height", imgRadius * 2);
     img.setAttribute("preserveAspectRatio", "xMidYMid slice");
     img.setAttribute("clip-path", `url(#${clipId})`);
     svg.appendChild(img);
