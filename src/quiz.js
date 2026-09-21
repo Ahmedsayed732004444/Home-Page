@@ -155,15 +155,15 @@ export function initQuiz(customQuestions = null) {
     // Render Pattern Sequence Row if question is pattern-based
     if (q.type === 'pattern' && q.patternRow && patternContainer) {
       patternContainer.classList.remove('hidden');
-      patternContainer.className = 'flex items-center justify-center gap-[12px] md:gap-[21.2px] my-4 md:my-8';
+      patternContainer.className = 'flex items-center justify-center gap-2 min-[360px]:gap-[12px] md:gap-[21.2px] my-4 md:my-8 w-full max-w-[330px] md:max-w-[588px] mx-auto';
       patternContainer.innerHTML = '';
 
       q.patternRow.forEach(item => {
         const card = document.createElement('div');
         if (item === 'question') {
-          card.className = 'w-[56px] h-[56px] md:w-[98.95px] md:h-[98.95px] rounded-[16px] md:rounded-[28.27px] bg-[#204A7A]/5 border-[1.6px] md:border-[2.83px] border-dashed border-[#204A7A]/30 flex items-center justify-center shrink-0 shadow-sm';
+          card.className = 'flex-1 min-w-0 max-w-[56px] h-[50px] min-[360px]:h-[56px] md:max-w-[98.95px] md:h-[98.95px] rounded-[14px] min-[360px]:rounded-[16px] md:rounded-[28.27px] bg-[#204A7A]/5 border-[1.6px] md:border-[2.83px] border-dashed border-[#204A7A]/30 flex items-center justify-center shadow-sm';
         } else {
-          card.className = 'w-[56px] h-[56px] md:w-[98.95px] md:h-[98.95px] rounded-[16px] md:rounded-[28.27px] bg-[#EFF3F8] border-[1.6px] md:border-[2.83px] border-[#DDE4ED] flex items-center justify-center shrink-0 shadow-sm';
+          card.className = 'flex-1 min-w-0 max-w-[56px] h-[50px] min-[360px]:h-[56px] md:max-w-[98.95px] md:h-[98.95px] rounded-[14px] min-[360px]:rounded-[16px] md:rounded-[28.27px] bg-[#EFF3F8] border-[1.6px] md:border-[2.83px] border-[#DDE4ED] flex items-center justify-center shadow-sm';
         }
         card.innerHTML = renderDotContent(item, false);
         patternContainer.appendChild(card);
@@ -178,10 +178,10 @@ export function initQuiz(customQuestions = null) {
 
     if (q.type === 'pattern') {
       // 4 pills in a row matching Figma (Mobile: 75x43, Desktop: 132.5x76)
-      optionsContainer.className = 'flex items-center justify-center gap-[11px] md:gap-[19.44px] my-4 md:my-8 w-full';
+      optionsContainer.className = 'flex items-center justify-center gap-1.5 min-[360px]:gap-[11px] md:gap-[19.44px] my-4 md:my-8 w-full max-w-[330px] md:max-w-[588px] mx-auto';
 
-      const normalClass = 'quiz-option w-[75px] h-[43px] md:w-[132.5px] md:h-[76px] rounded-[16px] md:rounded-[28.27px] bg-[#EFF3F8] border-[1.6px] md:border-[2.83px] border-[#DDE4ED] flex items-center justify-center shrink-0 shadow-sm hover:border-brand-primary hover:shadow-md transition-all duration-200 cursor-pointer';
-      const selectedClass = 'quiz-option w-[75px] h-[43px] md:w-[132.5px] md:h-[76px] rounded-[16px] md:rounded-[28.27px] bg-[#F0F5FA] border-[1.6px] md:border-[2.83px] border-brand-primary flex items-center justify-center shrink-0 shadow-md scale-[1.03] transition-all duration-200 cursor-pointer';
+      const normalClass = 'quiz-option flex-1 min-w-0 max-w-[75px] md:max-w-[132.5px] h-[43px] md:h-[76px] rounded-[16px] md:rounded-[28.27px] bg-[#EFF3F8] border-[1.6px] md:border-[2.83px] border-[#DDE4ED] flex items-center justify-center shadow-sm hover:border-brand-primary hover:shadow-md transition-all duration-200 cursor-pointer';
+      const selectedClass = 'quiz-option flex-1 min-w-0 max-w-[75px] md:max-w-[132.5px] h-[43px] md:h-[76px] rounded-[16px] md:rounded-[28.27px] bg-[#F0F5FA] border-[1.6px] md:border-[2.83px] border-brand-primary flex items-center justify-center shadow-md scale-[1.03] transition-all duration-200 cursor-pointer';
 
       q.options.forEach((optType, optIdx) => {
         const btn = document.createElement('button');
@@ -212,11 +212,11 @@ export function initQuiz(customQuestions = null) {
       });
 
     } else {
-      // 2x2 Grid for Text Questions
-      optionsContainer.className = 'grid grid-cols-2 gap-3 md:gap-5 my-4 md:my-8 w-full max-w-[330px] md:max-w-[600px] mx-auto';
+      // 2x2 Grid for Text Questions (Mobile: 155x47, Desktop: 313x95)
+      optionsContainer.className = 'grid grid-cols-2 gap-2.5 min-[360px]:gap-4 md:gap-[40.4px] my-4 md:my-8 w-full max-w-[330px] md:max-w-[671px] mx-auto';
 
-      const normalClass = 'quiz-option h-[44px] md:h-[76px] rounded-[12px] md:rounded-[22px] bg-white border border-[#E2E8F0] text-[#1E293B] text-[15px] md:text-[22px] font-bold font-cairo flex items-center justify-center cursor-pointer transition-all duration-200 hover:bg-[#F8FAFC] hover:border-brand-primary hover:text-brand-primary shadow-sm';
-      const selectedClass = 'quiz-option h-[44px] md:h-[76px] rounded-[12px] md:rounded-[22px] bg-[#F0F5FA] border-2 border-brand-primary text-brand-primary text-[15px] md:text-[22px] font-bold font-cairo flex items-center justify-center cursor-pointer shadow-md transition-all duration-200';
+      const normalClass = 'quiz-option w-full h-[47px] md:h-[95px] rounded-[14px] md:rounded-[32.34px] bg-[#EFF3F8] border-[1.6px] md:border-[3.23px] border-[#DDE4ED] text-[#262626] text-[14px] md:text-[28.3px] font-bold font-cairo flex items-center justify-center cursor-pointer transition-all duration-200 hover:bg-[#F8FAFC] hover:border-brand-primary hover:text-brand-primary shadow-sm';
+      const selectedClass = 'quiz-option w-full h-[47px] md:h-[95px] rounded-[14px] md:rounded-[32.34px] bg-[#F0F5FA] border-[1.6px] md:border-[3.23px] border-brand-primary text-brand-primary text-[14px] md:text-[28.3px] font-bold font-cairo flex items-center justify-center cursor-pointer shadow-md transition-all duration-200';
 
       q.options.forEach((optText, optIdx) => {
         const btn = document.createElement('button');
