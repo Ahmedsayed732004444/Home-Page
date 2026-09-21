@@ -74,7 +74,7 @@ export function initNavigation() {
         });
       }
 
-      const allNavLinks = [...desktopItems, ...mobileItems];
+      const allNavLinks = document.querySelectorAll('[data-nav]');
       allNavLinks.forEach(link => {
         link.addEventListener('click', (e) => {
           const targetNav = link.getAttribute('data-nav');
@@ -82,6 +82,21 @@ export function initNavigation() {
 
           setActiveNav(targetNav);
           closeDrawer();
+
+          if (targetNav === 'home') {
+            e.preventDefault();
+            isClickScrolling = true;
+            clearTimeout(clickTimeout);
+            clickTimeout = setTimeout(() => {
+              isClickScrolling = false;
+            }, 800);
+
+            window.scrollTo({
+              top: 0,
+              behavior: 'smooth'
+            });
+            return;
+          }
 
           const targetEl = document.getElementById(targetNav);
           if (targetEl) {

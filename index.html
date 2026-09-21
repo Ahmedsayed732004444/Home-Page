@@ -32,12 +32,14 @@
   </style>
 </head>
 <body class="bg-[#F8FAFC] text-brand-dark min-h-screen font-cairo antialiased selection:bg-brand-primary selection:text-white relative">
+  <!-- Top anchor for Home (#home) navigation -->
+  <div id="home" class="absolute top-0 left-0 w-full h-0 pointer-events-none"></div>
 
   <!-- 1. Floating Nav-Bar & Mobile Drawer -->
   <include src="./components/navbar.html"></include>
 
   <!-- Main Container -->
-  <main id="home" class="w-full mx-auto overflow-hidden relative">
+  <main class="w-full mx-auto overflow-hidden relative">
     <!-- 2. Hero Section & Life Wheel -->
     <include src="./components/hero.html"></include>
 
