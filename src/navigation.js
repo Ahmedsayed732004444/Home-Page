@@ -65,11 +65,11 @@ export function initNavigation() {
         mobileItems.forEach(item => {
           const nav = item.getAttribute('data-nav');
           if (nav === targetNav) {
-            item.classList.remove('text-white/85', 'font-normal');
+            item.classList.remove('font-normal');
             item.classList.add('text-white', 'font-bold');
           } else {
             item.classList.remove('font-bold');
-            item.classList.add('text-white/85', 'font-normal');
+            item.classList.add('text-white', 'font-normal');
           }
         });
       }

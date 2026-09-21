@@ -46,27 +46,28 @@
     </div>
   </header>
 
-  <!-- ==================== MOBILE OFF-CANVAS DRAWER (#Frame 214723) ==================== -->
+  <!-- ==================== MOBILE OFF-CANVAS DRAWER (#934:5761 / #934:5762) ==================== -->
   <!-- Backdrop Overlay -->
   <div id="mobile-drawer-backdrop" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 opacity-0 pointer-events-none transition-opacity duration-300 ease-in-out"></div>
 
-  <!-- Off-Canvas Drawer (Solid navy brand color, right-anchored RTL slide-in) -->
-  <aside id="mobile-drawer" class="fixed top-0 right-0 bottom-0 h-full w-[240px] sm:w-[260px] max-w-[80vw] bg-[#1A3B62] z-[51] p-6 sm:p-7 flex flex-col shadow-2xl translate-x-full transition-transform duration-300 ease-in-out font-cairo select-none" aria-label="القائمة الجانبية">
-    <!-- Top Row: Close Button (Positioned at top-left inside drawer, exactly as in Figma Frame 214723) -->
-    <div dir="ltr" class="flex items-center justify-start mb-8 pt-1">
-      <button id="mobile-drawer-close" aria-label="إغلاق القائمة" class="w-9 h-9 rounded-full flex items-center justify-center text-white/90 hover:text-white hover:bg-white/10 active:scale-95 transition-all cursor-pointer">
-        <i class="fa-solid fa-xmark text-2xl text-white"></i>
-      </button>
-    </div>
+  <!-- Off-Canvas Drawer (Figma #934:5762: width 252px, bg #1A3B62, shadow 0px 2px 4px rgba(0,0,0,0.25)) -->
+  <aside id="mobile-drawer" class="fixed top-0 right-0 bottom-0 h-full w-[252px] max-w-[85vw] bg-[#1A3B62] shadow-[0px_2px_4px_rgba(0,0,0,0.25)] z-[51] flex flex-col translate-x-full transition-transform duration-300 ease-in-out select-none relative" aria-label="القائمة الجانبية">
+    <!-- Top Row: Close Button (Positioned at top-left inside drawer: x=22, y=19, 16x16px icon) -->
+    <button id="mobile-drawer-close" aria-label="إغلاق القائمة" class="absolute top-[15px] left-[18px] w-[32px] h-[32px] flex items-center justify-center text-white/90 hover:text-white hover:bg-white/10 rounded-full active:scale-95 transition-all cursor-pointer">
+      <svg class="w-[16px] h-[16px] text-white pointer-events-none" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="2" y1="2" x2="14" y2="14" />
+        <line x1="14" y1="2" x2="2" y2="14" />
+      </svg>
+    </button>
 
-    <!-- Navigation Links List (Right-aligned, clean vertical spacing, no dividing lines) -->
-    <nav class="flex flex-col gap-6 text-right font-messiri">
-      <a href="#home" data-nav="home" class="mobile-nav-item text-white font-bold text-[18px] transition-colors py-1 cursor-pointer">الرئيسية</a>
-      <a href="#courses" data-nav="courses" class="mobile-nav-item text-white/85 hover:text-white font-normal text-[17px] transition-colors py-1 cursor-pointer">الدورات</a>
-      <a href="#certifications" data-nav="certifications" class="mobile-nav-item text-white/85 hover:text-white font-normal text-[17px] transition-colors py-1 cursor-pointer">الشهادات الإحترافية</a>
-      <a href="#assessments" data-nav="assessments" class="mobile-nav-item text-white/85 hover:text-white font-normal text-[17px] transition-colors py-1 cursor-pointer">المقاييس</a>
-      <a href="#about" data-nav="about" class="mobile-nav-item text-white/85 hover:text-white font-normal text-[17px] transition-colors py-1 cursor-pointer">عن دار الرؤى</a>
-      <a href="#contact" data-nav="contact" class="mobile-nav-item text-white/85 hover:text-white font-normal text-[17px] transition-colors py-1 cursor-pointer">تواصل معنا</a>
+    <!-- Navigation Links List (#934:5763: x=49, y=54, width=174px, gap=19px, El Messiri 21px) -->
+    <nav class="pt-[54px] pr-[29px] pl-[49px] flex flex-col gap-[19px] text-right font-messiri">
+      <a href="#home" data-nav="home" class="mobile-nav-item text-white font-bold text-[21px] leading-[1.5] transition-colors cursor-pointer">الرئيسية</a>
+      <a href="#courses" data-nav="courses" class="mobile-nav-item text-white font-normal text-[21px] leading-[1.5] hover:text-[#E6B844] transition-colors cursor-pointer">الدورات</a>
+      <a href="#certifications" data-nav="certifications" class="mobile-nav-item text-white font-normal text-[21px] leading-[1.5] hover:text-[#E6B844] transition-colors cursor-pointer">الشهادات الإحترافية</a>
+      <a href="#assessments" data-nav="assessments" class="mobile-nav-item text-white font-normal text-[21px] leading-[1.5] hover:text-[#E6B844] transition-colors cursor-pointer">المقاييس</a>
+      <a href="#about" data-nav="about" class="mobile-nav-item text-white font-normal text-[21px] leading-[1.5] hover:text-[#E6B844] transition-colors cursor-pointer">عن دار الرؤى</a>
+      <a href="#contact" data-nav="contact" class="mobile-nav-item text-white font-normal text-[21px] leading-[1.5] hover:text-[#E6B844] transition-colors cursor-pointer">تواصل معنا</a>
     </nav>
   </aside>
 
