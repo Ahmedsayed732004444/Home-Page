@@ -10,7 +10,7 @@ export function initTestimonialsSlider() {
 
     if (cards.length === 0) return;
 
-    let activeIndex = 0;
+    let activeIndex = window.innerWidth < 1024 ? 1 : 0;
     let isDragging = false;
     let startX, scrollLeft;
     let isTouching = false;
@@ -20,16 +20,18 @@ export function initTestimonialsSlider() {
       dotsContainer.innerHTML = '';
       // Exactly 4 dots in both mobile (Figma #954:7735) and desktop (#952:4234)
       const count = 4;
+      const isMobile = window.innerWidth < 1024;
+      const currentActiveDot = isMobile ? (activeIndex % 4) : Math.min(3, Math.floor(activeIndex / 3));
       
       for (let i = 0; i < count; i++) {
         const dot = document.createElement('span');
-        dot.className = i === 0 
+        dot.className = i === currentActiveDot
           ? 'w-7 h-2 rounded-full bg-brand-primary transition-all duration-300 block cursor-pointer' 
           : 'w-2 h-2 rounded-full bg-[#DCE4EE] hover:bg-gray-300 transition-all duration-300 block cursor-pointer';
         
         dot.addEventListener('click', () => {
-          if (window.innerWidth < 1024) {
-            scrollToCard(i * 3);
+          if (isMobile) {
+            scrollToCard(i);
           } else {
             scrollToPage(i);
           }
@@ -41,20 +43,27 @@ export function initTestimonialsSlider() {
     function updateActiveState(index) {
       if (!dotsContainer) return;
       const dots = Array.from(dotsContainer.children);
-      
-      // 4 dots for 12 cards (3 cards per dot)
-      let targetPage = Math.floor(index / 3);
-      if (targetPage > 3) targetPage = 3;
-      if (targetPage < 0) targetPage = 0;
+      if (dots.length === 0) return;
+
+      const isMobile = window.innerWidth < 1024;
+      // In RTL, Dot 0 is on the right, Dot 3 is on the left.
+      // Every card swipe moves the dot in the exact swipe direction!
+      let targetDot;
+      if (isMobile) {
+        targetDot = index % 4;
+      } else {
+        targetDot = Math.min(3, Math.floor(index / 3));
+      }
 
       dots.forEach((dot, i) => {
-        dot.className = i === targetPage
+        dot.className = i === targetDot
           ? 'w-7 h-2 rounded-full bg-brand-primary transition-all duration-300 block cursor-pointer'
           : 'w-2 h-2 rounded-full bg-[#DCE4EE] hover:bg-gray-300 transition-all duration-300 block cursor-pointer';
       });
 
-      // Strict Figma Desktop button states
+      // Desktop arrow button states
       if (btnPrev && btnNext) {
+        const targetPage = Math.min(3, Math.floor(index / 3));
         const activeClass = 'hidden md:flex w-[50px] h-[50px] rounded-full border-[1.5px] border-[#204A7A] text-[#204A7A] items-center justify-center hover:bg-[#204A7A] hover:text-white transition-all duration-200 bg-white cursor-pointer shrink-0 z-10';
         const disabledClass = 'hidden md:flex w-[50px] h-[50px] rounded-full border-[1.5px] border-[#DEDEDE] text-[#DEDEDE] items-center justify-center transition-all duration-200 bg-white cursor-default shrink-0 z-10';
         
@@ -65,8 +74,10 @@ export function initTestimonialsSlider() {
 
     function adjustSliderPadding() {
       if (window.innerWidth < 1024) {
-        const cardWidth = cards[0]?.offsetWidth || 315;
-        const pad = Math.max(16, (slider.offsetWidth - cardWidth) / 2);
+        const card = cards[0];
+        const cardWidth = card ? card.getBoundingClientRect().width : (window.innerWidth >= 390 ? 298 : 280);
+        const sliderWidth = slider.getBoundingClientRect().width || window.innerWidth;
+        const pad = Math.max(16, (sliderWidth - cardWidth) / 2);
         slider.style.paddingLeft = `${pad}px`;
         slider.style.paddingRight = `${pad}px`;
       } else {
@@ -82,7 +93,15 @@ export function initTestimonialsSlider() {
       activeIndex = index;
       const targetCard = cards[index];
       if (targetCard) {
-        targetCard.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'nearest', inline: 'center' });
+        const sliderRect = slider.getBoundingClientRect();
+        const cardRect = targetCard.getBoundingClientRect();
+        const currentCenter = cardRect.left + cardRect.width / 2;
+        const targetCenter = sliderRect.left + sliderRect.width / 2;
+        const diff = currentCenter - targetCenter;
+        
+        if (Math.abs(diff) > 2) {
+          slider.scrollBy({ left: diff, behavior: smooth ? 'smooth' : 'auto' });
+        }
         updateActiveState(index);
         updateCardTransforms();
       }
@@ -127,12 +146,12 @@ export function initTestimonialsSlider() {
           closestIdx = i;
         }
 
-        const cardW = cardRect.width || 315;
+        const cardW = cardRect.width || 280;
         const ratio = Math.min(dist / cardW, 1);
         const eased = Math.sin((ratio * Math.PI) / 2);
 
         // Center card: scale 1.0, opacity 1.0
-        // Side cards: scale ~0.94 (matches Figma 298px vs 315px), opacity ~0.85
+        // Side cards: scale ~0.94 (matches Figma 298px vs 315px), opacity 0.85
         const scale = 1 - eased * 0.06;
         const opacity = 1 - eased * 0.15;
 
@@ -234,14 +253,18 @@ export function initTestimonialsSlider() {
     const init = () => {
       adjustSliderPadding();
       renderDots();
+      if (window.innerWidth < 1024) {
+        scrollToCard(1, false);
+      } else {
+        scrollToPage(0);
+      }
       updateCardTransforms();
     };
 
     init();
     window.addEventListener('resize', init);
     if (window.innerWidth < 1024) {
-      scrollToCard(0, false);
-      setTimeout(() => scrollToCard(0, false), 100);
+      setTimeout(() => scrollToCard(1, false), 150);
     }
   }
 
