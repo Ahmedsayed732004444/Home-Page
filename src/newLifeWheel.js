@@ -5,8 +5,8 @@ export function initNewLifeWheel() {
    ============================================================ */
 const SETTINGS = {
   center: { x: 417.215, y: 434.875 }, // تم التعديل لتتناسب مع أبعاد figma
-  centerImageRadius: 58, // نصف قطر صورة البوصلة
-  innerRadius: 82,       // نصف قطر بداية المحاور لخلق فاصل أبيض واضح بينها وبين البوصلة
+  centerImageRadius: 60, // نصف قطر صورة البوصلة
+  innerRadius: 74,       // الفاصل الدائري 14px بنفس مقاس الفاصل بين المحاور تماماً (74 - 60 = 14px)
   outerRadius: 330, // تصغير العجلة قليلا لإعطاء مساحة أكبر للنصوص والأيقونات
   numRings: 5,
   gapWidth: 14,
@@ -214,14 +214,6 @@ function drawWheel() {
   const rotatableGroup = document.createElementNS(svgNS, "g");
   rotatableGroup.setAttribute("transform", `rotate(${rotationAngle} ${cx} ${cy})`);
 
-  // خلفية بيضاء نقية لفاصل المنتصف بين المحاور وصورة البوصلة
-  const centerBacking = document.createElementNS(svgNS, "circle");
-  centerBacking.setAttribute("cx", cx);
-  centerBacking.setAttribute("cy", cy);
-  centerBacking.setAttribute("r", innerRadius);
-  centerBacking.setAttribute("fill", "#ffffff");
-  rotatableGroup.appendChild(centerBacking);
-
   const centerCircle = document.createElementNS(svgNS, "circle");
   centerCircle.setAttribute("cx", cx);
   centerCircle.setAttribute("cy", cy);
@@ -281,7 +273,7 @@ function drawWheel() {
     }
     const clipPath = document.createElementNS(svgNS, "clipPath");
     clipPath.setAttribute("id", clipId);
-    const imgRadius = SETTINGS.centerImageRadius || 58;
+    const imgRadius = SETTINGS.centerImageRadius || 60;
     const clipCircle = document.createElementNS(svgNS, "circle");
     clipCircle.setAttribute("cx", cx);
     clipCircle.setAttribute("cy", cy);
