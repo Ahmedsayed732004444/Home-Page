@@ -32,53 +32,57 @@ export const defaultQuestions = [
 ];
 
 // Helper: Generates HTML for dot patterns inside sequence cards and options
-function renderDotContent(dotType) {
+function renderDotContent(dotType, isOption = false) {
+  const dotColor = isOption ? 'bg-[#0B1628]' : 'bg-[#204A7A]';
+  const dotClass = `w-[10px] h-[10px] md:w-[17.67px] md:h-[17.67px] rounded-full ${dotColor}`;
+  const gapClass = 'gap-[4px] md:gap-[7.07px]';
+
   switch (dotType) {
     case '2-vert':
       return `
-        <div class="flex flex-col items-center justify-center gap-1.5 sm:gap-2">
-          <span class="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-[#1E3A5F]"></span>
-          <span class="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-[#1E3A5F]"></span>
+        <div class="flex flex-col items-center justify-center ${gapClass}">
+          <span class="${dotClass}"></span>
+          <span class="${dotClass}"></span>
         </div>`;
     case '4-grid':
       return `
-        <div class="grid grid-cols-2 gap-1.5 sm:gap-2">
-          <span class="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-[#1E3A5F]"></span>
-          <span class="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-[#1E3A5F]"></span>
-          <span class="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-[#1E3A5F]"></span>
-          <span class="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-[#1E3A5F]"></span>
+        <div class="grid grid-cols-2 ${gapClass}">
+          <span class="${dotClass}"></span>
+          <span class="${dotClass}"></span>
+          <span class="${dotClass}"></span>
+          <span class="${dotClass}"></span>
         </div>`;
     case 'question':
-      return `<span class="text-[22px] sm:text-[26px] font-bold text-[#204A7A] leading-none">؟</span>`;
+      return `<span class="text-[20px] md:text-[35.34px] font-black text-[#204A7A] leading-none font-['Cairo']">؟</span>`;
     case '3-tr':
       return `
-        <div class="flex items-center gap-2 sm:gap-2.5">
-          <span class="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-[#1E3A5F] self-start mt-0.5"></span>
-          <div class="flex flex-col gap-1.5 sm:gap-2">
-            <span class="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-[#1E3A5F]"></span>
-            <span class="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-[#1E3A5F]"></span>
+        <div class="flex items-center ${gapClass}">
+          <span class="${dotClass} self-start mt-0.5"></span>
+          <div class="flex flex-col ${gapClass}">
+            <span class="${dotClass}"></span>
+            <span class="${dotClass}"></span>
           </div>
         </div>`;
     case '3-tl':
       return `
-        <div class="flex items-center gap-2 sm:gap-2.5">
-          <div class="flex flex-col gap-1.5 sm:gap-2">
-            <span class="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-[#1E3A5F]"></span>
-            <span class="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-[#1E3A5F]"></span>
+        <div class="flex items-center ${gapClass}">
+          <div class="flex flex-col ${gapClass}">
+            <span class="${dotClass}"></span>
+            <span class="${dotClass}"></span>
           </div>
-          <span class="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-[#1E3A5F] self-end mb-0.5"></span>
+          <span class="${dotClass} self-end mb-0.5"></span>
         </div>`;
     case '2-diag':
       return `
-        <div class="flex items-center gap-2.5 sm:gap-3.5">
-          <span class="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-[#1E3A5F] self-end mb-0.5"></span>
-          <span class="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-[#1E3A5F] self-start mt-0.5"></span>
+        <div class="flex items-center gap-[6px] md:gap-[12px]">
+          <span class="${dotClass} self-end mb-0.5"></span>
+          <span class="${dotClass} self-start mt-0.5"></span>
         </div>`;
     case '2-horiz':
       return `
-        <div class="flex items-center gap-2.5 sm:gap-3">
-          <span class="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-[#1E3A5F]"></span>
-          <span class="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-[#1E3A5F]"></span>
+        <div class="flex items-center gap-[6px] md:gap-[12px]">
+          <span class="${dotClass}"></span>
+          <span class="${dotClass}"></span>
         </div>`;
     default:
       return '';
@@ -112,7 +116,7 @@ export function initQuiz(customQuestions = null) {
 
     // Reset action button state
     actionBtn.disabled = true;
-    actionBtn.className = 'w-full h-[56px] sm:h-[62px] rounded-[18px] sm:rounded-[20px] bg-[#BAC7D5] text-white font-bold text-[18px] sm:text-[20px] font-cairo flex items-center justify-center gap-2.5 cursor-not-allowed transition-all duration-200 shadow-sm';
+    actionBtn.className = 'w-full max-w-[330px] md:max-w-[671px] h-[40px] md:h-[71px] rounded-[10px] md:rounded-[17.67px] bg-[#BAC7D6] text-white font-semibold font-messiri text-[14px] md:text-[24.74px] flex items-center justify-center gap-[8px] md:gap-[14.14px] cursor-not-allowed transition-all duration-200 shadow-sm';
 
     // Button label
     const isLast = currentIndex === questions.length - 1;
@@ -135,11 +139,9 @@ export function initQuiz(customQuestions = null) {
       for (let i = 0; i < questions.length; i++) {
         const dot = document.createElement('span');
         if (i === currentIndex) {
-          dot.className = 'quiz-dash w-7 sm:w-8 h-2 sm:h-2.5 rounded-full bg-[#204A7A] transition-all duration-300';
-        } else if (i < currentIndex) {
-          dot.className = 'quiz-dash w-3.5 sm:w-4 h-1.5 sm:h-2 rounded-full bg-[#CBD5E1] transition-all duration-300';
+          dot.className = 'quiz-dash w-[20px] md:w-[35.34px] h-[6px] md:h-[10.6px] rounded-full bg-[#204A7A] transition-all duration-300';
         } else {
-          dot.className = 'quiz-dash w-3.5 sm:w-4 h-1.5 sm:h-2 rounded-full bg-[#CBD5E1] transition-all duration-300';
+          dot.className = 'quiz-dash w-[12px] md:w-[21.2px] h-[6px] md:h-[10.6px] rounded-full bg-[#DDE4ED] transition-all duration-300';
         }
         progressContainer.appendChild(dot);
       }
@@ -153,17 +155,17 @@ export function initQuiz(customQuestions = null) {
     // Render Pattern Sequence Row if question is pattern-based
     if (q.type === 'pattern' && q.patternRow && patternContainer) {
       patternContainer.classList.remove('hidden');
-      patternContainer.className = 'flex items-center justify-center gap-3 sm:gap-4 my-6 sm:my-8';
+      patternContainer.className = 'flex items-center justify-center gap-[12px] md:gap-[21.2px] my-4 md:my-8';
       patternContainer.innerHTML = '';
 
       q.patternRow.forEach(item => {
         const card = document.createElement('div');
         if (item === 'question') {
-          card.className = 'w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-[16px] sm:rounded-[20px] bg-white border-2 border-dashed border-[#204A7A]/40 flex items-center justify-center shadow-sm';
+          card.className = 'w-[56px] h-[56px] md:w-[98.95px] md:h-[98.95px] rounded-[16px] md:rounded-[28.27px] bg-[#204A7A]/5 border-[1.6px] md:border-[2.83px] border-dashed border-[#204A7A]/30 flex items-center justify-center shrink-0 shadow-sm';
         } else {
-          card.className = 'w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-[16px] sm:rounded-[20px] bg-white border border-[#DCE4EE] flex items-center justify-center shadow-sm';
+          card.className = 'w-[56px] h-[56px] md:w-[98.95px] md:h-[98.95px] rounded-[16px] md:rounded-[28.27px] bg-[#EFF3F8] border-[1.6px] md:border-[2.83px] border-[#DDE4ED] flex items-center justify-center shrink-0 shadow-sm';
         }
-        card.innerHTML = renderDotContent(item);
+        card.innerHTML = renderDotContent(item, false);
         patternContainer.appendChild(card);
       });
     } else if (patternContainer) {
@@ -175,29 +177,32 @@ export function initQuiz(customQuestions = null) {
     optionsContainer.innerHTML = '';
 
     if (q.type === 'pattern') {
-      // 4 pills in a row matching reference screenshot
-      optionsContainer.className = 'flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-5 my-6 sm:my-8';
+      // 4 pills in a row matching Figma (Mobile: 75x43, Desktop: 132.5x76)
+      optionsContainer.className = 'flex items-center justify-center gap-[11px] md:gap-[19.44px] my-4 md:my-8 w-full';
+
+      const normalClass = 'quiz-option w-[75px] h-[43px] md:w-[132.5px] md:h-[76px] rounded-[16px] md:rounded-[28.27px] bg-[#EFF3F8] border-[1.6px] md:border-[2.83px] border-[#DDE4ED] flex items-center justify-center shrink-0 shadow-sm hover:border-brand-primary hover:shadow-md transition-all duration-200 cursor-pointer';
+      const selectedClass = 'quiz-option w-[75px] h-[43px] md:w-[132.5px] md:h-[76px] rounded-[16px] md:rounded-[28.27px] bg-[#F0F5FA] border-[1.6px] md:border-[2.83px] border-brand-primary flex items-center justify-center shrink-0 shadow-md scale-[1.03] transition-all duration-200 cursor-pointer';
 
       q.options.forEach((optType, optIdx) => {
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.className = 'quiz-option h-[56px] sm:h-[66px] px-5 sm:px-8 rounded-[18px] sm:rounded-[22px] bg-white border border-[#DCE4EE] flex items-center justify-center shadow-sm hover:border-brand-primary hover:shadow-md transition-all duration-200 cursor-pointer';
-        btn.innerHTML = renderDotContent(optType);
+        btn.className = normalClass;
+        btn.innerHTML = renderDotContent(optType, true);
 
         btn.addEventListener('click', () => {
           selectedOption = optIdx;
 
           // Reset all
           optionsContainer.querySelectorAll('.quiz-option').forEach(b => {
-            b.className = 'quiz-option h-[56px] sm:h-[66px] px-5 sm:px-8 rounded-[18px] sm:rounded-[22px] bg-white border border-[#DCE4EE] flex items-center justify-center shadow-sm hover:border-brand-primary hover:shadow-md transition-all duration-200 cursor-pointer';
+            b.className = normalClass;
           });
 
           // Selected
-          btn.className = 'quiz-option h-[56px] sm:h-[66px] px-5 sm:px-8 rounded-[18px] sm:rounded-[22px] bg-[#F0F5FA] border-2 border-brand-primary flex items-center justify-center shadow-md scale-[1.02] transition-all duration-200 cursor-pointer';
+          btn.className = selectedClass;
 
           // Enable button
           actionBtn.disabled = false;
-          actionBtn.className = 'w-full h-[56px] sm:h-[62px] rounded-[18px] sm:rounded-[20px] bg-brand-primary hover:bg-[#102744] text-white font-bold text-[18px] sm:text-[20px] font-cairo flex items-center justify-center gap-2.5 cursor-pointer shadow-md hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 border-2 border-brand-primary';
+          actionBtn.className = 'w-full max-w-[330px] md:max-w-[671px] h-[40px] md:h-[71px] rounded-[10px] md:rounded-[17.67px] bg-brand-primary hover:bg-[#102744] text-white font-semibold font-messiri text-[14px] md:text-[24.74px] flex items-center justify-center gap-[8px] md:gap-[14.14px] cursor-pointer shadow-md hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 border-2 border-brand-primary';
           if (btnText) {
             btnText.textContent = isLast ? 'شاهد نتيجتك' : 'التالي';
           }
@@ -207,13 +212,16 @@ export function initQuiz(customQuestions = null) {
       });
 
     } else {
-      // 2x2 Grid for Text Questions matching reference screenshots
-      optionsContainer.className = 'grid grid-cols-2 gap-4 sm:gap-6 my-6 sm:my-8';
+      // 2x2 Grid for Text Questions
+      optionsContainer.className = 'grid grid-cols-2 gap-3 md:gap-5 my-4 md:my-8 w-full max-w-[330px] md:max-w-[600px] mx-auto';
+
+      const normalClass = 'quiz-option h-[44px] md:h-[76px] rounded-[12px] md:rounded-[22px] bg-white border border-[#E2E8F0] text-[#1E293B] text-[15px] md:text-[22px] font-bold font-cairo flex items-center justify-center cursor-pointer transition-all duration-200 hover:bg-[#F8FAFC] hover:border-brand-primary hover:text-brand-primary shadow-sm';
+      const selectedClass = 'quiz-option h-[44px] md:h-[76px] rounded-[12px] md:rounded-[22px] bg-[#F0F5FA] border-2 border-brand-primary text-brand-primary text-[15px] md:text-[22px] font-bold font-cairo flex items-center justify-center cursor-pointer shadow-md transition-all duration-200';
 
       q.options.forEach((optText, optIdx) => {
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.className = 'quiz-option h-[72px] sm:h-[84px] md:h-[90px] rounded-[22px] sm:rounded-[26px] bg-white border border-[#E2E8F0] text-[#1E293B] text-[22px] sm:text-[25px] md:text-[28px] font-bold font-cairo flex items-center justify-center cursor-pointer transition-all duration-200 hover:bg-[#F8FAFC] hover:border-brand-primary hover:text-brand-primary shadow-[0px_2px_8px_rgba(0,0,0,0.02)]';
+        btn.className = normalClass;
         btn.textContent = optText;
 
         btn.addEventListener('click', () => {
@@ -221,15 +229,15 @@ export function initQuiz(customQuestions = null) {
 
           // Reset all
           optionsContainer.querySelectorAll('.quiz-option').forEach(b => {
-            b.className = 'quiz-option h-[72px] sm:h-[84px] md:h-[90px] rounded-[22px] sm:rounded-[26px] bg-white border border-[#E2E8F0] text-[#1E293B] text-[22px] sm:text-[25px] md:text-[28px] font-bold font-cairo flex items-center justify-center cursor-pointer transition-all duration-200 hover:bg-[#F8FAFC] hover:border-brand-primary hover:text-brand-primary shadow-[0px_2px_8px_rgba(0,0,0,0.02)]';
+            b.className = normalClass;
           });
 
           // Selected
-          btn.className = 'quiz-option h-[72px] sm:h-[84px] md:h-[90px] rounded-[22px] sm:rounded-[26px] bg-[#F0F5FA] border-2 border-brand-primary text-brand-primary text-[22px] sm:text-[25px] md:text-[28px] font-bold font-cairo flex items-center justify-center cursor-pointer shadow-md transition-all duration-200';
+          btn.className = selectedClass;
 
           // Enable button
           actionBtn.disabled = false;
-          actionBtn.className = 'w-full h-[56px] sm:h-[62px] rounded-[18px] sm:rounded-[20px] bg-brand-primary hover:bg-[#102744] text-white font-bold text-[18px] sm:text-[20px] font-cairo flex items-center justify-center gap-2.5 cursor-pointer shadow-md hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 border-2 border-brand-primary';
+          actionBtn.className = 'w-full max-w-[330px] md:max-w-[671px] h-[40px] md:h-[71px] rounded-[10px] md:rounded-[17.67px] bg-brand-primary hover:bg-[#102744] text-white font-semibold font-messiri text-[14px] md:text-[24.74px] flex items-center justify-center gap-[8px] md:gap-[14.14px] cursor-pointer shadow-md hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 border-2 border-brand-primary';
           if (btnText) {
             btnText.textContent = isLast ? 'شاهد نتيجتك' : 'التالي';
           }
