@@ -21,14 +21,14 @@ const SETTINGS = {
 
 /* بيانات كل محور - كل محور ليه أيقونة افتراضية تقدر تغيّرها */
 let axesState = [
-  { label: "الجانب الصحي", color: "#43A074", percent: 92, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/health.png" },
-  { label: "الجانب الاجتماعي", color: "#C53664", percent: 55, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/social.png" },
-  { label: "الجانب العائلي", color: "#D98344", percent: 95, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/family.png" },
-  { label: "الجانب الترفيهي", color: "#C9B642", percent: 50, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/leisure.png" },
-  { label: "الجانب المالي", color: "#3CB1B3", percent: 90, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/financial.png" },
-  { label: "الجانب المهني", color: "#4474D0", percent: 54, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/career.png" },
-  { label: "الجانب الشخصي", color: "#7844D0", percent: 95, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/personal.png" },
-  { label: "الجانب الروحي", color: "#5875E5", percent: 52, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/spiritual.png" }
+  { label: "الصحي", color: "#43A074", percent: 92, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/health.png" },
+  { label: "الاجتماعي", color: "#C53664", percent: 55, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/social.png" },
+  { label: "العائلي", color: "#D98344", percent: 95, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/family.png" },
+  { label: "الترفيهي", color: "#C9B642", percent: 50, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/leisure.png" },
+  { label: "المالي", color: "#3CB1B3", percent: 90, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/financial.png" },
+  { label: "المهني", color: "#4474D0", percent: 54, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/career.png" },
+  { label: "الشخصي", color: "#7844D0", percent: 95, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/personal.png" },
+  { label: "الروحي", color: "#5875E5", percent: 52, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/spiritual.png" }
 ];
 
 /* حالة الدوران والصورة في المنتصف */
@@ -295,6 +295,15 @@ function drawWheel() {
 
   // أسماء المحاور والأيقونات مجمعة معاً لضبط المحاذاة العمودية (النص فوق الأيقونة)
   if (showLabels) {
+    const isMobile = window.innerWidth < 640 || (svg.clientWidth && svg.clientWidth < 500);
+    // قياسات مطابقة لـ Figma Dev Mode:
+    // على الجوال: حجم الخط 12px (أي 31.4px بوحدات الـ SVG)، وحجم الأيقونة 24px (أي 62.8px بوحدات الـ SVG)
+    const effectiveFontSize = isMobile ? 32 : 24;
+    const effectiveIconSize = isMobile ? 63 : iconSize;
+    const effectiveLabelOffset = isMobile ? 55 : labelOffset;
+    const textYOffset = isMobile ? -18 : -12;
+    const iconYOffset = isMobile ? 6 : 6;
+
     axesState.forEach((axis, i) => {
       const mid = i * sectorAngle + sectorAngle / 2 + rotationAngle;
       
@@ -303,16 +312,17 @@ function drawWheel() {
       const currentFillRadius = innerRadius + fillFraction * (outerRadius - innerRadius);
       
       // مسافة ثابتة بين طرف المحور الملون والاسم والأيقونة (تتبع المحور في الزيادة والنقصان)
-      const targetRadius = Math.max(innerRadius + 45, currentFillRadius + labelOffset);
+      const targetRadius = Math.max(innerRadius + 45, currentFillRadius + effectiveLabelOffset);
       const basePos = polarToCartesian(cx, cy, targetRadius, mid);
       
       // رسم النص
       const text = document.createElementNS(svgNS, "text");
       text.setAttribute("x", basePos.x);
-      text.setAttribute("y", basePos.y - 12); // رفع النص قليلا للأعلى
+      text.setAttribute("y", basePos.y + textYOffset);
       text.setAttribute("class", "axis-label");
       text.setAttribute("fill", getAxisAccentColor(axis, 0.38));
-      text.setAttribute("font-size", "22px");
+      text.setAttribute("font-family", "'El Messiri', sans-serif");
+      text.setAttribute("font-size", `${effectiveFontSize}px`);
       text.setAttribute("font-weight", "bold");
       text.setAttribute("text-anchor", "middle");
       text.textContent = axis.label || "";
@@ -325,10 +335,10 @@ function drawWheel() {
         img.setAttributeNS("http://www.w3.org/1999/xlink", "href", axis.customIconUrl);
         img.setAttribute("href", axis.customIconUrl);
         // توسيط الأيقونة تحت النص
-        img.setAttribute("x", basePos.x - iconSize / 2);
-        img.setAttribute("y", basePos.y + 6); // وضع الأيقونة أسفل النص
-        img.setAttribute("width", iconSize);
-        img.setAttribute("height", iconSize);
+        img.setAttribute("x", basePos.x - effectiveIconSize / 2);
+        img.setAttribute("y", basePos.y + iconYOffset);
+        img.setAttribute("width", effectiveIconSize);
+        img.setAttribute("height", effectiveIconSize);
         img.setAttribute("preserveAspectRatio", "xMidYMid meet");
         svg.appendChild(img);
       }
@@ -681,6 +691,11 @@ window.addEventListener("touchmove", (e) => {
   pointerMove(t.clientX, t.clientY);
 }, { passive: true });
 window.addEventListener("touchend", pointerUp);
+
+// إعادة رسم العجلة تلقائياً عند تغيير أبعاد الشاشة لضبط أحجام النصوص والأيقونات بدقة
+window.addEventListener("resize", () => {
+  drawWheel();
+});
 
 buildControls();
 drawWheel();

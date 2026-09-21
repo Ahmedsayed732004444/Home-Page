@@ -228,10 +228,9 @@
   #wheel-wrap.spinning{ cursor:not-allowed; }
   svg{ width:100%; height:auto; display:block; user-select:none; }
   .axis-label{
-    font-family:'Cairo','Segoe UI',Tahoma,Arial,sans-serif;
-    font-size:clamp(10px, 2.2vw, 15px);
+    font-family:'El Messiri', sans-serif;
     font-weight:700;
-    text-anchor:middle; dominant-baseline:middle;
+    text-anchor:middle;
   }
   .grid-cell{ fill:none; stroke-width:1.6; }
   .center-circle{ fill:var(--wheel-center-bg); stroke-width:1.6; }
