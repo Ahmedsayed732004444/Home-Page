@@ -33,9 +33,9 @@ let axesState = [
 
 /* حالة الدوران والصورة في المنتصف */
 let rotationAngle = 0;      // بالدرجات - قيمة معروضة محصورة 0-360
-let autoSpinOn = false;
+let autoSpinOn = typeof window !== "undefined" && localStorage.getItem("dar_alruya_wheel_auto_spin_360") === "true";
 let autoSpinSpeed = 20;     // درجة/ثانية
-let spinDirection = "cw";   // cw = يمين (مع عقارب الساعة) / ccw = شمال (عكسها)
+let spinDirection = (typeof window !== "undefined" && localStorage.getItem("dar_alruya_wheel_spin_direction")) || "cw";
 let centerImageDataUrl = "/images/Frame%202147238562.png";
 let autoSpinTimer = null;
 let isSpinning = false;     // true أثناء تشغيل أنيميشن السبين العشوائي
@@ -352,10 +352,14 @@ function buildWheelDom() {
   centerHit.setAttribute("r", innerRadius);
   centerHit.setAttribute("fill", "transparent");
   centerHit.setAttribute("class", "center-hit");
-  centerHit.style.cursor = "pointer";
+  centerHit.style.cursor = "default";
   centerHit.addEventListener("click", (e) => {
     e.stopPropagation();
-    spinWheelRandom();
+    const adminControls = document.getElementById("admin-wheel-controls");
+    const isAdminActive = adminControls && !adminControls.classList.contains("hidden");
+    if (autoSpinOn || isAdminActive) {
+      spinWheelRandom();
+    }
   });
   svg.appendChild(centerHit);
 
@@ -680,31 +684,55 @@ rotationSlider.addEventListener("input", (e) => {
   setRotation(parseFloat(e.target.value));
 });
 
-spinDirectionSelect.addEventListener("change", (e) => {
-  spinDirection = e.target.value;
-});
-
-autoSpinToggle.addEventListener("change", (e) => {
-  if (isSpinning) {
-    e.target.checked = false;
-    return;
-  }
-  autoSpinOn = e.target.checked;
-  if (autoSpinOn) {
-    let last = performance.now();
-    const step = (now) => {
-      if (!autoSpinOn) return;
-      const dt = (now - last) / 1000;
-      last = now;
-      const dirMultiplier = spinDirection === "cw" ? 1 : -1;
-      setRotation(rotationAngle + dirMultiplier * autoSpinSpeed * dt);
-      autoSpinTimer = requestAnimationFrame(step);
-    };
+function startAutoSpin() {
+  if (autoSpinTimer) cancelAnimationFrame(autoSpinTimer);
+  let last = performance.now();
+  const step = (now) => {
+    if (!autoSpinOn) return;
+    const dt = (now - last) / 1000;
+    last = now;
+    const dirMultiplier = spinDirection === "cw" ? 1 : -1;
+    setRotation(rotationAngle + dirMultiplier * autoSpinSpeed * dt);
     autoSpinTimer = requestAnimationFrame(step);
-  } else if (autoSpinTimer) {
+  };
+  autoSpinTimer = requestAnimationFrame(step);
+}
+
+function stopAutoSpin() {
+  if (autoSpinTimer) {
     cancelAnimationFrame(autoSpinTimer);
+    autoSpinTimer = null;
   }
-});
+}
+
+if (spinDirectionSelect) {
+  spinDirectionSelect.value = spinDirection;
+  spinDirectionSelect.addEventListener("change", (e) => {
+    spinDirection = e.target.value;
+    if (typeof window !== "undefined") {
+      localStorage.setItem("dar_alruya_wheel_spin_direction", spinDirection);
+    }
+  });
+}
+
+if (autoSpinToggle) {
+  autoSpinToggle.checked = autoSpinOn;
+  autoSpinToggle.addEventListener("change", (e) => {
+    if (isSpinning) {
+      e.target.checked = false;
+      return;
+    }
+    autoSpinOn = e.target.checked;
+    if (typeof window !== "undefined") {
+      localStorage.setItem("dar_alruya_wheel_auto_spin_360", autoSpinOn ? "true" : "false");
+    }
+    if (autoSpinOn) {
+      startAutoSpin();
+    } else {
+      stopAutoSpin();
+    }
+  });
+}
 
 centerImageInput.addEventListener("change", (e) => {
   const file = e.target.files[0];
@@ -871,11 +899,21 @@ function angleFromCenter(clientX, clientY) {
 
 function pointerDown(clientX, clientY) {
   if (isSpinning) return;
+  const adminControls = document.getElementById("admin-wheel-controls");
+  const isAdminActive = adminControls && !adminControls.classList.contains("hidden");
+  if (!autoSpinOn && !isAdminActive) return;
   dragging = true;
   wheelWrap.classList.add("dragging");
   dragStartAngle = angleFromCenter(clientX, clientY);
   dragStartRotation = rotationAngle;
-  if (autoSpinOn) { autoSpinToggle.checked = false; autoSpinOn = false; if (autoSpinTimer) cancelAnimationFrame(autoSpinTimer); }
+  if (autoSpinOn) {
+    autoSpinToggle.checked = false;
+    autoSpinOn = false;
+    if (typeof window !== "undefined") {
+      localStorage.setItem("dar_alruya_wheel_auto_spin_360", "false");
+    }
+    if (autoSpinTimer) cancelAnimationFrame(autoSpinTimer);
+  }
 }
 function pointerMove(clientX, clientY) {
   if (!dragging) return;
@@ -909,5 +947,9 @@ window.addEventListener("resize", () => {
 
 buildControls();
 drawWheel(true);
+
+if (autoSpinOn) {
+  startAutoSpin();
+}
 
 }
