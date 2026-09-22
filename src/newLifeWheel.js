@@ -447,28 +447,33 @@ function drawWheel(forceRebuild = false) {
 }
 
 /* ============================================================
-   محرك النسب الحيوية المتغيرة (Living Wheel Dynamic Engine)
+   محرك النسب الحيوية المتغيرة المتوازنة (Balanced Living Wheel Dynamic Engine)
    ============================================================ */
 let dynamicBreathingOn = true;
 let isWheelVisible = true;
 let isTabVisible = true;
 let breathingLoopId = null;
 
-// Initial animation state: staggered and alternating
+// حركة تموجية متوازنة تضمن عدم انخفاض جانب كامل وارتفاع جانب آخر
+// المحاور المتقاطعة (0, 2, 4, 6) والمحاور المائلة (1, 3, 5, 7) تتحرك في تناغم متقابل
 let axisAnimState = axesState.map((axis, i) => {
-  const isHigh = axis.percent > 70;
+  const isCross = (i % 2 === 0);
   return {
     current: axis.percent,
     start: axis.percent,
-    target: isHigh ? (44 + Math.random() * 14) : (84 + Math.random() * 11),
-    isAscending: !isHigh,
-    startTime: performance.now() + i * 380, // Staggered initial starts
-    duration: 3300 + Math.random() * 1600   // 3.3s to 4.9s
+    // المحاور المتقاطعة تبدأ بالهبوط الخفيف، والمائلة بالصعود الخفيف بتوازن تام
+    target: isCross ? (74 + Math.random() * 5) : (67 + Math.random() * 5),
+    isAscending: !isCross,
+    // تباعد زمني خفيف بين كل محور والذي يليه (فارق 70ms فقط للحفاظ على الاتزان والسرعة)
+    startTime: performance.now() + (i * 70),
+    // مدة حركة أسرع وأخف (1.4s إلى 1.9s) لحركة حيوية ومرنة تمنع الشعور بالتعليق
+    duration: 1450 + Math.random() * 450
   };
 });
 
-function easeInOutCubic(t) {
-  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+// دالة حركة جيبية انسيابية متصلة (Sinusoidal Easing) لضمان تدفق طبيعي فائق النعومة
+function easeInOutSine(t) {
+  return -(Math.cos(Math.PI * t) - 1) / 2;
 }
 
 let lastBreathingTime = performance.now();
@@ -485,12 +490,12 @@ function breathingStep(now) {
 
       const elapsed = now - anim.startTime;
       const progress = Math.min(1, elapsed / anim.duration);
-      const eased = easeInOutCubic(progress);
+      const eased = easeInOutSine(progress);
 
       axesState[i].percent = anim.start + (anim.target - anim.start) * eased;
       changed = true;
 
-      // Update admin panel percent display if present
+      // تحديث قيمة السلايدر في لوحة التحكم إن كانت مفتوحة
       const pVal = document.getElementById(`percent-val-${i}`);
       if (pVal && document.activeElement !== document.querySelector(`input[data-idx="${i}"][data-field="percent"]`)) {
         pVal.textContent = Math.round(axesState[i].percent) + "%";
@@ -500,16 +505,19 @@ function breathingStep(now) {
 
       if (progress >= 1) {
         anim.start = anim.target;
+        const isCross = (i % 2 === 0);
+
         if (anim.isAscending) {
-          // Reached high peak: next target is moderate/low (42% - 58%)
-          anim.target = 42 + Math.random() * 16;
+          // هبوط خفيف متزن ومدروس
+          anim.target = isCross ? (73 + Math.random() * 6) : (51 + Math.random() * 5);
           anim.isAscending = false;
         } else {
-          // Reached valley: next target is high (84% - 95%)
-          anim.target = 84 + Math.random() * 11;
+          // صعود خفيف متزن ومدروس
+          anim.target = isCross ? (89 + Math.random() * 5) : (68 + Math.random() * 5);
           anim.isAscending = true;
         }
-        anim.duration = 3300 + Math.random() * 1700; // 3.3s to 5.0s
+        // إيقاع حركي أسرع وأكثر رشاقة (1.4s إلى 1.9s)
+        anim.duration = 1450 + Math.random() * 450;
         anim.startTime = now;
       }
     });
@@ -651,7 +659,8 @@ if (dynamicBreathingToggle) {
       lastBreathingTime = resumeNow;
       axisAnimState.forEach((anim, i) => {
         anim.start = axesState[i].percent;
-        anim.startTime = resumeNow + i * 200;
+        anim.startTime = resumeNow + (i * 70);
+        anim.duration = 1450 + Math.random() * 450;
       });
     }
   });
@@ -838,7 +847,8 @@ function spinWheelRandom() {
       lastBreathingTime = resumeNow;
       axisAnimState.forEach((anim, i) => {
         anim.start = axesState[i].percent;
-        anim.startTime = resumeNow + i * 200;
+        anim.startTime = resumeNow + (i * 70);
+        anim.duration = 1450 + Math.random() * 450;
       });
     }
   }
