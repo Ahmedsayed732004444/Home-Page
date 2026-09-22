@@ -200,18 +200,48 @@ function getAxisAccentColor(axis, amt) {
   return isDarkMode() ? lighten(axis.color, amt) : darken(axis.color, amt);
 }
 
-function drawWheel() {
-  const { center, innerRadius, outerRadius, numRings, gapWidth, showLabels, labelOffset, iconOffset, iconSize, emptyGridStrokeOpacity, filledGridStrokeOpacity } = SETTINGS;
-  const gridStrokeColor = getGridColor();
-  const cx = center.x, cy = center.y;
-  const n = axesState.length;
-  const sectorAngle = 360 / n;
-  const ringThickness = (outerRadius - innerRadius) / numRings;
+function getMetrics() {
+  const isMobile = window.innerWidth < 640 || (svg && svg.clientWidth && svg.clientWidth < 500);
+  return {
+    effectiveFontSize: isMobile ? 31 : 24,
+    effectiveIconSize: isMobile ? 62 : 42,
+    effectiveLabelOffset: isMobile ? 68 : 62,
+    textYOffset: isMobile ? -12 : -10,
+    iconYOffset: isMobile ? 2 : 2
+  };
+}
 
+let wheelDom = null;
+
+function buildWheelDom() {
+  if (!svg) return;
   svg.innerHTML = "";
 
-  // مجموعة قابلة للدوران: فيها كل الأشكال الملونة والحلقات والدائرة الوسطى
+  const { center, innerRadius, outerRadius, numRings, gapWidth, showLabels } = SETTINGS;
+  const gridStrokeColor = getGridColor();
+  const filledGridStrokeOpacity = SETTINGS.filledGridStrokeOpacity;
+  const emptyGridStrokeOpacity = SETTINGS.emptyGridStrokeOpacity;
+  const cx = center.x, cy = center.y;
+  const n = axesState.length;
+  const ringThickness = (outerRadius - innerRadius) / numRings;
+
+  // 1. defs with clipPath for center image
+  const defs = document.createElementNS(svgNS, "defs");
+  const clipId = "centerClip";
+  const clipPath = document.createElementNS(svgNS, "clipPath");
+  clipPath.setAttribute("id", clipId);
+  const imgRadius = SETTINGS.centerImageRadius || 60;
+  const clipCircle = document.createElementNS(svgNS, "circle");
+  clipCircle.setAttribute("cx", cx);
+  clipCircle.setAttribute("cy", cy);
+  clipCircle.setAttribute("r", imgRadius);
+  clipPath.appendChild(clipCircle);
+  defs.appendChild(clipPath);
+  svg.appendChild(defs);
+
+  // 2. Rotatable Group (Colored sectors + center circle)
   const rotatableGroup = document.createElementNS(svgNS, "g");
+  rotatableGroup.setAttribute("class", "rotatable-group");
   rotatableGroup.setAttribute("transform", `rotate(${rotationAngle} ${cx} ${cy})`);
 
   const centerCircle = document.createElementNS(svgNS, "circle");
@@ -223,153 +253,295 @@ function drawWheel() {
   centerCircle.setAttribute("stroke-opacity", filledGridStrokeOpacity);
   rotatableGroup.appendChild(centerCircle);
 
+  // Axis sector elements
+  const axisElements = [];
+
   axesState.forEach((axis, i) => {
-    const sectorStartDeg = i * sectorAngle;
-    const sectorEndDeg = (i + 1) * sectorAngle;
     const { start: colorStart, end: colorEnd } = getGradientEnds(axis);
-    const value = Math.max(0, Math.min(numRings, (axis.percent / 100) * numRings));
+    const fillPaths = [];
+    const gridPaths = [];
 
     for (let k = 0; k < numRings; k++) {
-      const rInner = innerRadius + k * ringThickness;
-      const rOuter = innerRadius + (k + 1) * ringThickness;
-      const fillFraction = Math.max(0, Math.min(1, value - k));
       const t = numRings > 1 ? k / (numRings - 1) : 0;
       const shade = lerpColor(colorStart, colorEnd, t);
 
-      if (fillFraction > 0) {
-        const rMid = rInner + fillFraction * (rOuter - rInner);
-        const dColored = ringSectorPath(cx, cy, rInner, rMid, sectorStartDeg, sectorEndDeg, gapWidth);
-        const pathColored = document.createElementNS(svgNS, "path");
-        pathColored.setAttribute("d", dColored);
-        pathColored.setAttribute("class", "fill-cell");
-        pathColored.setAttribute("fill", shade);
-        pathColored.setAttribute("stroke", gridStrokeColor);
-        pathColored.setAttribute("stroke-opacity", filledGridStrokeOpacity);
-        rotatableGroup.appendChild(pathColored);
-      }
+      // Filled cell path
+      const pathColored = document.createElementNS(svgNS, "path");
+      pathColored.setAttribute("class", "fill-cell");
+      pathColored.setAttribute("fill", shade);
+      pathColored.setAttribute("stroke", gridStrokeColor);
+      pathColored.setAttribute("stroke-opacity", filledGridStrokeOpacity);
+      rotatableGroup.appendChild(pathColored);
+      fillPaths.push(pathColored);
 
-      if (fillFraction < 1) {
-        const rStart = rInner + fillFraction * (rOuter - rInner);
-        const dEmpty = ringSectorPath(cx, cy, rStart, rOuter, sectorStartDeg, sectorEndDeg, gapWidth);
-        const pathEmpty = document.createElementNS(svgNS, "path");
-        pathEmpty.setAttribute("d", dEmpty);
-        pathEmpty.setAttribute("class", "grid-cell");
-        pathEmpty.setAttribute("stroke", gridStrokeColor);
-        pathEmpty.setAttribute("stroke-opacity", emptyGridStrokeOpacity);
-        rotatableGroup.appendChild(pathEmpty);
-      }
+      // Empty grid cell path
+      const pathEmpty = document.createElementNS(svgNS, "path");
+      pathEmpty.setAttribute("class", "grid-cell");
+      pathEmpty.setAttribute("fill", "transparent");
+      pathEmpty.setAttribute("stroke", gridStrokeColor);
+      pathEmpty.setAttribute("stroke-opacity", emptyGridStrokeOpacity);
+      rotatableGroup.appendChild(pathEmpty);
+      gridPaths.push(pathEmpty);
     }
+
+    axisElements.push({
+      fillPaths,
+      gridPaths,
+      text: null,
+      icon: null
+    });
   });
 
   svg.appendChild(rotatableGroup);
 
-  // صورة المنتصف - ثابتة ومش بتلف مع العجلة (زي شعار وسط بوصلة)
+  // 3. Center Compass Image
+  let centerImg = null;
   if (centerImageDataUrl) {
-    const clipId = "centerClip";
-    let defs = svg.querySelector("defs");
-    if (!defs) {
-      defs = document.createElementNS(svgNS, "defs");
-      svg.insertBefore(defs, svg.firstChild);
-    }
-    const clipPath = document.createElementNS(svgNS, "clipPath");
-    clipPath.setAttribute("id", clipId);
-    const imgRadius = SETTINGS.centerImageRadius || 60;
-    const clipCircle = document.createElementNS(svgNS, "circle");
-    clipCircle.setAttribute("cx", cx);
-    clipCircle.setAttribute("cy", cy);
-    clipCircle.setAttribute("r", imgRadius);
-    clipPath.appendChild(clipCircle);
-    defs.appendChild(clipPath);
-
-    const img = document.createElementNS(svgNS, "image");
-    img.setAttributeNS("http://www.w3.org/1999/xlink", "href", centerImageDataUrl);
-    img.setAttribute("href", centerImageDataUrl);
-    img.setAttribute("x", cx - imgRadius);
-    img.setAttribute("y", cy - imgRadius);
-    img.setAttribute("width", imgRadius * 2);
-    img.setAttribute("height", imgRadius * 2);
-    img.setAttribute("preserveAspectRatio", "xMidYMid slice");
-    img.setAttribute("clip-path", `url(#${clipId})`);
-    svg.appendChild(img);
+    centerImg = document.createElementNS(svgNS, "image");
+    centerImg.setAttributeNS("http://www.w3.org/1999/xlink", "href", centerImageDataUrl);
+    centerImg.setAttribute("href", centerImageDataUrl);
+    centerImg.setAttribute("x", cx - imgRadius);
+    centerImg.setAttribute("y", cy - imgRadius);
+    centerImg.setAttribute("width", imgRadius * 2);
+    centerImg.setAttribute("height", imgRadius * 2);
+    centerImg.setAttribute("preserveAspectRatio", "xMidYMid slice");
+    centerImg.setAttribute("clip-path", `url(#${clipId})`);
+    svg.appendChild(centerImg);
   }
 
-  // أسماء المحاور والأيقونات مجمعة معاً لضبط المحاذاة العمودية (النص فوق الأيقونة دائماً مع مسافة ثابتة من طرف المحور الملون)
+  // 4. Labels and Icons Group
   if (showLabels) {
-    const isMobile = window.innerWidth < 640 || (svg.clientWidth && svg.clientWidth < 500);
-    // قياسات مطابقة لـ Figma Dev Mode:
-    // على الجوال: حجم الخط 12px (أي 31.4px بوحدات الـ SVG)، وحجم الأيقونة 24px (أي 62.8px بوحدات الـ SVG)
-    const effectiveFontSize = isMobile ? 31 : 24;
-    const effectiveIconSize = isMobile ? 62 : 42;
-    const effectiveLabelOffset = isMobile ? 68 : 62;
-    const textYOffset = isMobile ? -12 : -10;
-    const iconYOffset = isMobile ? 2 : 2;
+    const labelsGroup = document.createElementNS(svgNS, "g");
+    labelsGroup.setAttribute("class", "labels-group");
+    const metrics = getMetrics();
 
     axesState.forEach((axis, i) => {
-      const mid = i * sectorAngle + sectorAngle / 2 + rotationAngle;
-      
-      // حساب نصف القطر الفعلي للمحور بناءً على نسبته الحالية
-      const fillFraction = Math.max(0, Math.min(100, axis.percent !== undefined ? axis.percent : 50)) / 100;
-      const currentFillRadius = innerRadius + fillFraction * (outerRadius - innerRadius);
-      
-      // مسافة ثابتة بين طرف المحور الملون والاسم والأيقونة (تتبع المحور في الزيادة والنقصان)
-      const targetRadius = Math.max(innerRadius + 50, currentFillRadius + effectiveLabelOffset);
-      const basePos = polarToCartesian(cx, cy, targetRadius, mid);
-      
-      // رسم النص (دائماً في الأعلى)
+      // Label Text
       const text = document.createElementNS(svgNS, "text");
-      text.setAttribute("x", basePos.x);
-      text.setAttribute("y", basePos.y + textYOffset);
       text.setAttribute("class", "axis-label");
       text.setAttribute("fill", getAxisAccentColor(axis, 0.38));
       text.setAttribute("font-family", "'El Messiri', sans-serif");
-      text.setAttribute("font-size", `${effectiveFontSize}px`);
+      text.setAttribute("font-size", `${metrics.effectiveFontSize}px`);
       text.setAttribute("font-weight", "bold");
       text.setAttribute("text-anchor", "middle");
       text.textContent = axis.label || "";
-      svg.appendChild(text);
+      labelsGroup.appendChild(text);
+      axisElements[i].text = text;
 
-      // رسم الأيقونة (دائماً تحت النص)
-      if (!axis.icon || axis.icon === "none") return;
+      // Icon Image
       if (axis.icon === "custom" && axis.customIconUrl) {
         const img = document.createElementNS(svgNS, "image");
+        img.setAttribute("class", "axis-icon");
         img.setAttributeNS("http://www.w3.org/1999/xlink", "href", axis.customIconUrl);
         img.setAttribute("href", axis.customIconUrl);
-        // توسيط الأيقونة تحت النص
-        img.setAttribute("x", basePos.x - effectiveIconSize / 2);
-        img.setAttribute("y", basePos.y + iconYOffset);
-        img.setAttribute("width", effectiveIconSize);
-        img.setAttribute("height", effectiveIconSize);
+        img.setAttribute("width", metrics.effectiveIconSize);
+        img.setAttribute("height", metrics.effectiveIconSize);
         img.setAttribute("preserveAspectRatio", "xMidYMid meet");
-        svg.appendChild(img);
+        labelsGroup.appendChild(img);
+        axisElements[i].icon = img;
       }
     });
+
+    svg.appendChild(labelsGroup);
   }
 
-  // مؤشر ثابت فوق العجلة (تم إخفاؤه بناءً على طلب العميل)
-  /*
-  const pointerTip = polarToCartesian(cx, cy, outerRadius + 6, 0);
-  const pointerLeft = polarToCartesian(cx, cy, outerRadius + 26, -8);
-  const pointerRight = polarToCartesian(cx, cy, outerRadius + 26, 8);
-  const pointerMark = document.createElementNS(svgNS, "polygon");
-  pointerMark.setAttribute("points", `${pointerTip.x},${pointerTip.y} ${pointerLeft.x},${pointerLeft.y} ${pointerRight.x},${pointerRight.y}`);
-  pointerMark.setAttribute("fill", gridStrokeColor);
-  pointerMark.setAttribute("class", "pointer-mark");
-  svg.appendChild(pointerMark);
-  */
-
-  // دائرة شفافة فوق منتصف العجلة (وفوق صورة المنتصف لو موجودة) عشان تلتقط الضغط وتشغّل السبين العشوائي
+  // 5. Center Hit Area for Spin
   const centerHit = document.createElementNS(svgNS, "circle");
   centerHit.setAttribute("cx", cx);
   centerHit.setAttribute("cy", cy);
   centerHit.setAttribute("r", innerRadius);
   centerHit.setAttribute("fill", "transparent");
   centerHit.setAttribute("class", "center-hit");
+  centerHit.style.cursor = "pointer";
   centerHit.addEventListener("click", (e) => {
     e.stopPropagation();
     spinWheelRandom();
   });
   svg.appendChild(centerHit);
+
+  wheelDom = {
+    rotatableGroup,
+    centerCircle,
+    centerImg,
+    axisElements,
+    centerHit
+  };
 }
+
+function updateWheelGeometry() {
+  if (!wheelDom) {
+    buildWheelDom();
+    if (!wheelDom) return;
+  }
+
+  const { center, innerRadius, outerRadius, numRings, gapWidth } = SETTINGS;
+  const cx = center.x, cy = center.y;
+  const n = axesState.length;
+  const sectorAngle = 360 / n;
+  const ringThickness = (outerRadius - innerRadius) / numRings;
+  const metrics = getMetrics();
+
+  // Rotate group
+  wheelDom.rotatableGroup.setAttribute("transform", `rotate(${rotationAngle} ${cx} ${cy})`);
+
+  axesState.forEach((axis, i) => {
+    const el = wheelDom.axisElements[i];
+    if (!el) return;
+
+    const sectorStartDeg = i * sectorAngle;
+    const sectorEndDeg = (i + 1) * sectorAngle;
+    const value = Math.max(0, Math.min(numRings, (axis.percent / 100) * numRings));
+
+    // Update ring paths
+    for (let k = 0; k < numRings; k++) {
+      const rInner = innerRadius + k * ringThickness;
+      const rOuter = innerRadius + (k + 1) * ringThickness;
+      const fillFraction = Math.max(0, Math.min(1, value - k));
+
+      const fillP = el.fillPaths[k];
+      const gridP = el.gridPaths[k];
+
+      if (fillFraction > 0) {
+        const rMid = rInner + fillFraction * (rOuter - rInner);
+        fillP.setAttribute("d", ringSectorPath(cx, cy, rInner, rMid, sectorStartDeg, sectorEndDeg, gapWidth));
+        fillP.style.display = "";
+      } else {
+        fillP.setAttribute("d", "");
+        fillP.style.display = "none";
+      }
+
+      if (fillFraction < 1) {
+        const rStart = rInner + fillFraction * (rOuter - rInner);
+        gridP.setAttribute("d", ringSectorPath(cx, cy, rStart, rOuter, sectorStartDeg, sectorEndDeg, gapWidth));
+        gridP.style.display = "";
+      } else {
+        gridP.setAttribute("d", "");
+        gridP.style.display = "none";
+      }
+    }
+
+    // Update Text and Icon positions
+    const mid = i * sectorAngle + sectorAngle / 2 + rotationAngle;
+    const fillFrac = Math.max(0, Math.min(100, axis.percent !== undefined ? axis.percent : 50)) / 100;
+    const currentFillRadius = innerRadius + fillFrac * (outerRadius - innerRadius);
+    const targetRadius = Math.max(innerRadius + 50, currentFillRadius + metrics.effectiveLabelOffset);
+    const basePos = polarToCartesian(cx, cy, targetRadius, mid);
+
+    if (el.text) {
+      el.text.setAttribute("x", basePos.x);
+      el.text.setAttribute("y", basePos.y + metrics.textYOffset);
+    }
+
+    if (el.icon) {
+      el.icon.setAttribute("x", basePos.x - metrics.effectiveIconSize / 2);
+      el.icon.setAttribute("y", basePos.y + metrics.iconYOffset);
+    }
+  });
+}
+
+function drawWheel(forceRebuild = false) {
+  if (forceRebuild || !wheelDom) {
+    buildWheelDom();
+  }
+  updateWheelGeometry();
+}
+
+/* ============================================================
+   محرك النسب الحيوية المتغيرة (Living Wheel Dynamic Engine)
+   ============================================================ */
+let dynamicBreathingOn = true;
+let isWheelVisible = true;
+let isTabVisible = true;
+let breathingLoopId = null;
+
+// Initial animation state: staggered and alternating
+let axisAnimState = axesState.map((axis, i) => {
+  const isHigh = axis.percent > 70;
+  return {
+    current: axis.percent,
+    start: axis.percent,
+    target: isHigh ? (44 + Math.random() * 14) : (84 + Math.random() * 11),
+    isAscending: !isHigh,
+    startTime: performance.now() + i * 380, // Staggered initial starts
+    duration: 3300 + Math.random() * 1600   // 3.3s to 4.9s
+  };
+});
+
+function easeInOutCubic(t) {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
+let lastBreathingTime = performance.now();
+
+function breathingStep(now) {
+  const dt = Math.min(now - lastBreathingTime, 100);
+  lastBreathingTime = now;
+
+  if (dynamicBreathingOn && isWheelVisible && isTabVisible && !isSpinning) {
+    let changed = false;
+
+    axisAnimState.forEach((anim, i) => {
+      if (now < anim.startTime) return;
+
+      const elapsed = now - anim.startTime;
+      const progress = Math.min(1, elapsed / anim.duration);
+      const eased = easeInOutCubic(progress);
+
+      axesState[i].percent = anim.start + (anim.target - anim.start) * eased;
+      changed = true;
+
+      // Update admin panel percent display if present
+      const pVal = document.getElementById(`percent-val-${i}`);
+      if (pVal && document.activeElement !== document.querySelector(`input[data-idx="${i}"][data-field="percent"]`)) {
+        pVal.textContent = Math.round(axesState[i].percent) + "%";
+        const slider = document.querySelector(`input[data-idx="${i}"][data-field="percent"]`);
+        if (slider) slider.value = Math.round(axesState[i].percent);
+      }
+
+      if (progress >= 1) {
+        anim.start = anim.target;
+        if (anim.isAscending) {
+          // Reached high peak: next target is moderate/low (42% - 58%)
+          anim.target = 42 + Math.random() * 16;
+          anim.isAscending = false;
+        } else {
+          // Reached valley: next target is high (84% - 95%)
+          anim.target = 84 + Math.random() * 11;
+          anim.isAscending = true;
+        }
+        anim.duration = 3300 + Math.random() * 1700; // 3.3s to 5.0s
+        anim.startTime = now;
+      }
+    });
+
+    if (changed) {
+      updateWheelGeometry();
+    }
+  }
+
+  breathingLoopId = requestAnimationFrame(breathingStep);
+}
+
+// Start breathing loop
+requestAnimationFrame(breathingStep);
+
+// IntersectionObserver for saving battery when wheel is not visible
+if (typeof IntersectionObserver !== "undefined" && svg) {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      isWheelVisible = entry.isIntersecting;
+    });
+  }, { threshold: 0.05 });
+  observer.observe(svg);
+}
+
+// Visibility change (tab switch / backgrounding)
+document.addEventListener("visibilitychange", () => {
+  isTabVisible = !document.hidden;
+  if (isTabVisible) {
+    lastBreathingTime = performance.now();
+  }
+});
 
 /* ====== لوحة تحكم كل محور ====== */
 function buildControls() {
@@ -429,6 +601,10 @@ function buildControls() {
       if (field === "percent") {
         value = parseFloat(value);
         document.getElementById(`percent-val-${idx}`).textContent = value + "%";
+        if (axisAnimState && axisAnimState[idx]) {
+          axisAnimState[idx].start = value;
+          axisAnimState[idx].startTime = performance.now();
+        }
       }
       axesState[idx][field] = value;
 
@@ -436,7 +612,7 @@ function buildControls() {
         const row = document.getElementById(`icon-upload-row-${idx}`);
         if (row) row.style.display = value === "custom" ? "" : "none";
       }
-      drawWheel();
+      drawWheel(field !== "percent");
     });
   });
 }
@@ -451,7 +627,7 @@ controlsEl.addEventListener("change", (e) => {
     const reader = new FileReader();
     reader.onload = () => {
       axesState[idx].customIconUrl = reader.result;
-      drawWheel();
+      drawWheel(true);
     };
     reader.readAsDataURL(file);
   }
@@ -461,9 +637,25 @@ controlsEl.addEventListener("change", (e) => {
 const rotationSlider = document.getElementById("rotationSlider");
 const rotationVal = document.getElementById("rotationVal");
 const autoSpinToggle = document.getElementById("autoSpinToggle");
+const dynamicBreathingToggle = document.getElementById("dynamicBreathingToggle");
 const spinDirectionSelect = document.getElementById("spinDirectionSelect");
 const centerImageInput = document.getElementById("centerImageInput");
 const removeImageBtn = document.getElementById("removeImageBtn");
+
+if (dynamicBreathingToggle) {
+  dynamicBreathingToggle.checked = dynamicBreathingOn;
+  dynamicBreathingToggle.addEventListener("change", (e) => {
+    dynamicBreathingOn = e.target.checked;
+    if (dynamicBreathingOn) {
+      const resumeNow = performance.now();
+      lastBreathingTime = resumeNow;
+      axisAnimState.forEach((anim, i) => {
+        anim.start = axesState[i].percent;
+        anim.startTime = resumeNow + i * 200;
+      });
+    }
+  });
+}
 
 spinDirectionSelect.value = spinDirection;
 
@@ -638,8 +830,16 @@ function spinWheelRandom() {
       wheelWrap.classList.remove("spinning");
       rotationSlider.disabled = false;
       spinDirectionSelect.disabled = false;
-      spinResultEl.textContent = `${winnerAxis.label} (${winnerAxis.percent}%)`;
+      spinResultEl.textContent = `${winnerAxis.label} (${Math.round(winnerAxis.percent)}%)`;
       playWinSound();
+
+      // استئناف حركة التنفس الطبيعية بسلاسة بعد انتهاء اللف
+      const resumeNow = performance.now();
+      lastBreathingTime = resumeNow;
+      axisAnimState.forEach((anim, i) => {
+        anim.start = axesState[i].percent;
+        anim.startTime = resumeNow + i * 200;
+      });
     }
   }
   requestAnimationFrame(frame);
@@ -694,10 +894,10 @@ window.addEventListener("touchend", pointerUp);
 
 // إعادة رسم العجلة تلقائياً عند تغيير أبعاد الشاشة لضبط أحجام النصوص والأيقونات بدقة
 window.addEventListener("resize", () => {
-  drawWheel();
+  drawWheel(true);
 });
 
 buildControls();
-drawWheel();
+drawWheel(true);
 
 }
