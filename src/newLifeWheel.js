@@ -458,24 +458,43 @@ let isWheelVisible = true;
 let isTabVisible = true;
 let breathingLoopId = null;
 
-// حركة تموجية متوازنة تضمن عدم انخفاض جانب كامل وارتفاع جانب آخر
-// المحاور المتقاطعة (0, 2, 4, 6) والمحاور المائلة (1, 3, 5, 7) تتحرك في تناغم متقابل
-let axisAnimState = axesState.map((axis, i) => {
-  const isCross = (i % 2 === 0);
-  return {
-    current: axis.percent,
-    start: axis.percent,
-    // المحاور المتقاطعة تبدأ بالهبوط الخفيف، والمائلة بالصعود الخفيف بتوازن تام
-    target: isCross ? (74 + Math.random() * 5) : (67 + Math.random() * 5),
-    isAscending: !isCross,
-    // تباعد زمني خفيف بين كل محور والذي يليه (فارق 70ms فقط للحفاظ على الاتزان والسرعة)
-    startTime: performance.now() + (i * 70),
-    // مدة حركة أسرع وأخف (1.4s إلى 1.9s) لحركة حيوية ومرنة تمنع الشعور بالتعليق
-    duration: 1450 + Math.random() * 450
-  };
+// نحتفظ بالقيم الأساسية لكي تتموج العجلة حولها برفق (تحافظ على شكلها العام)
+const basePercents = axesState.map(a => a.percent);
+
+let axisAnimState = axesState.map((axis) => ({
+  start: axis.percent,
+  current: axis.percent,
+  target: axis.percent,
+  startTime: performance.now() + Math.random() * 150,
+  duration: 350 + Math.random() * 350 // سرعة قصوى
+}));
+
+// دالة لاختيار هدف جديد ذكي لا يسمح بتشوه العجلة
+function getNewTarget(i) {
+  const prevIdx = (i === 0) ? 7 : i - 1;
+  const nextIdx = (i === 7) ? 0 : i + 1;
+  
+  const prevTarget = axisAnimState[prevIdx].target;
+  const nextTarget = axisAnimState[nextIdx].target;
+  
+  // إذا كان أحد الجيران منخفضاً جداً، يُجبر هذا المحور على الارتفاع للحفاظ على دائرية العجلة
+  if (prevTarget < 55 || nextTarget < 55) {
+    return 65 + Math.random() * 30; // 65 إلى 95
+  }
+  
+  // عدا ذلك، نزيد احتمالية انخفاضه لصنع تفاوت جميل
+  if (Math.random() > 0.3) {
+    return 35 + Math.random() * 20; // 35 إلى 55
+  } else {
+    return 70 + Math.random() * 25; // 70 إلى 95
+  }
+}
+
+// تهيئة الأهداف الأولى
+axisAnimState.forEach((anim, i) => {
+  anim.target = getNewTarget(i);
 });
 
-// دالة حركة جيبية انسيابية متصلة (Sinusoidal Easing) لضمان تدفق طبيعي فائق النعومة
 function easeInOutSine(t) {
   return -(Math.cos(Math.PI * t) - 1) / 2;
 }
@@ -483,9 +502,6 @@ function easeInOutSine(t) {
 let lastBreathingTime = performance.now();
 
 function breathingStep(now) {
-  const dt = Math.min(now - lastBreathingTime, 100);
-  lastBreathingTime = now;
-
   if (dynamicBreathingOn && isWheelVisible && isTabVisible && !isSpinning) {
     let changed = false;
 
@@ -496,33 +512,28 @@ function breathingStep(now) {
       const progress = Math.min(1, elapsed / anim.duration);
       const eased = easeInOutSine(progress);
 
-      axesState[i].percent = anim.start + (anim.target - anim.start) * eased;
-      changed = true;
-
-      // تحديث قيمة السلايدر في لوحة التحكم إن كانت مفتوحة
-      const pVal = document.getElementById(`percent-val-${i}`);
-      if (pVal && document.activeElement !== document.querySelector(`input[data-idx="${i}"][data-field="percent"]`)) {
-        pVal.textContent = Math.round(axesState[i].percent) + "%";
-        const slider = document.querySelector(`input[data-idx="${i}"][data-field="percent"]`);
-        if (slider) slider.value = Math.round(axesState[i].percent);
-      }
-
+      anim.current = anim.start + (anim.target - anim.start) * eased;
+      
+      // بمجرد الوصول للهدف، ننطلق فوراً لهدف جديد دون أي توقف (0 frames delay)
       if (progress >= 1) {
         anim.start = anim.target;
-        const isCross = (i % 2 === 0);
-
-        if (anim.isAscending) {
-          // هبوط خفيف متزن ومدروس
-          anim.target = isCross ? (73 + Math.random() * 6) : (51 + Math.random() * 5);
-          anim.isAscending = false;
-        } else {
-          // صعود خفيف متزن ومدروس
-          anim.target = isCross ? (89 + Math.random() * 5) : (68 + Math.random() * 5);
-          anim.isAscending = true;
-        }
-        // إيقاع حركي أسرع وأكثر رشاقة (1.4s إلى 1.9s)
-        anim.duration = 1450 + Math.random() * 450;
+        anim.target = getNewTarget(i);
         anim.startTime = now;
+        anim.duration = 350 + Math.random() * 350; // سرعة قصوى
+      }
+      
+      let newPercent = Math.max(10, Math.min(100, anim.current));
+
+      if (Math.abs(axesState[i].percent - newPercent) > 0.1) {
+        axesState[i].percent = newPercent;
+        changed = true;
+
+        const pVal = document.getElementById(`percent-val-${i}`);
+        if (pVal && document.activeElement !== document.querySelector(`input[data-idx="${i}"][data-field="percent"]`)) {
+          pVal.textContent = Math.round(axesState[i].percent) + "%";
+          const slider = document.querySelector(`input[data-idx="${i}"][data-field="percent"]`);
+          if (slider) slider.value = Math.round(axesState[i].percent);
+        }
       }
     });
 
@@ -613,9 +624,12 @@ function buildControls() {
       if (field === "percent") {
         value = parseFloat(value);
         document.getElementById(`percent-val-${idx}`).textContent = value + "%";
-        if (axisAnimState && axisAnimState[idx]) {
+        if (typeof axisAnimState !== "undefined" && axisAnimState[idx]) {
           axisAnimState[idx].start = value;
+          axisAnimState[idx].current = value;
+          axisAnimState[idx].target = getNewTarget(idx);
           axisAnimState[idx].startTime = performance.now();
+          axisAnimState[idx].duration = 350 + Math.random() * 350;
         }
       }
       axesState[idx][field] = value;
@@ -663,8 +677,10 @@ if (dynamicBreathingToggle) {
       lastBreathingTime = resumeNow;
       axisAnimState.forEach((anim, i) => {
         anim.start = axesState[i].percent;
-        anim.startTime = resumeNow + (i * 70);
-        anim.duration = 1450 + Math.random() * 450;
+        anim.current = axesState[i].percent;
+        anim.target = getNewTarget(i);
+        anim.startTime = resumeNow + (Math.random() * 150);
+        anim.duration = 350 + Math.random() * 350;
       });
     }
   });
