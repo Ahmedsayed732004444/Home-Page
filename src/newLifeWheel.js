@@ -21,14 +21,14 @@ const SETTINGS = {
 
 /* بيانات كل محور - الترتيب يبدأ من المحور الشخصي في أعلى العجلة مع عقارب الساعة تماماً كما في Figma */
 let axesState = [
-  { label: "الشخصي", color: "#7844D0", percent: 95, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/personal.png" },
-  { label: "الروحي", color: "#5875E5", percent: 52, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/spiritual.png" },
-  { label: "الصحي", color: "#43A074", percent: 92, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/health.png" },
-  { label: "الاجتماعي", color: "#C53664", percent: 55, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/social.png" },
-  { label: "العائلي", color: "#D98344", percent: 95, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/family.png" },
-  { label: "الترفيهي", color: "#C9B642", percent: 50, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/leisure.png" },
-  { label: "المالي", color: "#3CB1B3", percent: 90, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/financial.png" },
-  { label: "المهني", color: "#4474D0", percent: 54, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/career.png" }
+  { label: "الشخصي", color: "#7844D0", percent: 30, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/personal.png" },
+  { label: "الروحي", color: "#5875E5", percent: 45, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/spiritual.png" },
+  { label: "الصحي", color: "#43A074", percent: 38, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/health.png" },
+  { label: "الاجتماعي", color: "#C53664", percent: 40, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/social.png" },
+  { label: "العائلي", color: "#D98344", percent: 50, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/family.png" },
+  { label: "الترفيهي", color: "#C9B642", percent: 30, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/leisure.png" },
+  { label: "المالي", color: "#3CB1B3", percent: 35, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/financial.png" },
+  { label: "المهني", color: "#4474D0", percent: 45, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/career.png" }
 ];
 
 /* حالة الدوران والصورة في المنتصف */
@@ -40,6 +40,7 @@ let centerImageDataUrl = "/images/Frame%202147238562.png";
 let autoSpinTimer = null;
 let isSpinning = false;     // true أثناء تشغيل أنيميشن السبين العشوائي
 let audioCtx = null;
+let idleWobbleDeg = 0;      // ميل بسيط دايم على العجلة (فوق rotationAngle) بيدي إحساس إنها "لسه شغالة"
 
 /* ============================================================
    مكتبة أيقونات بسيطة مرسومة بـ SVG (كل أيقونة عبارة عن أشكال بسيطة تتلون بلون المحور)
@@ -242,7 +243,7 @@ function buildWheelDom() {
   // 2. Rotatable Group (Colored sectors + center circle)
   const rotatableGroup = document.createElementNS(svgNS, "g");
   rotatableGroup.setAttribute("class", "rotatable-group");
-  rotatableGroup.setAttribute("transform", `rotate(${rotationAngle} ${cx} ${cy})`);
+  rotatableGroup.setAttribute("transform", `rotate(${rotationAngle + idleWobbleDeg} ${cx} ${cy})`);
 
   const centerCircle = document.createElementNS(svgNS, "circle");
   centerCircle.setAttribute("cx", cx);
@@ -386,7 +387,7 @@ function updateWheelGeometry() {
   const metrics = getMetrics();
 
   // Rotate group
-  wheelDom.rotatableGroup.setAttribute("transform", `rotate(${rotationAngle} ${cx} ${cy})`);
+  wheelDom.rotatableGroup.setAttribute("transform", `rotate(${rotationAngle + idleWobbleDeg} ${cx} ${cy})`);
 
   axesState.forEach((axis, i) => {
     const el = wheelDom.axisElements[i];
@@ -425,7 +426,7 @@ function updateWheelGeometry() {
     }
 
     // Update Text and Icon positions
-    const mid = i * sectorAngle + sectorAngle / 2 + rotationAngle;
+    const mid = i * sectorAngle + sectorAngle / 2 + rotationAngle + idleWobbleDeg;
     const fillFrac = Math.max(0, Math.min(100, axis.percent !== undefined ? axis.percent : 50)) / 100;
     const currentFillRadius = innerRadius + fillFrac * (outerRadius - innerRadius);
     const targetRadius = Math.max(innerRadius + 50, currentFillRadius + metrics.effectiveLabelOffset);
@@ -451,80 +452,161 @@ function drawWheel(forceRebuild = false) {
 }
 
 /* ============================================================
-   محرك النسب الحيوية المتغيرة المتوازنة (Balanced Living Wheel Dynamic Engine)
+   محرك رحلة النمو الواقعية (Realistic Growth Journey Engine)
+   مستوحى من محاكاة حقيقية لـ 1000 اختبار عجلة حياة على مدار 5 سنين:
+   كل محور بيمشي على منحنى نموه الفعلي (بداية منخفضة → انتكاسة/تذبذب → نمو)
+   مضغوط في ~10 ثواني، وبعدها العجلة تثبت مع تذبذب طبيعي بسيط جداً.
+   كل محور له إيقاعه الخاص (مش كلهم بيتحركوا مع بعض بالظبط): تعشيق زمني بسيط
+   في البداية + مدة كل خطوة عشوائية شوية + وقفات قصيرة أحياناً + تذبذب صغير
+   حوالين كل هدف مرحلي عشان تحس إنها بتتنفس وتقف وتترجع شوية زي البيانات الحقيقية.
+   الحركة نفسها بقت "ملاحقة" مستمرة (exponential smoothing) للهدف الحالي بدل
+   تحريك من نقطة لنقطة بمدة ثابتة، عشان تبقى سايحة/ناعمة من غير أي وقفة سرعة
+   عند كل نقطة تحول (زي ما كان بيحصل مع easing لكل قطعة لوحدها).
    ============================================================ */
 let dynamicBreathingOn = true;
 let isWheelVisible = true;
 let isTabVisible = true;
 let breathingLoopId = null;
 
-// نحتفظ بالقيم الأساسية لكي تتموج العجلة حولها برفق (تحافظ على شكلها العام)
-const basePercents = axesState.map(a => a.percent);
+const JOURNEY_TOTAL_MS = 10000; // مدة الرحلة التقريبية من البداية لحد الاستقرار
+const SETTLE_JITTER_RANGE = 2.5;   // تذبذب صغير جداً حول القيمة النهائية بعد الاستقرار
+const SETTLE_DURATION_MIN = 1000;
+const SETTLE_DURATION_MAX = 2000;
 
-let axisAnimState = axesState.map((axis) => ({
-  start: axis.percent,
-  current: axis.percent,
-  target: axis.percent,
-  startTime: performance.now() + Math.random() * 150,
-  duration: 350 + Math.random() * 350 // سرعة قصوى
-}));
+const AXIS_STAGGER_MAX_MS = 450;      // فرق بداية عشوائي بين المحاور عشان ميبقوش متزامنين
+const SEGMENT_DURATION_VARIANCE_MS = 180; // تنويع بسيط في سرعة كل خطوة
+const SEGMENT_JITTER_RANGE = 2.2;     // تذبذب صغير حوالين كل هدف مرحلي (ممكن يعمل نزول خفيف مؤقت)
+const PAUSE_CHANCE = 0.3;             // احتمال وقفة قصيرة بعد الوصول لهدف قبل الاستمرار
+const PAUSE_DURATION_MIN = 150;
+const PAUSE_DURATION_MAX = 420;
+const SMOOTHING_TAU_MS = 480; // ثابت زمني للملاحقة الناعمة (أكبر = حركة أنعم وأبطأ في اللحاق بالهدف)
+const MAX_FRAME_DT_MS = 100;  // سقف لأي قفزة زمن كبيرة (تبديل تابات مثلاً) عشان الحركة تفضل ناعمة
 
-// دالة لاختيار هدف جديد ذكي لا يسمح بتشوه العجلة
-function getNewTarget(i) {
-  const prevIdx = (i === 0) ? 7 : i - 1;
-  const nextIdx = (i === 7) ? 0 : i + 1;
-  
-  const prevTarget = axisAnimState[prevIdx].target;
-  const nextTarget = axisAnimState[nextIdx].target;
-  
-  // إذا كان أحد الجيران منخفضاً جداً، يُجبر هذا المحور على الارتفاع للحفاظ على دائرية العجلة
-  if (prevTarget < 55 || nextTarget < 55) {
-    return 65 + Math.random() * 30; // 65 إلى 95
-  }
-  
-  // عدا ذلك، نزيد احتمالية انخفاضه لصنع تفاوت جميل
-  if (Math.random() > 0.3) {
-    return 35 + Math.random() * 20; // 35 إلى 55
+// إيقاع خفيف دايم على دوران العجلة نفسها (فوق rotationAngle) بيدي إحساس إن
+// "لسه حد بيمتحن" حتى بعد ما القيم تستقر - مش مرتبط بمرحلة الرحلة، بيفضل شغال دايمًا
+const WHEEL_WOBBLE_AMPLITUDE_1 = 2.2;
+const WHEEL_WOBBLE_SPEED_1 = 0.9;
+const WHEEL_WOBBLE_AMPLITUDE_2 = 1.1;
+const WHEEL_WOBBLE_SPEED_2 = 0.37;
+
+// 12 نقطة لكل محور: القيمة الأولى + متوسط كل 6 شهور (10 فترات) + القيمة الفعلية النهائية
+// (بالترتيب نفسه لمحاور axesState: شخصي، روحي، صحي، اجتماعي، عائلي، ترفيهي، مالي، مهني)
+const AXIS_JOURNEY = [
+  [30, 33, 43, 48, 56, 62, 66, 71, 74, 81, 89, 93],
+  [45, 46, 51, 54, 56, 60, 66, 66, 69, 77, 86, 91],
+  [38, 43, 52, 53, 52, 57, 61, 62, 67, 75, 86, 91],
+  [40, 37, 36, 41, 46, 52, 59, 61, 63, 72, 84, 90],
+  [50, 49, 50, 48, 48, 52, 59, 62, 66, 75, 86, 93],
+  [30, 26, 29, 31, 34, 40, 50, 54, 57, 68, 83, 90],
+  [35, 35, 38, 42, 47, 54, 59, 63, 69, 75, 85, 91],
+  [45, 45, 46, 52, 59, 66, 69, 74, 77, 82, 88, 92]
+];
+const JOURNEY_SEGMENTS = AXIS_JOURNEY[0].length - 1; // 11 قطعة
+const JOURNEY_SEGMENT_MS = JOURNEY_TOTAL_MS / JOURNEY_SEGMENTS;
+
+function settleValueFor(i) {
+  const kf = AXIS_JOURNEY[i];
+  return kf[kf.length - 1];
+}
+
+function jitteredTarget(value, range) {
+  return Math.max(0, Math.min(100, value + (Math.random() * 2 - 1) * range));
+}
+
+// خطوة تذبذب طبيعي صغيرة حول قيمة الاستقرار (أو حول قيمة يدوية لو المستخدم عدّل السلايدر)
+function settledStep(i, center) {
+  const base = center !== undefined ? center : settleValueFor(i);
+  const target = jitteredTarget(base, SETTLE_JITTER_RANGE);
+  const duration = SETTLE_DURATION_MIN + Math.random() * (SETTLE_DURATION_MAX - SETTLE_DURATION_MIN);
+  return { target, duration };
+}
+
+// بيحدد هدف/مدة الخطوة الجاية في الرحلة، أو يحوّل المحور لوضع الاستقرار لو خلصت كل الخطوات
+function scheduleNextJourneySegment(anim, i) {
+  if (anim.segmentsCompleted < JOURNEY_SEGMENTS) {
+    anim.target = jitteredTarget(AXIS_JOURNEY[i][anim.segmentsCompleted + 1], SEGMENT_JITTER_RANGE);
+    anim.duration = JOURNEY_SEGMENT_MS + (Math.random() * 2 - 1) * SEGMENT_DURATION_VARIANCE_MS;
   } else {
-    return 70 + Math.random() * 25; // 70 إلى 95
+    anim.journeyDone = true;
+    const step = settledStep(i);
+    anim.target = step.target;
+    anim.duration = step.duration;
   }
 }
 
-// تهيئة الأهداف الأولى
-axisAnimState.forEach((anim, i) => {
-  anim.target = getNewTarget(i);
+let axisAnimState = axesState.map((axis, i) => {
+  const kf = AXIS_JOURNEY[i];
+  return {
+    current: kf[0],
+    target: kf[1],
+    segmentsCompleted: 0,
+    journeyDone: false,
+    pausing: false,
+    segmentStartTime: performance.now() + Math.random() * AXIS_STAGGER_MAX_MS,
+    duration: JOURNEY_SEGMENT_MS
+  };
 });
 
-function easeInOutSine(t) {
-  return -(Math.cos(Math.PI * t) - 1) / 2;
-}
-
 let lastBreathingTime = performance.now();
+let lastFrameTime = performance.now();
 
 function breathingStep(now) {
+  const dt = Math.max(0, Math.min(now - lastFrameTime, MAX_FRAME_DT_MS));
+  lastFrameTime = now;
+
   if (dynamicBreathingOn && isWheelVisible && isTabVisible && !isSpinning) {
     let changed = false;
 
-    axisAnimState.forEach((anim, i) => {
-      if (now < anim.startTime) return;
-
-      const elapsed = now - anim.startTime;
-      const progress = Math.min(1, elapsed / anim.duration);
-      const eased = easeInOutSine(progress);
-
-      anim.current = anim.start + (anim.target - anim.start) * eased;
-      
-      // بمجرد الوصول للهدف، ننطلق فوراً لهدف جديد دون أي توقف (0 frames delay)
-      if (progress >= 1) {
-        anim.start = anim.target;
-        anim.target = getNewTarget(i);
-        anim.startTime = now;
-        anim.duration = 350 + Math.random() * 350; // سرعة قصوى
+    // إيقاع الدوران الخفيف الدايم - بيفضل شغال حتى بعد ما القيم تستقر
+    if (!dragging && !autoSpinOn) {
+      const t = now / 1000;
+      const nextWobble =
+        Math.sin(t * WHEEL_WOBBLE_SPEED_1) * WHEEL_WOBBLE_AMPLITUDE_1 +
+        Math.sin(t * WHEEL_WOBBLE_SPEED_2 + 1.7) * WHEEL_WOBBLE_AMPLITUDE_2;
+      if (Math.abs(nextWobble - idleWobbleDeg) > 0.01) {
+        idleWobbleDeg = nextWobble;
+        changed = true;
       }
-      
+    } else if (idleWobbleDeg !== 0) {
+      idleWobbleDeg = 0;
+      changed = true;
+    }
+
+    axisAnimState.forEach((anim, i) => {
+      if (now < anim.segmentStartTime) return;
+
+      // ملاحقة ناعمة ومستمرة للهدف الحالي (بدل قفزة/إيزنج منفصلة لكل قطعة)
+      if (dt > 0) {
+        const alpha = 1 - Math.exp(-dt / SMOOTHING_TAU_MS);
+        anim.current += (anim.target - anim.current) * alpha;
+      }
+
+      if (now - anim.segmentStartTime >= anim.duration) {
+        anim.segmentStartTime = now;
+
+        if (anim.pausing) {
+          anim.pausing = false;
+          scheduleNextJourneySegment(anim, i);
+        } else if (!anim.journeyDone) {
+          anim.segmentsCompleted++;
+          if (anim.segmentsCompleted < JOURNEY_SEGMENTS && Math.random() < PAUSE_CHANCE) {
+            // وقفة قصيرة طبيعية قبل ما يكمل الخطوة الجاية
+            anim.pausing = true;
+            anim.target = anim.current;
+            anim.duration = PAUSE_DURATION_MIN + Math.random() * (PAUSE_DURATION_MAX - PAUSE_DURATION_MIN);
+          } else {
+            scheduleNextJourneySegment(anim, i);
+          }
+        } else {
+          const step = settledStep(i);
+          anim.target = step.target;
+          anim.duration = step.duration;
+        }
+      }
+
       let newPercent = Math.max(10, Math.min(100, anim.current));
 
-      if (Math.abs(axesState[i].percent - newPercent) > 0.1) {
+      if (Math.abs(axesState[i].percent - newPercent) > 0.05) {
         axesState[i].percent = newPercent;
         changed = true;
 
@@ -625,11 +707,15 @@ function buildControls() {
         value = parseFloat(value);
         document.getElementById(`percent-val-${idx}`).textContent = value + "%";
         if (typeof axisAnimState !== "undefined" && axisAnimState[idx]) {
-          axisAnimState[idx].start = value;
+          // تعديل يدوي بالسلايدر = تجاوز صريح: يوقف رحلة النمو لهذا المحور
+          // ويثبته حول القيمة اللي المستخدم اختارها مع تذبذب هادئ
           axisAnimState[idx].current = value;
-          axisAnimState[idx].target = getNewTarget(idx);
-          axisAnimState[idx].startTime = performance.now();
-          axisAnimState[idx].duration = 350 + Math.random() * 350;
+          axisAnimState[idx].journeyDone = true;
+          axisAnimState[idx].segmentsCompleted = JOURNEY_SEGMENTS;
+          const step = settledStep(idx, value);
+          axisAnimState[idx].target = step.target;
+          axisAnimState[idx].segmentStartTime = performance.now();
+          axisAnimState[idx].duration = step.duration;
         }
       }
       axesState[idx][field] = value;
@@ -673,14 +759,12 @@ if (dynamicBreathingToggle) {
   dynamicBreathingToggle.addEventListener("change", (e) => {
     dynamicBreathingOn = e.target.checked;
     if (dynamicBreathingOn) {
+      // استئناف من نفس نقطة الرحلة (من غير ما نعيدها من الأول ومن غير هدف عشوائي جديد)
       const resumeNow = performance.now();
       lastBreathingTime = resumeNow;
       axisAnimState.forEach((anim, i) => {
-        anim.start = axesState[i].percent;
         anim.current = axesState[i].percent;
-        anim.target = getNewTarget(i);
-        anim.startTime = resumeNow + (Math.random() * 150);
-        anim.duration = 350 + Math.random() * 350;
+        anim.segmentStartTime = resumeNow;
       });
     }
   });
@@ -890,8 +974,7 @@ function spinWheelRandom() {
       const resumeNow = performance.now();
       lastBreathingTime = resumeNow;
       axisAnimState.forEach((anim, i) => {
-        anim.start = axesState[i].percent;
-        anim.startTime = resumeNow + (i * 70);
+        anim.segmentStartTime = resumeNow + (i * 70);
         anim.duration = 1450 + Math.random() * 450;
       });
     }
