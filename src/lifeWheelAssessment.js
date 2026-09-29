@@ -12,28 +12,24 @@ function scaleFor(value) {
   return ANSWER_SCALE.find((s) => s.value === value);
 }
 
+
 // عرض الخط     بت المميّز (Bar) اللي فيجما بيسجله فعليًا لكل جانب، مأخوذ من الميتاداتا الحقيقية
 // (بيانات كل صفحة جانب على حدة) - مش نسبة خطية متساوية بين كل خطوة والتانية.
 // القيم دي هي عرض الجزء المميّز بالبكسل زي ما فيجما مسجله بالظبط لكل جانب من الـ8.
 const STEP_LINE_WIDTHS = [105, 254, 389, 519, 664, 787, 931, 931];
 const STEP_LINE_MAX = Math.max(...STEP_LINE_WIDTHS);
 
+
+
 function renderStepper() {
   const el = document.getElementById('lw-stepper');
   if (!el) return;
 
-  const progressPct = (STEP_LINE_WIDTHS[currentCategoryIndex] / STEP_LINE_MAX) * 100;
-
-  // فيجما مش بيستخدم عناصر بعرض ثابت متساوي - كل جانب بياخد عرض محتواه (حسب طول
-  // الاسم) وبيتوزعوا بـ justify-between على عرض الحاوية بالظبط زي فيجما (مش gap ثابت
-  // مخمّن). على الموبايل بنستخدم gap ثابت صغير مع تمرير أفقي بدل التوزيع.
   el.innerHTML = `
     <div class="relative flex items-start justify-start md:justify-between gap-[16px] md:gap-0 min-w-max md:min-w-0 md:w-full px-2">
       <div class="absolute top-[20px] md:top-[27px] inset-x-[20px] md:inset-x-[27px] h-[2px] bg-[#e5e7eb]"></div>
-      <div class="absolute top-[20px] md:top-[27px] right-[20px] md:right-[27px] h-[2px] bg-brand-primary transition-all duration-300" style="width:calc(${progressPct}% - 20px)"></div>
+      <div id="lw-active-line" class="absolute top-[20px] md:top-[27px] right-[20px] md:right-[27px] h-[2px] bg-brand-primary transition-all duration-300" style="width:0px;"></div>
       ${CATEGORIES.map((cat, i) => {
-        // زي فيجما بالظبط: أي جانب اتخطى أو الجانب الحالي بيتلوّن بدائرة مليانة
-        // بلون العلامة التجارية (مش لون خاص بكل محور) وأيقونته بيضا، والباقي رمادي فاتح.
         const reached = i <= currentCategoryIndex;
         const circleClass = reached
           ? 'bg-brand-primary'
@@ -59,7 +55,30 @@ function renderStepper() {
     if (btn.disabled) return;
     btn.addEventListener('click', () => goToCategory(Number(btn.dataset.index)));
   });
+
+  updateStepperLine();
 }
+
+function updateStepperLine() {
+  const el = document.getElementById('lw-stepper');
+  const line = el?.querySelector('#lw-active-line');
+  const btns = el?.querySelectorAll('.lw-step-btn');
+  if (!line || !btns || !btns.length) return;
+
+  const firstCircle = btns[0].querySelector('.rounded-full');
+  const activeCircle = btns[currentCategoryIndex].querySelector('.rounded-full');
+
+  if (firstCircle && activeCircle) {
+    const firstRect = firstCircle.getBoundingClientRect();
+    const activeRect = activeCircle.getBoundingClientRect();
+    const firstCenter = firstRect.left + firstRect.width / 2;
+    const activeCenter = activeRect.left + activeRect.width / 2;
+    const width = Math.abs(firstCenter - activeCenter);
+    line.style.width = width + 'px';
+  }
+}
+
+window.addEventListener('resize', updateStepperLine);
 
 function renderScaleLegend() {
   const el = document.getElementById('lw-scale-legend');
@@ -236,34 +255,8 @@ function showMilestone() {
 }
 
 function showCompletionScreen() {
-  const stepper = document.getElementById('lw-stepper');
-  const reminder = document.getElementById('lw-reminder-box');
-  const legend = document.getElementById('lw-scale-legend');
-  const progressRow = document.getElementById('lw-progress-row');
-  const header = document.getElementById('lw-category-header');
-  const questions = document.getElementById('lw-questions');
-  const navButtons = document.getElementById('lw-nav-buttons');
-
-  [stepper, reminder, legend, progressRow].forEach((node) => {
-    if (node) node.style.display = 'none';
-  });
-  if (header) header.innerHTML = '';
-  if (navButtons) navButtons.innerHTML = '';
-
-  if (questions) {
-    questions.innerHTML = `
-      <div class="flex flex-col items-center text-center gap-4 py-14 px-6">
-        <span class="text-[54px]">🎉</span>
-        <h2 class="font-messiri font-bold text-brand-primary text-[20px] md:text-[30px]">أحسنت! أكملت اختبار عجلة الحياة</h2>
-        <p class="font-messiri text-[#565656] text-[13.5px] md:text-[18px] max-w-[520px] leading-relaxed">شكرًا لإكمالك كل الأسئلة في الجوانب الثمانية. نتيجتك التفصيلية هتكون متاحة قريبًا.</p>
-        <a href="/index.html#home" class="mt-2 inline-flex items-center gap-2 h-[46px] md:h-[56px] px-6 rounded-[15px] bg-brand-primary text-white font-messiri font-semibold text-[13.5px] md:text-[18px] hover:bg-[#102744] transition-all shadow-md">
-          <span>العودة للرئيسية</span>
-        </a>
-      </div>
-    `;
-  }
-
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  localStorage.setItem('lwAnswers', JSON.stringify(answers));
+  window.location.href = '/result.html';
 }
 
 function renderAll() {

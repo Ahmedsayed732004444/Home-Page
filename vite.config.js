@@ -40,6 +40,7 @@ export default defineConfig({
       input: {
         main: path.resolve(__dirname, 'index.html'),
         lifeWheelAssessment: path.resolve(__dirname, 'life-wheel-assessment.html'),
+        result: path.resolve(__dirname, 'result.html'),
       },
     },
   },
