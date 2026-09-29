@@ -106,12 +106,23 @@ export function initNavigation() {
     }
 
     // Handle Navbar Links (with data-nav)
+    // Shared navbar/footer markup is reused across pages (e.g. life-wheel-assessment.html),
+    // so a target section may not exist on the current page - fall back to a real navigation
+    // to the homepage with the hash instead of silently doing nothing.
     const allNavLinks = document.querySelectorAll('[data-nav]');
     allNavLinks.forEach(link => {
       link.addEventListener('click', (e) => {
         const targetNav = link.getAttribute('data-nav');
         if (!targetNav) return;
         e.preventDefault();
+        if (targetNav !== 'home' && !document.getElementById(targetNav)) {
+          window.location.href = `/index.html#${targetNav}`;
+          return;
+        }
+        if (targetNav === 'home' && !document.getElementById('home')) {
+          window.location.href = '/index.html';
+          return;
+        }
         smoothScrollTo(targetNav, targetNav);
       });
     });
@@ -125,18 +136,22 @@ export function initNavigation() {
       anchor.addEventListener('click', (e) => {
         const targetId = href.substring(1);
         const targetEl = document.getElementById(targetId);
-        if (targetEl) {
+        if (!targetEl) {
           e.preventDefault();
-          let navMap = null;
-          if (targetId === 'home' || targetId === 'wheel-wrap') navMap = 'home';
-          else if (targetId === 'assessments' || targetId === 'personality-keys' || targetId === 'challenge') navMap = 'assessments';
-          else if (targetId === 'courses') navMap = 'courses';
-          else if (targetId === 'certifications') navMap = 'certifications';
-          else if (targetId === 'about') navMap = 'about';
-          else if (targetId === 'contact') navMap = 'contact';
-
-          smoothScrollTo(targetId, navMap);
+          window.location.href = `/index.html#${targetId}`;
+          return;
         }
+
+        e.preventDefault();
+        let navMap = null;
+        if (targetId === 'home' || targetId === 'wheel-wrap') navMap = 'home';
+        else if (targetId === 'assessments' || targetId === 'personality-keys' || targetId === 'challenge') navMap = 'assessments';
+        else if (targetId === 'courses') navMap = 'courses';
+        else if (targetId === 'certifications') navMap = 'certifications';
+        else if (targetId === 'about') navMap = 'about';
+        else if (targetId === 'contact') navMap = 'contact';
+
+        smoothScrollTo(targetId, navMap);
       });
     });
 

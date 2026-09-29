@@ -491,32 +491,42 @@ const WHEEL_WOBBLE_SPEED_2 = 0.37;
 
 // 12 نقطة لكل محور: القيمة الأولى + متوسط كل 6 شهور (10 فترات) + القيمة الفعلية النهائية
 // (بالترتيب نفسه لمحاور axesState: شخصي، روحي، صحي، اجتماعي، عائلي، ترفيهي، مالي، مهني)
+//
+// شخصية الرحلة: مهني هو التركيز الأساسي الواضح، والصحي بيتحسن معاه كجزء من نفس
+// انضباطه (مش بيضحي بيه) لكن برتبة أقل منه، والعائلي محمي/شبه مستقر لأنه بيعتبره
+// التزام مش اختياري. المالي والروحي بيتحسنوا بهدوء من غير ما يبقوا أولوية. الشخصي
+// (الوعي الذاتي/التأمل الداخلي) بيفضل متأخر لأنه غارق في الإنجاز الخارجي. الاجتماعي
+// والترفيهي هما أكتر حاجتين بيضحي بيهم (أضعف ارتباط بالتزام، أسهل حاجة تتلغي وقت
+// الانشغال) - ده متوافق مع أبحاث توازن الحياة/العمل. مفيش أي جانب بيتعدى 90،
+// ومهم كمان إن القيم العالية والواطية موزعة حوالين العجلة مش متجمعة في نص واحد بس.
 const AXIS_JOURNEY = [
-  [30, 33, 43, 48, 56, 62, 66, 71, 74, 81, 89, 93],
-  [45, 46, 51, 54, 56, 60, 66, 66, 69, 77, 86, 91],
-  [38, 43, 52, 53, 52, 57, 61, 62, 67, 75, 86, 91],
-  [40, 37, 36, 41, 46, 52, 59, 61, 63, 72, 84, 90],
-  [50, 49, 50, 48, 48, 52, 59, 62, 66, 75, 86, 93],
-  [30, 26, 29, 31, 34, 40, 50, 54, 57, 68, 83, 90],
-  [35, 35, 38, 42, 47, 54, 59, 63, 69, 75, 85, 91],
-  [45, 45, 46, 52, 59, 66, 69, 74, 77, 82, 88, 92]
+  [30, 33, 36, 39, 41, 43, 44, 45, 46, 47, 47, 48], // شخصي — وعي ذاتي متأخر، مش أولوية
+  [45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 54, 55], // الروحي — نمو هادئ ومستقل
+  [38, 42, 47, 52, 57, 61, 65, 69, 72, 74, 76, 78], // الصحي — بيتحسن مع الانضباط، رتبة تانية بعد المهني
+  [40, 36, 32, 29, 27, 26, 28, 31, 34, 37, 39, 40], // الاجتماعي — أول حاجة بتتلغي وقت الانشغال
+  [50, 51, 53, 52, 55, 57, 59, 62, 65, 68, 70, 72], // العائلي — محمي/التزام، تحسن تدريجي مستقر
+  [30, 26, 22, 19, 18, 19, 22, 25, 28, 31, 33, 34], // الترفيهي — أكتر جانب مُهمَل
+  [35, 37, 40, 43, 46, 49, 51, 53, 55, 56, 57, 58], // المالي — بينمو أبطأ من المهني (إدارة مالية أضعف من الأداء الوظيفي)
+  [45, 49, 54, 59, 64, 69, 73, 77, 80, 83, 85, 87]  // المهني — التركيز الأساسي الواضح
 ];
 const JOURNEY_SEGMENTS = AXIS_JOURNEY[0].length - 1; // 11 قطعة
 const JOURNEY_SEGMENT_MS = JOURNEY_TOTAL_MS / JOURNEY_SEGMENTS;
+const MAX_AUTO_PERCENT = 90; // سقف صارم: مفيش جانب بيوصل له تلقائيًا (مفيش بني آدم "كامل")
 
 function settleValueFor(i) {
   const kf = AXIS_JOURNEY[i];
   return kf[kf.length - 1];
 }
 
-function jitteredTarget(value, range) {
-  return Math.max(0, Math.min(100, value + (Math.random() * 2 - 1) * range));
+function jitteredTarget(value, range, maxCap = 100) {
+  return Math.max(0, Math.min(maxCap, value + (Math.random() * 2 - 1) * range));
 }
 
 // خطوة تذبذب طبيعي صغيرة حول قيمة الاستقرار (أو حول قيمة يدوية لو المستخدم عدّل السلايدر)
 function settledStep(i, center) {
-  const base = center !== undefined ? center : settleValueFor(i);
-  const target = jitteredTarget(base, SETTLE_JITTER_RANGE);
+  const isManualOverride = center !== undefined;
+  const base = isManualOverride ? center : settleValueFor(i);
+  const target = jitteredTarget(base, SETTLE_JITTER_RANGE, isManualOverride ? 100 : MAX_AUTO_PERCENT);
   const duration = SETTLE_DURATION_MIN + Math.random() * (SETTLE_DURATION_MAX - SETTLE_DURATION_MIN);
   return { target, duration };
 }
@@ -524,7 +534,7 @@ function settledStep(i, center) {
 // بيحدد هدف/مدة الخطوة الجاية في الرحلة، أو يحوّل المحور لوضع الاستقرار لو خلصت كل الخطوات
 function scheduleNextJourneySegment(anim, i) {
   if (anim.segmentsCompleted < JOURNEY_SEGMENTS) {
-    anim.target = jitteredTarget(AXIS_JOURNEY[i][anim.segmentsCompleted + 1], SEGMENT_JITTER_RANGE);
+    anim.target = jitteredTarget(AXIS_JOURNEY[i][anim.segmentsCompleted + 1], SEGMENT_JITTER_RANGE, MAX_AUTO_PERCENT);
     anim.duration = JOURNEY_SEGMENT_MS + (Math.random() * 2 - 1) * SEGMENT_DURATION_VARIANCE_MS;
   } else {
     anim.journeyDone = true;
