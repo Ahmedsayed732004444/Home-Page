@@ -13,6 +13,14 @@ function scaleFor(value) {
 }
 
 
+// عرض الخط     بت المميّز (Bar) اللي فيجما بيسجله فعليًا لكل جانب، مأخوذ من الميتاداتا الحقيقية
+// (بيانات كل صفحة جانب على حدة) - مش نسبة خطية متساوية بين كل خطوة والتانية.
+// القيم دي هي عرض الجزء المميّز بالبكسل زي ما فيجما مسجله بالظبط لكل جانب من الـ8.
+const STEP_LINE_WIDTHS = [105, 254, 389, 519, 664, 787, 931, 931];
+const STEP_LINE_MAX = Math.max(...STEP_LINE_WIDTHS);
+
+
+
 function renderStepper() {
   const el = document.getElementById('lw-stepper');
   if (!el) return;
