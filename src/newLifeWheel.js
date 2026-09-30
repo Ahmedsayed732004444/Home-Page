@@ -1,4 +1,4 @@
-export function initNewLifeWheel() {
+export function initNewLifeWheel(options = {}) {
 
 /* ============================================================
    إعدادات عامة للعجلة
@@ -660,6 +660,7 @@ document.addEventListener("visibilitychange", () => {
 
 /* ====== لوحة تحكم كل محور ====== */
 function buildControls() {
+  if (!controlsEl) return;
   controlsEl.innerHTML = "";
   const iconOptionsHtml = Object.keys(ICON_LABELS)
     .map(key => `<option value="${key}">${ICON_LABELS[key]}</option>`)
@@ -740,7 +741,7 @@ function buildControls() {
 }
 
 // رفع صورة مخصصة كأيقونة لمحور معيّن (مُوكل على الحاوية عشان يفضل شغال بعد إعادة بناء اللوحة)
-controlsEl.addEventListener("change", (e) => {
+if (controlsEl) controlsEl.addEventListener("change", (e) => {
   const el = e.target;
   if (el.tagName === "INPUT" && el.type === "file" && el.dataset.field === "customIconUrl") {
     const idx = parseInt(el.dataset.idx, 10);
@@ -780,16 +781,16 @@ if (dynamicBreathingToggle) {
   });
 }
 
-spinDirectionSelect.value = spinDirection;
+if (spinDirectionSelect) spinDirectionSelect.value = spinDirection;
 
 function setRotation(angle) {
   rotationAngle = ((angle % 360) + 360) % 360;
-  rotationSlider.value = Math.round(rotationAngle);
-  rotationVal.textContent = Math.round(rotationAngle) + "°";
+  if (rotationSlider) rotationSlider.value = Math.round(rotationAngle);
+  if (rotationVal) rotationVal.textContent = Math.round(rotationAngle) + "°";
   drawWheel();
 }
 
-rotationSlider.addEventListener("input", (e) => {
+if (rotationSlider) rotationSlider.addEventListener("input", (e) => {
   if (isSpinning) return;
   setRotation(parseFloat(e.target.value));
 });
@@ -844,22 +845,26 @@ if (autoSpinToggle) {
   });
 }
 
-centerImageInput.addEventListener("change", (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    centerImageDataUrl = reader.result;
-    drawWheel();
-  };
-  reader.readAsDataURL(file);
-});
+if (centerImageInput) {
+  centerImageInput.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      centerImageDataUrl = reader.result;
+      drawWheel();
+    };
+    reader.readAsDataURL(file);
+  });
+}
 
-removeImageBtn.addEventListener("click", () => {
-  centerImageDataUrl = null;
-  centerImageInput.value = "";
-  drawWheel();
-});
+if (removeImageBtn) {
+  removeImageBtn.addEventListener("click", () => {
+    centerImageDataUrl = null;
+    if (centerImageInput) centerImageInput.value = "";
+    drawWheel();
+  });
+}
 
 /* ============================================================
    الصوت أثناء اللف - مُصنَّع بالكامل بالـ Web Audio API (من غير ملفات خارجية)
@@ -1054,6 +1059,57 @@ window.addEventListener("resize", () => {
   drawWheel(true);
 });
 
+// ====== RESULT PAGE LOGIC ======
+const isResultPage = options.isResultPage || false;
+if (isResultPage) {
+  autoSpinOn = false;
+  dynamicBreathingOn = false; // Turn off wobble
+  
+  // Try to get actual user scores
+  const answersJson = typeof window !== "undefined" ? localStorage.getItem('lwAnswers') : null;
+  if (answersJson) {
+    const answers = JSON.parse(answersJson);
+    const categoryScores = answers.map((catAnswers) => {
+      const sum = catAnswers.reduce((a, b) => a + (b || 0), 0);
+      return Math.round((sum / 40) * 100);
+    });
+    // Mapping: Personal(2), Spiritual(0), Health(1), Social(4), Family(3), Recreational(7), Financial(6), Professional(5)
+    const visualOrderIndices = [2, 0, 1, 4, 3, 7, 6, 5];
+    const userScores = visualOrderIndices.map(origIdx => categoryScores[origIdx]);
+    axesState.forEach((axis, i) => {
+      axis.percent = userScores[i];
+    });
+  }
+  
+  // Set up startup animation
+  axesState.forEach((axis, i) => {
+    axisAnimState[i].target = axis.percent;
+    axisAnimState[i].current = 0; // Start from 0
+  });
+  
+  const startupDuration = 2000; // 2 seconds
+  const startupStartTime = performance.now();
+  
+  function startupAnim(now) {
+    let progress = (now - startupStartTime) / startupDuration;
+    if (progress > 1) progress = 1;
+    
+    // easeOutQuart
+    const ease = 1 - Math.pow(1 - progress, 4);
+    
+    axesState.forEach((axis, i) => {
+      axisAnimState[i].current = axisAnimState[i].target * ease;
+      axis.percent = axisAnimState[i].current; // Update the actual percent for drawing
+    });
+    drawWheel(true);
+    
+    if (progress < 1) {
+      requestAnimationFrame(startupAnim);
+    }
+  }
+  requestAnimationFrame(startupAnim);
+}
+
 buildControls();
 drawWheel(true);
 
@@ -1062,3 +1118,4 @@ if (autoSpinOn) {
 }
 
 }
+

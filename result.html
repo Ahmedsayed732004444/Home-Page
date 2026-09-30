@@ -110,18 +110,22 @@
         </div>
 
         <!-- Polar Chart (Life Wheel) -->
-        <div class="bg-white rounded-[24px] shadow-sm p-4 sm:p-6 md:p-8 flex-1 relative flex flex-col">
-          <h2 class="font-messiri font-bold text-[#1a3b62] text-[18px] md:text-[22px] mb-4 md:mb-6">مجالات التوازن</h2>
-          <div class="flex-1 flex items-center justify-center relative min-h-[360px] sm:min-h-[420px] md:min-h-[480px] p-2 sm:p-4">
-            <div id="wheel-container" class="relative w-full max-w-[340px] sm:max-w-[420px] md:max-w-[500px] mx-auto aspect-square flex items-center justify-center">
-              <svg id="wheelSvg" role="img" aria-label="رسم بياني لعجلة الحياة يوضح توزيع درجات المجالات المختلفة" viewBox="0 0 834 834" class="w-full h-full overflow-visible" style="overflow: visible;"></svg>
-            </div>
-            
-            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div class="bg-white rounded-full w-[90px] h-[90px] md:w-[110px] md:h-[110px] shadow-sm flex flex-col items-center justify-center z-10 border border-[#f0f0f0]">
-                    <span id="center-score" class="font-bold text-[22px] md:text-[28px] text-[#1a3b62] leading-none mb-1">0%</span>
-                    <span class="text-[#6f6f6f] text-[10px] md:text-[12px] font-messiri">التوازن العام</span>
-                </div>
+        <div class="bg-white rounded-[24px] shadow-sm p-6 md:p-8 flex-1 relative flex flex-col overflow-hidden">
+          <h2 class="font-messiri font-bold text-[#1a3b62] text-[18px] md:text-[22px] mb-6">مجالات التوازن</h2>
+          <div class="flex-1 flex items-center justify-center relative">
+            <!-- Wheel copied from Main Page -->
+            <div class="relative w-full max-w-[305px] min-[390px]:max-w-[325px] min-[410px]:max-w-[335px] sm:max-w-[593px] mx-auto flex items-center justify-center overflow-visible aspect-[319.08/332.58] sm:aspect-[834.43/869.75]">
+              <div id="wheel-wrap" class="w-full h-full relative z-10">
+                <svg id="wheelSvg" viewBox="0 0 834.43 869.75" xmlns="http://www.w3.org/2000/svg" class="w-full h-full overflow-visible" style="overflow: visible;"></svg>
+              </div>
+
+              <!-- Center Score Overlay perfectly sized to match the empty SVG hole -->
+              <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
+                  <div class="bg-white rounded-full shadow-sm flex flex-col items-center justify-center border border-[#f0f0f0]" style="width: 14.38%; aspect-ratio: 1/1;">
+                      <span id="center-score" class="font-bold text-[10px] sm:text-[18px] text-[#1a3b62] leading-none mb-0.5">0%</span>
+                      <span class="text-[#6f6f6f] text-[5px] sm:text-[8px] font-messiri hidden sm:block">التوازن العام</span>
+                  </div>
+              </div>
             </div>
           </div>
         </div>
@@ -195,6 +199,12 @@
   <include src="./components/login-modal.html"></include>
   
   <script type="module" src="/src/lifeWheelResult.js"></script>
+  <script type="module">
+    import { initNewLifeWheel } from '/src/newLifeWheel.js';
+    document.addEventListener('DOMContentLoaded', () => {
+      initNewLifeWheel({ isResultPage: true });
+    });
+  </script>
 
   <!-- Auth Modal -->
   <div id="authModal" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title" aria-describedby="auth-modal-desc" class="fixed inset-0 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
