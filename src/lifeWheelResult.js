@@ -1,5 +1,8 @@
 import Chart from 'chart.js/auto';
 import { CATEGORIES } from './lifeWheelAssessmentData.js';
+import { initNavigation } from './navigation.js';
+
+initNavigation();
 
 function initResult() {
   const answersJson = localStorage.getItem('lwAnswers');
@@ -185,15 +188,15 @@ function initResult() {
       const topPct = 50 - Math.cos(centerAngleRad) * labelRadiusPct;
       
       const el = document.createElement('div');
-      el.className = 'chart-custom-label absolute transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1 z-10';
+      el.className = 'chart-custom-label absolute transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-0.5 sm:gap-1 z-10 select-none pointer-events-none';
       el.style.left = leftPct + '%';
       el.style.top = topPct + '%';
       el.style.color = cat.color;
       
       el.innerHTML = `
-        <span class="font-messiri font-bold text-[14px] md:text-[18px] leading-none whitespace-nowrap">${cat.label}</span>
-        <img src="${cat.solidIconUrl}" class="w-[24px] h-[24px] md:w-[32px] md:h-[32px] object-contain my-1" alt="" />
-        <span class="font-messiri font-bold text-[14px] md:text-[18px] leading-none">${cat.score}%</span>
+        <span class="font-messiri font-bold text-[11px] sm:text-[14px] md:text-[18px] leading-none whitespace-nowrap">${cat.label}</span>
+        <img src="${cat.solidIconUrl}" class="w-[18px] h-[18px] sm:w-[24px] sm:h-[24px] md:w-[32px] md:h-[32px] object-contain my-0.5" alt="" />
+        <span class="font-messiri font-bold text-[11px] sm:text-[14px] md:text-[18px] leading-none">${cat.score}%</span>
       `;
       wheelContainer.appendChild(el);
     });

@@ -110,10 +110,10 @@
         </div>
 
         <!-- Polar Chart (Life Wheel) -->
-        <div class="bg-white rounded-[24px] shadow-sm p-6 md:p-8 flex-1 relative flex flex-col overflow-hidden">
-          <h2 class="font-messiri font-bold text-[#1a3b62] text-[18px] md:text-[22px] mb-6">مجالات التوازن</h2>
-          <div class="flex-1 flex items-center justify-center relative min-h-[350px] md:min-h-[450px]">
-            <div id="wheel-container" class="relative w-full max-w-[500px] mx-auto aspect-square flex items-center justify-center">
+        <div class="bg-white rounded-[24px] shadow-sm p-4 sm:p-6 md:p-8 flex-1 relative flex flex-col">
+          <h2 class="font-messiri font-bold text-[#1a3b62] text-[18px] md:text-[22px] mb-4 md:mb-6">مجالات التوازن</h2>
+          <div class="flex-1 flex items-center justify-center relative min-h-[360px] sm:min-h-[420px] md:min-h-[480px] p-2 sm:p-4">
+            <div id="wheel-container" class="relative w-full max-w-[340px] sm:max-w-[420px] md:max-w-[500px] mx-auto aspect-square flex items-center justify-center">
               <svg id="wheelSvg" role="img" aria-label="رسم بياني لعجلة الحياة يوضح توزيع درجات المجالات المختلفة" viewBox="0 0 834 834" class="w-full h-full overflow-visible" style="overflow: visible;"></svg>
             </div>
             
@@ -128,54 +128,54 @@
 
       </div>
 
-      <!-- Bottom Section: Analysis and Highlights -->
-      <div class="flex flex-col lg:flex-row gap-8 lg:gap-10">
+      <!-- Bottom Section: Analysis and Highlights (Figma #3083:11353) -->
+      <div class="flex flex-col lg:flex-row items-stretch gap-6 md:gap-8 lg:gap-10">
         
-        <!-- Highest and Lowest -->
-        <div class="w-full lg:w-[320px] shrink-0 flex flex-col gap-[10px]">
+        <!-- Text Analysis (Figma: AI Insight #3083:11354, 708px desktop, right side in RTL) -->
+        <div class="bg-gradient-to-tr from-white to-[#dbeafe] border border-blue-100 rounded-[20px] p-6 sm:p-8 lg:p-10 flex-1 flex flex-col justify-center relative overflow-hidden order-1 lg:order-1 shadow-sm">
+          <div class="flex items-center justify-between mb-4 relative z-10 gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-[48px] h-[48px] sm:w-[56px] sm:h-[56px] bg-[#1a3b62] rounded-xl flex items-center justify-center shrink-0 shadow-sm" aria-hidden="true">
+                <i class="fa-regular fa-lightbulb text-white text-[22px] sm:text-[26px]"></i>
+              </div>
+              <h2 class="font-messiri font-bold text-[#172554] text-[19px] sm:text-[22px] lg:text-[25px]">ماذا تعني هذه النتيجة؟</h2>
+            </div>
+            <div class="bg-[#E9EDF2] px-3 sm:px-4 py-1.5 rounded-full flex items-center gap-1.5 shrink-0">
+              <span class="text-[12px] sm:text-[14px] font-semibold text-[#1a3b62] font-messiri">تحليل ذكي</span>
+              <i class="fa-solid fa-wand-magic-sparkles text-[11px] sm:text-[13px] text-[#1a3b62]" aria-hidden="true"></i>
+            </div>
+          </div>
+          
+          <p id="analysis-text" class="font-messiri text-[#565656] text-[15px] sm:text-[17px] lg:text-[19px] leading-relaxed text-right relative z-10 mt-2">
+            جاري تحليل النتيجة...
+          </p>
+        </div>
+
+        <!-- Highest and Lowest Cards (Figma #3083:11368, left side in RTL) -->
+        <div class="w-full lg:w-[420px] xl:w-[460px] shrink-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 order-2 lg:order-2">
             
           <!-- Lowest -->
-          <div id="lowest-card" class="bg-[#fffaf5] border border-[#f97316]/30 rounded-[20px] py-[20px] px-[16px] flex items-center justify-between">
+          <div id="lowest-card" class="bg-gradient-to-l from-[#fbbaba]/20 to-white border border-[#f97316]/40 rounded-[20px] p-5 sm:p-6 flex items-center justify-between shadow-sm transition-all">
             <div class="flex flex-col items-start gap-1 text-right">
-              <span class="font-messiri font-bold text-[#262626] text-[16px]">أقل جانب</span>
-              <span id="lowest-value" class="font-messiri font-bold text-[#f97316] text-[18px] md:text-[20px]">--</span>
+              <span class="font-messiri font-semibold text-[#111111] text-[16px] sm:text-[18px]">أقل جانب</span>
+              <span id="lowest-value" class="font-messiri font-bold text-[#f97316] text-[18px] sm:text-[20px]">--</span>
             </div>
-            <div id="lowest-icon-box" class="w-[48px] h-[48px] rounded-xl bg-[#f97316]/10 flex items-center justify-center shrink-0" aria-hidden="true">
-              <span id="lowest-icon" class="lw-icon-mask w-[24px] h-[24px] text-[#f97316]" style="--icon-url:url('')"></span>
+            <div id="lowest-icon-box" class="w-[52px] h-[52px] sm:w-[56px] sm:h-[56px] rounded-xl bg-[#f97316]/20 flex items-center justify-center shrink-0" aria-hidden="true">
+              <span id="lowest-icon" class="lw-icon-mask w-[28px] h-[28px] text-[#f97316]" style="--icon-url:url('')"></span>
             </div>
           </div>
 
           <!-- Highest -->
-          <div id="highest-card" class="bg-[#fcfaff] border border-[#8b5cf6]/30 rounded-[20px] py-[20px] px-[16px] flex items-center justify-between">
+          <div id="highest-card" class="bg-gradient-to-l from-[#5c3e9b]/20 to-white border border-[#8b5cf6]/40 rounded-[20px] p-5 sm:p-6 flex items-center justify-between shadow-sm transition-all">
             <div class="flex flex-col items-start gap-1 text-right">
-              <span class="font-messiri font-bold text-[#262626] text-[16px]">أعلى جانب</span>
-              <span id="highest-value" class="font-messiri font-bold text-[#8b5cf6] text-[18px] md:text-[20px]">--</span>
+              <span class="font-messiri font-semibold text-[#111111] text-[16px] sm:text-[18px]">أعلى جانب</span>
+              <span id="highest-value" class="font-messiri font-bold text-[#8b5cf6] text-[18px] sm:text-[20px]">--</span>
             </div>
-            <div id="highest-icon-box" class="w-[48px] h-[48px] rounded-xl bg-[#8b5cf6]/10 flex items-center justify-center shrink-0" aria-hidden="true">
-              <span id="highest-icon" class="lw-icon-mask w-[24px] h-[24px] text-[#8b5cf6]" style="--icon-url:url('')"></span>
+            <div id="highest-icon-box" class="w-[52px] h-[52px] sm:w-[56px] sm:h-[56px] rounded-xl bg-[#8b5cf6]/20 flex items-center justify-center shrink-0" aria-hidden="true">
+              <span id="highest-icon" class="lw-icon-mask w-[28px] h-[28px] text-[#8b5cf6]" style="--icon-url:url('')"></span>
             </div>
           </div>
 
-        </div>
-
-        <!-- Text Analysis -->
-        <div class="bg-[#f0f5ff] rounded-[24px] py-[44px] px-[16px] flex-1 flex flex-col justify-center relative overflow-hidden">
-          <div class="flex items-center justify-between mb-5 relative z-10">
-            <div class="flex items-center gap-3">
-              <div class="w-[42px] h-[42px] bg-[#1a3b62] rounded-xl flex items-center justify-center shrink-0" aria-hidden="true">
-                <i class="fa-solid fa-scale-balanced text-white text-[18px]"></i>
-              </div>
-              <h2 class="font-messiri font-bold text-[#1a3b62] text-[18px] md:text-[22px]">ماذا تعني هذه النتيجة؟</h2>
-            </div>
-            <div class="bg-white/60 backdrop-blur-sm px-4 py-1.5 rounded-full flex items-center gap-2">
-              <span class="text-[12px] font-bold text-[#1a3b62]">تحليل ذكي</span>
-              <i class="fa-solid fa-wand-magic-sparkles text-[12px] text-[#1a3b62]" aria-hidden="true"></i>
-            </div>
-          </div>
-          
-          <p id="analysis-text" class="font-messiri text-[#333333] text-[14px] md:text-[18px] leading-relaxed text-right relative z-10 mt-2">
-            جاري تحليل النتيجة...
-          </p>
         </div>
 
       </div>
@@ -192,6 +192,7 @@
   </main>
 
   <include src="./components/footer.html"></include>
+  <include src="./components/login-modal.html"></include>
   
   <script type="module" src="/src/lifeWheelResult.js"></script>
 

@@ -1,6 +1,9 @@
 // محرك اختبار عجلة الحياة - 8 جوانب × 10 أسئلة (مقياس ليكرت 0-4)
 import confetti from 'canvas-confetti';
 import { CATEGORIES, ANSWER_SCALE } from './lifeWheelAssessmentData.js';
+import { initNavigation } from './navigation.js';
+
+initNavigation();
 
 const TOTAL_CATEGORIES = CATEGORIES.length;
 const QUESTIONS_PER_CATEGORY = 10;
@@ -109,19 +112,23 @@ window.addEventListener('resize', updateStepperLine);
 function renderScaleLegend() {
   const el = document.getElementById('lw-scale-legend');
   if (!el) return;
-  // الترتيب البصري في فيجما: 4 (دائماً) أقصى اليسار ... 0 (لا تنطبق) أقصى اليمين.
-  // كود فيجما نفسه LTR افتراضيًا، فبالنسبة لصفحتنا (dir=rtl) لازم نعكس ترتيب الـ DOM
-  // (أول عنصر في DOM بيتحط أقصى اليمين في RTL) عشان نرجّع نفس الترتيب البصري بالظبط.
+
   const visualOrder = [...ANSWER_SCALE].reverse();
-  el.innerHTML = visualOrder.map((s, i) => `
-    <div class="flex items-center gap-[77px]">
-      <div class="flex flex-col items-center gap-2">
-        <div class="w-[50px] h-[50px] rounded-full flex items-center justify-center font-messiri font-bold text-[17px]" style="background:${s.bg};color:${s.text}">${s.value}</div>
-        <span class="font-messiri font-semibold text-[14px] text-[#262626] whitespace-nowrap">${s.label}</span>
+  const html = [];
+  visualOrder.forEach((s, i) => {
+    html.push(`
+      <div class="flex flex-col items-center gap-1 sm:gap-2 shrink-0">
+        <div class="w-[30px] h-[30px] min-[360px]:w-[34px] min-[360px]:h-[34px] md:w-[50px] md:h-[50px] rounded-full border-2 flex items-center justify-center font-messiri font-bold text-[13px] md:text-[17px] shadow-sm" style="background:${s.bg};color:${s.text};border-color:${s.bg}">${s.value}</div>
+        <span class="font-messiri font-semibold text-[10px] min-[360px]:text-[11.5px] md:text-[14px] text-[#262626] whitespace-nowrap">${s.label}</span>
       </div>
-      ${i < visualOrder.length - 1 ? '<div class="w-px h-[66px] bg-[#DDDDDD]"></div>' : ''}
-    </div>
-  `).join('');
+    `);
+    if (i < visualOrder.length - 1) {
+      html.push(`
+        <div class="w-px h-[30px] min-[360px]:h-[36px] sm:h-[48px] md:h-[60px] bg-[#DDDDDD] self-center shrink-0" aria-hidden="true"></div>
+      `);
+    }
+  });
+  el.innerHTML = html.join('');
 }
 
 function renderCategoryHeader() {
@@ -182,22 +189,20 @@ function renderQuestions() {
   if (!el) return;
   const cat = CATEGORIES[currentCategoryIndex];
 
-  // فيجما: دواير الإجابة على الشمال (4 يمين المجموعة...0 شمالها)، والسؤال على اليمين.
-  // بالنسبة لصفحتنا RTL: أول عنصر في DOM بيتحط أقصى اليمين، فلازم نعكس ترتيب كل حاجة
-  // كانت متبنية على افتراض LTR الافتراضي في كود فيجما.
+  // فيجما: ترتيب خيارات الإجابة 0، 1، 2، 3، 4 من اليمين لليسار مع فجوة واضحة 26px
   const circleOrder = [...ANSWER_SCALE].reverse();
 
   el.innerHTML = cat.questions.map((q, qIdx) => `
-    <div class="flex flex-col md:flex-row md:items-center gap-3 md:gap-8 py-4 md:py-6" data-q="${qIdx}">
-      <div class="flex items-center justify-center md:justify-start gap-1.5 md:gap-3 order-2 shrink-0" role="radiogroup" aria-labelledby="lw-q-text-${qIdx}">
+    <div class="flex flex-col md:flex-row md:items-center gap-3.5 md:gap-8 py-5 md:py-6" data-q="${qIdx}">
+      <div class="flex items-center justify-center md:justify-start w-full md:w-auto mx-auto md:mx-0 gap-4 min-[360px]:gap-[18px] min-[375px]:gap-[22px] min-[390px]:gap-[26px] md:gap-4 lg:gap-6 order-2 shrink-0 py-1" role="radiogroup" aria-labelledby="lw-q-text-${qIdx}">
         ${circleOrder.map((s) => `
-          <button type="button" role="radio" aria-checked="false" aria-label="الدرجة ${s.value}" class="lw-answer-btn w-[36px] h-[36px] md:w-[50px] md:h-[50px] rounded-full border-2 flex items-center justify-center font-messiri font-bold text-[13px] md:text-[17px] transition-all"
+          <button type="button" role="radio" aria-checked="false" aria-label="الدرجة ${s.value}" class="lw-answer-btn w-[36px] h-[36px] min-[360px]:w-[38px] min-[360px]:h-[38px] min-[390px]:w-[40px] min-[390px]:h-[40px] md:w-[50px] md:h-[50px] rounded-full border-2 flex items-center justify-center font-messiri font-bold text-[14px] min-[360px]:text-[15px] md:text-[17px] transition-all cursor-pointer select-none active:scale-95 shadow-sm"
             data-value="${s.value}" style="border-color:${s.bg};color:${s.text};background:transparent">${s.value}</button>
         `).join('')}
       </div>
-      <div class="flex items-start md:items-center gap-2 order-1 flex-1 min-w-0">
+      <div class="flex items-start md:items-center justify-center md:justify-start text-center md:text-right gap-2 order-1 flex-1 min-w-0">
         <span class="font-messiri font-semibold text-brand-primary text-[14px] md:text-[25px] shrink-0">${qIdx + 1}.</span>
-        <p id="lw-q-text-${qIdx}" class="font-messiri text-[#262626] text-[13.5px] md:text-[21px] text-right leading-snug">${q}</p>
+        <p id="lw-q-text-${qIdx}" class="font-messiri text-[#262626] text-[13.5px] md:text-[21px] leading-snug">${q}</p>
       </div>
     </div>
   `).join('');

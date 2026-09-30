@@ -95,14 +95,14 @@
       </div>
     </div>
 
-    <!-- Answer scale legend (static, desktop reference row) -->
-    <div class="hidden md:flex bg-white rounded-2xl shadow-card items-center justify-center gap-[77px] py-5 mb-4" id="lw-scale-legend"></div>
+    <!-- Answer scale legend (reference row) -->
+    <div class="flex bg-white rounded-2xl shadow-card items-center justify-center w-full mx-auto py-3.5 sm:py-5 px-2.5 sm:px-6 mb-4 gap-2.5 min-[360px]:gap-3 min-[390px]:gap-4 sm:gap-6 md:gap-8 lg:gap-10 xl:gap-[77px] overflow-hidden" id="lw-scale-legend"></div>
 
     <!-- Progress row (dynamic: X/10) -->
     <div id="lw-progress-row" class="flex items-center gap-3 mb-4 md:mb-6"></div>
 
     <!-- Questions list -->
-    <div id="lw-questions" class="flex flex-col bg-white rounded-2xl shadow-card px-4 sm:px-5 md:px-6 divide-y divide-[#EEF1F6]"></div>
+    <div id="lw-questions" class="flex flex-col bg-white rounded-2xl shadow-card px-3 sm:px-5 md:px-6 divide-y divide-[#EEF1F6]"></div>
 
     <!-- Nav buttons -->
     <div id="lw-nav-buttons" class="flex items-center justify-between mt-8 md:mt-10 gap-4"></div>
@@ -118,6 +118,7 @@
   </div>
 
   <include src="./components/footer.html"></include>
+  <include src="./components/login-modal.html"></include>
 
   <script type="module" src="/src/lifeWheelAssessment.js"></script>
 
