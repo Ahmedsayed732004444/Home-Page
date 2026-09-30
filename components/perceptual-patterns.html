@@ -1,11 +1,11 @@
 <!-- ==================== 3. SECTION: أنماط الإدراك (#943:4129) ==================== -->
-    <section id="assessments" class="pt-[19px] md:pt-[64px] pb-[25px] md:pb-[64px] px-0 sm:px-6 md:px-12 flex flex-col items-center w-full overflow-hidden">
+    <section id="assessments" aria-labelledby="perceptual-title" class="pt-[19px] md:pt-[64px] pb-[25px] md:pb-[64px] px-0 sm:px-6 md:px-12 flex flex-col items-center w-full overflow-hidden">
 
       <!-- Perception orbital diagram matching reference image (Figma #875:6216 & Mobile Frame #943:4129) -->
       <div class="relative w-full max-w-[393px] sm:max-w-[593px] mx-auto mb-[16px] md:mb-[40px] select-none aspect-[393/346] sm:aspect-[926/832]">
         
         <!-- Mobile Vector Orbit Background (Figma: 393 x 346) -->
-        <svg viewBox="0 0 393 346" class="absolute inset-0 w-full h-full pointer-events-none sm:hidden" fill="none">
+        <svg viewBox="0 0 393 346" class="absolute inset-0 w-full h-full pointer-events-none sm:hidden" fill="none" aria-hidden="true">
           <defs>
             <linearGradient id="orbitGradientMobile" x1="15%" y1="0%" x2="85%" y2="100%">
               <stop offset="0%" stop-color="#7C3AED" stop-opacity="0.5" />
@@ -37,7 +37,7 @@
         </svg>
 
         <!-- Desktop Vector Orbit Background (Concentric Circles + Subtle Gradient + Glowing Nodes) -->
-        <svg viewBox="0 0 926 832" class="absolute inset-0 w-full h-full pointer-events-none hidden sm:block" fill="none">
+        <svg viewBox="0 0 926 832" class="absolute inset-0 w-full h-full pointer-events-none hidden sm:block" fill="none" aria-hidden="true">
           <defs>
             <linearGradient id="orbitGradient" x1="15%" y1="0%" x2="85%" y2="100%">
               <stop offset="0%" stop-color="#7C3AED" stop-opacity="0.5" />
@@ -70,14 +70,14 @@
 
         <!-- Center Head/Brain Illustration (Mobile: 188x158 at Left 104, Top 111) -->
         <div class="absolute flex items-center justify-center pointer-events-none left-[26.46%] top-[32.08%] w-[47.84%] h-[45.66%] sm:left-[25.926%] sm:top-[32.08%] sm:w-[48.81%] sm:h-[45.66%]">
-          <img src="/images/illustrations/perception-head.png" alt="أنماط الإدراك" loading="lazy" decoding="async" class="w-full h-full object-contain" />
+          <img src="/images/illustrations/perception-head.png" alt="رسم توضيحي لمركز أنماط الإدراك" loading="lazy" decoding="async" class="w-full h-full object-contain" />
         </div>
 
         <!-- 1. سمعي (Auditory) — Top (#875:6228 Desktop / #934:4970 Mobile) -->
         <div class="absolute flex flex-col items-center justify-start pointer-events-auto left-1/2 -translate-x-1/2 top-0 w-[120px] sm:w-auto sm:left-[35.794%] sm:translate-x-0 sm:top-0">
           <div class="flex items-center justify-center gap-[4px] sm:gap-[8px]" dir="ltr">
             <div class="w-[40px] h-[40px] sm:w-[56px] sm:h-[56px] md:w-[77px] md:h-[77px] rounded-full bg-[#F5F3FF] border border-[#7C3AED]/20 md:border-[2px] shadow-[0px_12px_24px_rgba(124,58,237,0.12),inset_0px_4px_8px_rgba(124,58,237,0.1)] md:shadow-[0px_28.85px_57.71px_rgba(124,58,237,0.12),inset_0px_9.62px_19.24px_rgba(124,58,237,0.1)] flex items-center justify-center shrink-0 transition-transform duration-300 hover:scale-105 cursor-pointer">
-              <img src="/images/icons/icon-auditory-headphones.svg" alt="سمعي" loading="lazy" decoding="async" class="w-[20px] h-[20px] sm:w-[28px] sm:h-[28px] md:w-[38px] md:h-[38px] object-contain" />
+              <img src="/images/icons/icon-auditory-headphones.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" class="w-[20px] h-[20px] sm:w-[28px] sm:h-[28px] md:w-[38px] md:h-[38px] object-contain" />
             </div>
             <h4 class="font-bold text-[17px] sm:text-[22px] md:text-[33px] leading-none text-[#7C3AED] font-messiri">
               سمعي
@@ -92,7 +92,7 @@
         <div class="absolute flex flex-col items-center justify-start pointer-events-auto right-[1%] top-[47.69%] w-[95px] sm:w-auto sm:right-auto sm:left-[74.79%] sm:top-[47.69%]">
           <div class="flex items-center justify-center gap-[6px] sm:gap-[12px]" dir="ltr">
             <div class="w-[40px] h-[40px] sm:w-[56px] sm:h-[56px] md:w-[77px] md:h-[77px] rounded-full bg-[#FDF2F8] border border-[#EC4899]/40 md:border-[2px] shadow-[0px_12px_24px_rgba(236,72,153,0.12),inset_0px_4px_8px_rgba(236,72,153,0.1)] md:shadow-[0px_28.85px_57.71px_rgba(236,72,153,0.12),inset_0px_9.62px_19.24px_rgba(236,72,153,0.1)] flex items-center justify-center shrink-0 transition-transform duration-300 hover:scale-105 cursor-pointer">
-              <img src="/images/icons/icon-sensory-heart.svg" alt="حسي" loading="lazy" decoding="async" class="w-[20px] h-[20px] sm:w-[28px] sm:h-[28px] md:w-[38px] md:h-[38px] object-contain" />
+              <img src="/images/icons/icon-sensory-heart.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" class="w-[20px] h-[20px] sm:w-[28px] sm:h-[28px] md:w-[38px] md:h-[38px] object-contain" />
             </div>
             <h4 class="font-bold text-[17px] sm:text-[22px] md:text-[33px] leading-none text-[#EC4899] font-messiri">
               حسي
@@ -107,7 +107,7 @@
         <div class="absolute flex flex-col items-center justify-start pointer-events-auto left-[2.29%] top-[44.80%] w-[100px] sm:w-auto sm:left-[2.34%] sm:top-[44.80%]">
           <div class="flex items-center justify-center gap-[4px] sm:gap-[8px]" dir="ltr">
             <div class="w-[40px] h-[40px] sm:w-[56px] sm:h-[56px] md:w-[77px] md:h-[77px] rounded-full bg-[#EFF6FF] border border-[#1E5AF9]/20 md:border-[2px] shadow-[0px_12px_24px_rgba(30,90,249,0.12),inset_0px_4px_8px_rgba(30,90,249,0.1)] md:shadow-[0px_28.85px_57.71px_rgba(30,90,249,0.12),inset_0px_9.62px_19.24px_rgba(30,90,249,0.1)] flex items-center justify-center shrink-0 transition-transform duration-300 hover:scale-105 cursor-pointer">
-              <img src="/images/icons/icon-visual-eye.svg" alt="بصري" loading="lazy" decoding="async" class="w-[20px] h-[20px] sm:w-[28px] sm:h-[28px] md:w-[38px] md:h-[38px] object-contain" />
+              <img src="/images/icons/icon-visual-eye.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" class="w-[20px] h-[20px] sm:w-[28px] sm:h-[28px] md:w-[38px] md:h-[38px] object-contain" />
             </div>
             <h4 class="font-bold text-[17px] sm:text-[22px] md:text-[33px] leading-none text-[#1E5AF9] font-messiri">
               بصري
@@ -125,7 +125,7 @@
         <p class="text-[14px] md:text-[24px] font-medium text-black font-messiri leading-normal text-center w-full max-w-[333px] md:max-w-[490px] mx-auto">
           اكتشف طريقتك في فهم العالم من حولك باستخدام
         </p>
-        <h2 class="text-[18px] md:text-[34px] font-bold md:font-semibold text-[#1D436E] font-messiri leading-[27px] md:leading-[1.5] text-center whitespace-nowrap">
+        <h2 id="perceptual-title" class="text-[18px] md:text-[34px] font-bold md:font-semibold text-[#1D436E] font-messiri leading-[27px] md:leading-[1.5] text-center whitespace-nowrap">
           اختبار أنماط الإدراك
         </h2>
       </div>
@@ -135,8 +135,8 @@
 
         <!-- Right Promotional Text & Alarm Clock (First child in RTL) -->
         <div class="flex items-center gap-[10px] sm:gap-[21px] min-w-0">
-          <div class="flex items-center justify-center shrink-0 w-[37px] h-[37px] sm:w-[62px] sm:h-[62px]">
-            <img src="/images/icons/alarm-clock.svg" alt="Alarm Clock" loading="lazy" decoding="async" class="w-full h-full object-contain" />
+          <div class="flex items-center justify-center shrink-0 w-[37px] h-[37px] sm:w-[62px] sm:h-[62px]" aria-hidden="true">
+            <img src="/images/icons/alarm-clock.svg" alt="" loading="lazy" decoding="async" class="w-full h-full object-contain" />
           </div>
           <div class="flex flex-col items-start min-w-0 font-messiri">
             <span class="text-[25px] sm:text-[32px] font-bold text-[#204A7A] block leading-tight sm:leading-none">مجاني</span>
@@ -145,8 +145,8 @@
         </div>
 
         <!-- Left Gift Box Image / Vector (Last child in RTL) -->
-        <div class="w-[84px] h-[78px] sm:w-[115px] sm:h-[107px] flex items-center justify-center shrink-0">
-          <img src="/images/icons/wrapped-gift.svg" alt="Gift Box" loading="lazy" decoding="async" class="w-full h-full object-contain drop-shadow-sm" />
+        <div class="w-[84px] h-[78px] sm:w-[115px] sm:h-[107px] flex items-center justify-center shrink-0" aria-hidden="true">
+          <img src="/images/icons/wrapped-gift.svg" alt="" loading="lazy" decoding="async" class="w-full h-full object-contain drop-shadow-sm" />
         </div>
 
       </div>
@@ -156,7 +156,7 @@
         <!-- Start Evaluation Button -->
         <a href="#challenge" class="group flex-1 h-[40px] sm:h-[56px] bg-brand-primary text-white rounded-[10px] sm:rounded-[12px] font-semibold text-[13.5px] sm:text-[17px] flex items-center justify-center gap-1 sm:gap-3 shadow-md hover:bg-[#102744] hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 border-2 border-brand-primary cursor-pointer whitespace-nowrap font-messiri">
           <span class="leading-none">ابدأ التقييم الآن</span>
-          <i class="fa-solid fa-arrow-left text-xs sm:text-sm group-hover:-translate-x-1.5 transition-transform duration-200"></i>
+          <i class="fa-solid fa-arrow-left text-xs sm:text-sm group-hover:-translate-x-1.5 transition-transform duration-200" aria-hidden="true"></i>
         </a>
 
         <!-- Explore Button -->

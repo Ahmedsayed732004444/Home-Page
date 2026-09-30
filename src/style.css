@@ -15,6 +15,20 @@
       scroll-padding-top: 75px;
     }
   }
+  body {
+    margin: 0;
+    padding-top: clamp(20px, 4vw, 24px);
+    padding-bottom: 0;
+    padding-inline: 0;
+    overflow-x: hidden;
+  }
+}
+
+/* Non-home pages: desktop header width matches content (1240px) per Figma #3083:7913 */
+@media (min-width: 1024px) {
+  .page-wide-header #main-header {
+    max-width: 1240px;
+  }
 }
 
 /* Custom effects matching Figma */
@@ -207,23 +221,6 @@
     --grid-color: #cbd5e1;
   }
 
-  html{ direction:rtl; color-scheme: light dark; }
-  *{ box-sizing:border-box; }
-  body{
-    margin:0; padding-inline:16px;
-    background:var(--bg);
-    font-family: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif;
-    display:flex; flex-direction:column; align-items:center;
-    gap:clamp(12px, 3vw, 20px);
-    padding-block:clamp(12px, 4vw, 24px);
-    width:100%;
-    overflow-x:hidden;
-  }
-  h1{
-    font-size:clamp(16px, 4vw, 20px);
-    font-weight:800;
-    color:var(--text-strong); margin:0; text-align:center;
-  }
   #wheel-wrap{
     width:100%;
     height:100%;
@@ -233,7 +230,7 @@
   #wheel-wrap.can-drag{ cursor:grab; }
   #wheel-wrap.dragging{ cursor:grabbing; touch-action:none; }
   #wheel-wrap.spinning{ cursor:not-allowed; }
-  svg{ width:100%; height:auto; display:block; user-select:none; }
+  #wheelSvg, #wheel-wrap svg, #wheel-container svg{ width:100%; height:auto; display:block; user-select:none; }
   .axis-label{
     font-family:'El Messiri', sans-serif;
     font-weight:700;

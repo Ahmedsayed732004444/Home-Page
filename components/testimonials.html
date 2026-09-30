@@ -1,5 +1,5 @@
 <!-- ==================== 8. SECTION: آراء المتدربين (#952:4234 / #954:7735) ==================== -->
-<section id="about" class="pt-[25px] md:pt-[64px] pb-[25px] md:pb-[64px] px-0 md:px-12 relative overflow-hidden">
+<section id="about" aria-labelledby="testimonials-title" class="pt-[25px] md:pt-[64px] pb-[25px] md:pb-[64px] px-0 md:px-12 relative overflow-hidden">
 
   <div class="max-w-[992px] mx-auto">
 
@@ -8,7 +8,7 @@
       <div class="flex flex-row items-center justify-center gap-1.5 sm:gap-4 md:gap-[24px] w-full max-w-[361px] md:max-w-none mx-auto">
         
         <!-- Right Mark (Visual Right in RTL) -->
-        <div class="flex items-center w-[36px] min-[370px]:w-[48px] min-[390px]:w-[56.56px] md:w-[109px] shrink" dir="ltr">
+        <div class="flex items-center w-[36px] min-[370px]:w-[48px] min-[390px]:w-[56.56px] md:w-[109px] shrink" dir="ltr" aria-hidden="true">
           <!-- Diamond is closest to text (left side of this block) -->
           <div class="w-[5px] h-[5px] min-[370px]:w-[5.65px] min-[370px]:h-[5.65px] md:w-[6px] md:h-[6px] rotate-45 bg-[#204A7A] shrink-0 mx-1 md:mx-2"></div>
           <!-- Line fades to the right (away from text) -->
@@ -16,10 +16,10 @@
         </div>
         
         <!-- Text -->
-        <h2 class="text-[16px] min-[370px]:text-[17.5px] min-[390px]:text-[18px] md:text-[29px] text-[#1D436E] md:text-brand-primary whitespace-nowrap shrink-0" style="font-family: 'El Messiri', sans-serif; font-weight: 600; line-height: 1.5;">آراء المتدربين</h2>
+        <h2 id="testimonials-title" class="text-[16px] min-[370px]:text-[17.5px] min-[390px]:text-[18px] md:text-[29px] text-[#1D436E] md:text-brand-primary whitespace-nowrap shrink-0" style="font-family: 'El Messiri', sans-serif; font-weight: 600; line-height: 1.5;">آراء المتدربين</h2>
 
         <!-- Left Mark (Visual Left in RTL) -->
-        <div class="flex items-center w-[36px] min-[370px]:w-[48px] min-[390px]:w-[56.56px] md:w-[109px] shrink" dir="ltr">
+        <div class="flex items-center w-[36px] min-[370px]:w-[48px] min-[390px]:w-[56.56px] md:w-[109px] shrink" dir="ltr" aria-hidden="true">
           <!-- Line fades to the left (away from text) -->
           <div class="flex-1 h-[1.5px] bg-gradient-to-l from-[#204A7A] to-transparent"></div>
           <!-- Diamond is closest to text (right side of this block) -->
@@ -326,18 +326,18 @@
       <!-- Pagination controls matching Figma layout: Dots visible on both Mobile and Desktop -->
       <div class="flex items-center justify-center gap-[16px] md:gap-[16px] mt-[10px] md:mt-[40px] px-4 md:px-0" dir="rtl">
         <!-- Visual Right Button (Previous in RTL, Desktop only) -->
-        <button id="testi-prev" aria-label="السابق" class="hidden md:flex w-[50px] h-[50px] rounded-full border-[1.5px] border-[#204A7A] text-[#204A7A] items-center justify-center hover:bg-[#204A7A] hover:text-white transition-all duration-200 bg-white cursor-pointer shrink-0 z-10">
-          <i class="fa-solid fa-chevron-right text-[14px]"></i>
+        <button id="testi-prev" aria-label="عرض آراء المتدربين السابقة" class="hidden md:flex w-[50px] h-[50px] rounded-full border-[1.5px] border-[#204A7A] text-[#204A7A] items-center justify-center hover:bg-[#204A7A] hover:text-white transition-all duration-200 bg-white cursor-pointer shrink-0 z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary">
+          <i class="fa-solid fa-chevron-right text-[14px]" aria-hidden="true"></i>
         </button>
         
         <!-- Dots Container (RTL order: Dot 0 is at right, Dot 3 is at left) -->
-        <div id="testi-dots" class="flex items-center gap-[6px] cursor-pointer select-none" dir="rtl">
+        <div id="testi-dots" role="tablist" aria-label="مؤشرات التمرير بين آراء المتدربين" class="flex items-center gap-[6px] cursor-pointer select-none" dir="rtl">
           <!-- 4 Dots generated dynamically via JS: 1 active pill (w-7 h-2) + 3 inactive dots (w-2 h-2) -->
         </div>
         
         <!-- Visual Left Button (Next in RTL, Desktop only) -->
-        <button id="testi-next" aria-label="التالي" class="hidden md:flex w-[50px] h-[50px] rounded-full border-[1.5px] border-[#204A7A] text-[#204A7A] items-center justify-center hover:bg-[#204A7A] hover:text-white transition-all duration-200 bg-white cursor-pointer shrink-0 z-10">
-          <i class="fa-solid fa-chevron-left text-[14px]"></i>
+        <button id="testi-next" aria-label="عرض آراء المتدربين التالية" class="hidden md:flex w-[50px] h-[50px] rounded-full border-[1.5px] border-[#204A7A] text-[#204A7A] items-center justify-center hover:bg-[#204A7A] hover:text-white transition-all duration-200 bg-white cursor-pointer shrink-0 z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary">
+          <i class="fa-solid fa-chevron-left text-[14px]" aria-hidden="true"></i>
         </button>
       </div>
 

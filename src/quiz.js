@@ -187,6 +187,9 @@ export function initQuiz(customQuestions = null) {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = normalClass;
+        btn.setAttribute('role', 'radio');
+        btn.setAttribute('aria-checked', 'false');
+        btn.setAttribute('aria-label', `خيار نمط ${optIdx + 1}`);
         btn.innerHTML = renderDotContent(optType, true);
 
         btn.addEventListener('click', () => {
@@ -195,10 +198,12 @@ export function initQuiz(customQuestions = null) {
           // Reset all
           optionsContainer.querySelectorAll('.quiz-option').forEach(b => {
             b.className = normalClass;
+            b.setAttribute('aria-checked', 'false');
           });
 
           // Selected
           btn.className = selectedClass;
+          btn.setAttribute('aria-checked', 'true');
 
           // Enable button
           actionBtn.disabled = false;
@@ -222,6 +227,9 @@ export function initQuiz(customQuestions = null) {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = normalClass;
+        btn.setAttribute('role', 'radio');
+        btn.setAttribute('aria-checked', 'false');
+        btn.setAttribute('aria-label', optText);
         btn.textContent = optText;
 
         btn.addEventListener('click', () => {
@@ -230,10 +238,12 @@ export function initQuiz(customQuestions = null) {
           // Reset all
           optionsContainer.querySelectorAll('.quiz-option').forEach(b => {
             b.className = normalClass;
+            b.setAttribute('aria-checked', 'false');
           });
 
           // Selected
           btn.className = selectedClass;
+          btn.setAttribute('aria-checked', 'true');
 
           // Enable button
           actionBtn.disabled = false;

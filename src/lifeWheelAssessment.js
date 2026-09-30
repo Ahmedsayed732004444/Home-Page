@@ -13,37 +13,31 @@ function scaleFor(value) {
 }
 
 
-// عرض الخط     بت المميّز (Bar) اللي فيجما بيسجله فعليًا لكل جانب، مأخوذ من الميتاداتا الحقيقية
-// (بيانات كل صفحة جانب على حدة) - مش نسبة خطية متساوية بين كل خطوة والتانية.
-// القيم دي هي عرض الجزء المميّز بالبكسل زي ما فيجما مسجله بالظبط لكل جانب من الـ8.
-const STEP_LINE_WIDTHS = [105, 254, 389, 519, 664, 787, 931, 931];
-const STEP_LINE_MAX = Math.max(...STEP_LINE_WIDTHS);
-
-
-
 function renderStepper() {
   const el = document.getElementById('lw-stepper');
   if (!el) return;
 
   el.innerHTML = `
-    <div class="relative flex items-start justify-start md:justify-between gap-[16px] md:gap-0 min-w-max md:min-w-0 md:w-full px-2">
-      <div class="absolute top-[20px] md:top-[27px] inset-x-[20px] md:inset-x-[27px] h-[2px] bg-[#e5e7eb]"></div>
-      <div id="lw-active-line" class="absolute top-[20px] md:top-[27px] right-[20px] md:right-[27px] h-[2px] bg-brand-primary transition-all duration-300" style="width:0px;"></div>
+    <div class="relative w-full flex items-start justify-between">
+      <div id="lw-base-line" class="absolute h-[1px] md:h-[2px] bg-[#DEDEDE] z-0 pointer-events-none"></div>
+      <div id="lw-active-line" class="absolute h-[1px] md:h-[2px] bg-brand-primary transition-all duration-300 z-0 pointer-events-none"></div>
       ${CATEGORIES.map((cat, i) => {
         const reached = i <= currentCategoryIndex;
         const circleClass = reached
-          ? 'bg-brand-primary'
-          : 'bg-[#f5f6fa] border-[1.6px] border-[#6f6f6f]';
-        const iconColorClass = reached ? 'text-white' : 'text-[#6f6f6f]';
-        const labelColorClass = reached ? 'text-brand-primary font-bold' : 'text-[#6f6f6f] font-semibold';
+          ? 'bg-brand-primary border-brand-primary'
+          : 'bg-[#f5f6fa] border-[#565656]/50 md:border-[#6f6f6f]';
+        const iconColorClass = reached ? 'text-white' : 'text-[#565656] md:text-[#6f6f6f]';
+        const labelColorClass = reached ? 'text-brand-primary font-bold' : 'text-[#565656] md:text-[#6f6f6f] font-semibold';
+        const shortLabel = cat.label.replace('الجانب ', '');
         return `
-          <button type="button" class="lw-step-btn flex flex-col items-center gap-1.5 md:gap-2 shrink-0" data-index="${i}" ${i > currentCategoryIndex ? 'disabled' : ''}>
-            <div class="relative flex items-center justify-center rounded-full w-[40px] h-[40px] md:w-[54px] md:h-[54px] ${circleClass} transition-colors">
-              <span class="lw-icon-mask w-[16px] h-[16px] md:w-[22px] md:h-[22px] ${iconColorClass}" style="--icon-url:url('${cat.iconUrl}')"></span>
+          <button type="button" class="lw-step-btn flex flex-col items-center gap-1 md:gap-2 flex-1 min-w-0 max-w-[42px] sm:max-w-[48px] md:max-w-none transition-transform cursor-pointer" data-index="${i}" ${i > currentCategoryIndex ? 'disabled' : ''} aria-label="${cat.label} (الخطوة ${i + 1})">
+            <div class="relative flex items-center justify-center rounded-full w-[26px] h-[26px] min-[360px]:w-[28px] min-[360px]:h-[28px] md:w-[54px] md:h-[54px] border-[0.6px] md:border-[1.6px] ${circleClass} transition-colors z-10 shadow-sm">
+              <span class="lw-icon-mask w-[13px] h-[13px] min-[360px]:w-[14px] min-[360px]:h-[14px] md:w-[22px] md:h-[22px] ${iconColorClass}" style="--icon-url:url('${cat.iconUrl}')"></span>
             </div>
-            <div class="flex flex-col items-center leading-tight">
-              <span class="font-messiri text-[11px] md:text-[14px] ${labelColorClass}">${i + 1}</span>
-              <span class="font-messiri text-[10px] md:text-[14px] ${labelColorClass} whitespace-nowrap">${cat.label}</span>
+            <div class="flex flex-col items-center leading-tight w-full pointer-events-none">
+              <span class="font-messiri text-[8px] min-[360px]:text-[9px] md:text-[14px] ${labelColorClass}">${i + 1}</span>
+              <span class="font-messiri text-[7px] min-[360px]:text-[7.5px] min-[390px]:text-[8.5px] md:hidden ${labelColorClass} text-center leading-none mt-0.5 truncate w-full block">${shortLabel}</span>
+              <span class="font-messiri hidden md:inline text-[13px] lg:text-[14px] ${labelColorClass} whitespace-nowrap mt-0.5">${cat.label}</span>
             </div>
           </button>
         `;
@@ -56,25 +50,49 @@ function renderStepper() {
     btn.addEventListener('click', () => goToCategory(Number(btn.dataset.index)));
   });
 
-  updateStepperLine();
+  requestAnimationFrame(updateStepperLine);
 }
 
 function updateStepperLine() {
   const el = document.getElementById('lw-stepper');
-  const line = el?.querySelector('#lw-active-line');
+  const baseLine = el?.querySelector('#lw-base-line');
+  const activeLine = el?.querySelector('#lw-active-line');
   const btns = el?.querySelectorAll('.lw-step-btn');
-  if (!line || !btns || !btns.length) return;
+  if (!baseLine || !activeLine || !btns || btns.length < 2) return;
 
+  const container = el.firstElementChild;
+  if (!container) return;
+  const containerRect = container.getBoundingClientRect();
   const firstCircle = btns[0].querySelector('.rounded-full');
+  const lastCircle = btns[btns.length - 1].querySelector('.rounded-full');
   const activeCircle = btns[currentCategoryIndex].querySelector('.rounded-full');
 
-  if (firstCircle && activeCircle) {
+  if (firstCircle && lastCircle && activeCircle) {
     const firstRect = firstCircle.getBoundingClientRect();
+    const lastRect = lastCircle.getBoundingClientRect();
     const activeRect = activeCircle.getBoundingClientRect();
+
     const firstCenter = firstRect.left + firstRect.width / 2;
+    const lastCenter = lastRect.left + lastRect.width / 2;
     const activeCenter = activeRect.left + activeRect.width / 2;
-    const width = Math.abs(firstCenter - activeCenter);
-    line.style.width = width + 'px';
+
+    const centerY = (firstRect.top + firstRect.height / 2) - containerRect.top;
+
+    baseLine.style.top = centerY + 'px';
+    baseLine.style.transform = 'translateY(-50%)';
+    activeLine.style.top = centerY + 'px';
+    activeLine.style.transform = 'translateY(-50%)';
+
+    // In RTL: firstCircle (step 1) is at the right, lastCircle (step 8) is at the left
+    const rightOffset = Math.max(0, containerRect.right - firstCenter);
+    const leftOffset = Math.max(0, lastCenter - containerRect.left);
+
+    baseLine.style.right = rightOffset + 'px';
+    baseLine.style.left = leftOffset + 'px';
+
+    activeLine.style.right = rightOffset + 'px';
+    const activeWidth = Math.max(0, firstCenter - activeCenter);
+    activeLine.style.width = activeWidth + 'px';
   }
 }
 
@@ -111,7 +129,7 @@ function renderCategoryHeader() {
         <div class="w-[36px] h-[36px] md:w-[54px] md:h-[54px] rounded-full bg-[#EFF3F8] flex items-center justify-center shrink-0">
           <span class="lw-icon-mask w-[15px] h-[15px] md:w-[22px] md:h-[22px] text-brand-primary" style="--icon-url:url('${cat.iconUrl}')"></span>
         </div>
-        <h1 class="font-messiri font-bold text-brand-primary text-[17px] md:text-[28px]">${cat.label}</h1>
+        <h2 class="font-messiri font-bold text-brand-primary text-[17px] md:text-[28px]">${cat.label}</h2>
       </div>
     </div>
     <p class="font-messiri text-[#565656] text-[12.5px] md:text-[17px] leading-relaxed">${cat.description}</p>
@@ -139,6 +157,7 @@ function applySelectedStyle(btn, val) {
   btn.style.background = s.bg;
   btn.style.borderColor = s.bg;
   btn.style.color = s.text;
+  btn.setAttribute('aria-checked', 'true');
 }
 
 function resetStyle(btn) {
@@ -147,6 +166,7 @@ function resetStyle(btn) {
   btn.style.background = 'transparent';
   btn.style.borderColor = s.bg;
   btn.style.color = s.text;
+  btn.setAttribute('aria-checked', 'false');
 }
 
 function renderQuestions() {
@@ -161,15 +181,15 @@ function renderQuestions() {
 
   el.innerHTML = cat.questions.map((q, qIdx) => `
     <div class="flex flex-col md:flex-row md:items-center gap-3 md:gap-8 py-4 md:py-6" data-q="${qIdx}">
-      <div class="flex items-center justify-center md:justify-start gap-1.5 md:gap-3 order-2 shrink-0">
+      <div class="flex items-center justify-center md:justify-start gap-1.5 md:gap-3 order-2 shrink-0" role="radiogroup" aria-labelledby="lw-q-text-${qIdx}">
         ${circleOrder.map((s) => `
-          <button type="button" class="lw-answer-btn w-[36px] h-[36px] md:w-[50px] md:h-[50px] rounded-full border-2 flex items-center justify-center font-messiri font-bold text-[13px] md:text-[17px] transition-all"
+          <button type="button" role="radio" aria-checked="false" aria-label="الدرجة ${s.value}" class="lw-answer-btn w-[36px] h-[36px] md:w-[50px] md:h-[50px] rounded-full border-2 flex items-center justify-center font-messiri font-bold text-[13px] md:text-[17px] transition-all"
             data-value="${s.value}" style="border-color:${s.bg};color:${s.text};background:transparent">${s.value}</button>
         `).join('')}
       </div>
       <div class="flex items-start md:items-center gap-2 order-1 flex-1 min-w-0">
-        <span class="font-messiri font-semibold text-brand-primary text-[14px] md:text-[25px] shrink-0">.${qIdx + 1}</span>
-        <p class="font-messiri text-[#262626] text-[13.5px] md:text-[21px] text-right leading-snug">${q}</p>
+        <span class="font-messiri font-semibold text-brand-primary text-[14px] md:text-[25px] shrink-0">${qIdx + 1}.</span>
+        <p id="lw-q-text-${qIdx}" class="font-messiri text-[#262626] text-[13.5px] md:text-[21px] text-right leading-snug">${q}</p>
       </div>
     </div>
   `).join('');
@@ -203,13 +223,13 @@ function renderNavButtons() {
   el.innerHTML = `
     ${isFirst ? '<span></span>' : `
       <button type="button" id="lw-prev-btn" class="flex items-center gap-2 h-[46px] md:h-[60px] px-4 md:px-6 rounded-[15px] border-2 border-brand-primary text-brand-primary font-messiri font-semibold text-[13px] md:text-[21px] hover:bg-brand-primary hover:text-white transition-all cursor-pointer">
-        <i class="fa-solid fa-arrow-right text-[12px] md:text-[16px]"></i>
+        <i class="fa-solid fa-arrow-right text-[12px] md:text-[16px]" aria-hidden="true"></i>
         <span>الجانب السابق</span>
       </button>
     `}
     <button type="button" id="lw-next-btn" class="flex items-center gap-2 h-[46px] md:h-[60px] px-4 md:px-6 rounded-[15px] font-messiri font-semibold text-[13px] md:text-[21px] transition-all ${allAnswered ? 'bg-brand-primary text-white hover:bg-[#102744] shadow-md cursor-pointer' : 'bg-brand-primary/50 text-white/70 cursor-not-allowed'}" ${allAnswered ? '' : 'disabled'}>
       <span>${isLast ? 'إنهاء الاختبار' : 'الجانب التالي'}</span>
-      <i class="fa-solid fa-arrow-left text-[12px] md:text-[16px]"></i>
+      <i class="fa-solid fa-arrow-left text-[12px] md:text-[16px]" aria-hidden="true"></i>
     </button>
   `;
 

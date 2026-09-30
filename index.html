@@ -5,6 +5,73 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>دار الرؤى للتدريب | Dar Al-Ruya Training</title>
   
+  <meta name="description" content="دار الرؤى للتدريب - منصة رائدة في التدريب والتطوير وبناء المهارات القيادية والمقاييس الشخصية المتقدمة مثل اختبار عجلة الحياة المعتمد في المملكة العربية السعودية." />
+  <meta name="keywords" content="دار الرؤى, تدريب, عجلة الحياة, مقاييس شخصية, دورات قيادية, شهادات احترافية, تطوير الذات, السعودية" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#204A7A" />
+  <link rel="canonical" href="https://alruaa.com/" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://alruaa.com/" />
+  <meta property="og:title" content="دار الرؤى للتدريب | Dar Al-Ruya Training" />
+  <meta property="og:description" content="اكتشف نفسك وابدأ رحلة تطورك مع مقاييس ذكية لفهم ذاتك وتوازنك في الحياة من دار الرؤى للتدريب." />
+  <meta property="og:image" content="https://alruaa.com/images/hero_cover.png" />
+  <meta property="og:locale" content="ar_SA" />
+  <meta property="og:site_name" content="دار الرؤى للتدريب" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://alruaa.com/" />
+  <meta name="twitter:title" content="دار الرؤى للتدريب | Dar Al-Ruya Training" />
+  <meta name="twitter:description" content="اكتشف نفسك وابدأ رحلة تطورك مع مقاييس ذكية لفهم ذاتك وتوازنك في الحياة من دار الرؤى للتدريب." />
+  <meta name="twitter:image" content="https://alruaa.com/images/hero_cover.png" />
+
+  <!-- Structured Data (Schema.org) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "EducationalOrganization",
+        "@id": "https://alruaa.com/#organization",
+        "name": "دار الرؤى للتدريب",
+        "alternateName": "Dar Al-Ruya Training",
+        "url": "https://alruaa.com/",
+        "logo": "https://alruaa.com/images/logo.png",
+        "image": "https://alruaa.com/images/hero_cover.png",
+        "description": "مركز رائد يقدم برامج تدريبية وتطويرية معتمدة ومقاييس ذكية لاكتشاف الذات وتطوير المهارات القيادية والشخصية.",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "الرياض",
+          "addressCountry": "SA"
+        },
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+966557595769",
+          "contactType": "customer service",
+          "availableLanguage": "Arabic"
+        },
+        "sameAs": [
+          "https://twitter.com/",
+          "https://instagram.com/",
+          "https://youtube.com/"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://alruaa.com/#website",
+        "url": "https://alruaa.com/",
+        "name": "دار الرؤى للتدريب",
+        "publisher": {
+          "@id": "https://alruaa.com/#organization"
+        },
+        "inLanguage": "ar"
+      }
+    ]
+  }
+  </script>
+  
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="/images/logo.png" />
 
@@ -32,6 +99,11 @@
   </style>
 </head>
 <body class="bg-[#F8FAFC] text-brand-dark min-h-screen font-cairo antialiased selection:bg-brand-primary selection:text-white relative">
+  <!-- Skip to Main Content Link for Keyboard Accessibility -->
+  <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:right-4 focus:z-[999] focus:px-5 focus:py-3 focus:bg-brand-primary focus:text-white focus:rounded-xl focus:shadow-xl focus:outline-none">
+    تخطي إلى المحتوى الرئيسي
+  </a>
+
   <!-- Top anchor for Home (#home) navigation -->
   <div id="home" class="absolute top-0 left-0 w-full h-0 pointer-events-none"></div>
 
@@ -39,7 +111,7 @@
   <include src="./components/navbar.html"></include>
 
   <!-- Main Container -->
-  <main class="w-full mx-auto overflow-hidden relative">
+  <main id="main-content" class="w-full mx-auto overflow-hidden relative">
     <!-- 2. Hero Section & Life Wheel -->
     <include src="./components/hero.html"></include>
 
