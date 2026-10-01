@@ -5,22 +5,22 @@ import { initNavigation } from './navigation.js';
 initNavigation();
 
 function initResult() {
-  const answersJson = localStorage.getItem('lwAnswers');
-  let answers = [];
+  const answersJson = typeof window !== "undefined" ? localStorage.getItem('lwAnswers') : null;
+  let categoryScores = [];
+  let overallScore = 84;
   if (answersJson) {
-    answers = JSON.parse(answersJson);
+    const answers = JSON.parse(answersJson);
+    categoryScores = answers.map((catAnswers) => {
+      const sum = catAnswers.reduce((a, b) => a + (b || 0), 0);
+      return Math.round((sum / 40) * 100);
+    });
+    overallScore = Math.round(categoryScores.reduce((a, b) => a + b, 0) / categoryScores.length);
   } else {
-    // Fallback dummy data if accessed directly
-    answers = CATEGORIES.map(() => Array(10).fill(3));
+    // Exact fallback matching Figma design:
+    // CATEGORIES indices: 0: Spiritual(89), 1: Health(74), 2: Personal(92), 3: Family(61), 4: Social(69), 5: Professional(85), 6: Financial(63), 7: Recreational(73)
+    categoryScores = [89, 74, 92, 61, 69, 85, 63, 73];
+    overallScore = 84;
   }
-
-  // Calculate scores for each category
-  const categoryScores = answers.map((catAnswers) => {
-    const sum = catAnswers.reduce((a, b) => a + (b || 0), 0);
-    return Math.round((sum / 40) * 100);
-  });
-
-  const overallScore = Math.round(categoryScores.reduce((a, b) => a + b, 0) / categoryScores.length);
 
   // Figma Visual Order Mapping
   const visualOrderIndices = [2, 0, 1, 4, 3, 7, 6, 5];
@@ -70,17 +70,22 @@ function initResult() {
 
   // Render Gauge Chart
   const gaugeCtx = document.getElementById('gaugeChart');
-  let gaugeColor = '#20AD70';
+  let gaugeColor = '#38833C';
   let gaugeText = 'مستوى متميز';
+  let gaugeDesc = 'أنت تسير في الطريق الصحيح حافظ على توازنك واستمر في تطوير نفسك';
+
   if (overallScore < 50) {
-    gaugeColor = '#E33E5A';
-    gaugeText = 'يحتاج تطوير';
+    gaugeColor = '#9E1515';
+    gaugeText = 'مستوى منخفض';
+    gaugeDesc = 'لديك فرصة كبيرة للتحسن، وخطوات بسيطة قد تصنع فرقًا.';
   } else if (overallScore < 70) {
     gaugeColor = '#D4AE30';
     gaugeText = 'مستوى جيد';
+    gaugeDesc = 'أداؤك جيد ولديك مساحة جيدة لتعزيز توازنك وتطوير مجالاتك.';
   } else if (overallScore < 80) {
     gaugeColor = '#20AD70';
     gaugeText = 'مستوى جيد جداً';
+    gaugeDesc = 'أنت تسير في الطريق الصحيح حافظ على توازنك واستمر في تطوير نفسك';
   }
 
   if (gaugeCtx) {
@@ -153,6 +158,10 @@ function initResult() {
   if (gaugeLevelEl) {
     gaugeLevelEl.textContent = gaugeText;
     gaugeLevelEl.style.color = gaugeColor;
+  }
+  const gaugeDescEl = document.getElementById('gauge-desc');
+  if (gaugeDescEl) {
+    gaugeDescEl.textContent = gaugeDesc;
   }
 
   // Analysis & Highest/Lowest

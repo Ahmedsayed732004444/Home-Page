@@ -1,4 +1,5 @@
 export function initNewLifeWheel(options = {}) {
+const isResultPage = options.isResultPage || false;
 
 /* ============================================================
    إعدادات عامة للعجلة
@@ -7,11 +8,11 @@ const SETTINGS = {
   center: { x: 417.215, y: 434.875 }, // تم التعديل لتتناسب مع أبعاد figma
   centerImageRadius: 60, // نصف قطر صورة البوصلة
   innerRadius: 74,       // الفاصل الدائري 14px بنفس مقاس الفاصل بين المحاور تماماً (74 - 60 = 14px)
-  outerRadius: 330, // تصغير العجلة قليلا لإعطاء مساحة أكبر للنصوص والأيقونات
+  outerRadius: isResultPage ? 300 : 330, // قطر متوازن للعجلة لإعطاء فجوات واسعة وواضحة للنصوص والنسب
   numRings: 5,
   gapWidth: 14,
   showLabels: true,
-  labelOffset: 68,  // مسافة ثابتة بين طرف المحور الفعلي والأيقونة والاسم
+  labelOffset: isResultPage ? 54 : 68,  // مسافة ثابتة ومتوازنة للنصوص والأيقونات
   iconOffset: 20,   // (لم تعد مستخدمة بشكل منفصل، لكن نبقيها)
   iconSize: 34,     // تكبير حجم الأيقونات
   gridStrokeColor: "#2c3e50",
@@ -22,7 +23,7 @@ const SETTINGS = {
 /* بيانات كل محور - الترتيب يبدأ من المحور الشخصي في أعلى العجلة مع عقارب الساعة تماماً كما في Figma */
 let axesState = [
   { label: "الشخصي", color: "#7844D0", percent: 30, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/personal.png" },
-  { label: "الروحي", color: "#5875E5", percent: 45, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/spiritual.png" },
+  { label: "الروحاني", color: "#5875E5", percent: 45, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/spiritual.png" },
   { label: "الصحي", color: "#43A074", percent: 38, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/health.png" },
   { label: "الاجتماعي", color: "#C53664", percent: 40, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/social.png" },
   { label: "العائلي", color: "#D98344", percent: 50, direction: "dark-to-light", icon: "custom", customIconUrl: "/icons/wheel_of_life/family.png" },
@@ -203,6 +204,16 @@ function getAxisAccentColor(axis, amt) {
 
 function getMetrics() {
   const isMobile = window.innerWidth < 640 || (svg && svg.clientWidth && svg.clientWidth < 500);
+  if (isResultPage) {
+    return {
+      effectiveFontSize: 25,
+      effectiveIconSize: 48,
+      effectivePercentSize: 28,
+      effectiveLabelOffset: 54,
+      textYOffset: -10,
+      iconYOffset: 0
+    };
+  }
   return {
     effectiveFontSize: isMobile ? 31 : 24,
     effectiveIconSize: isMobile ? 62 : 42,
@@ -289,7 +300,8 @@ function buildWheelDom() {
       fillPaths,
       gridPaths,
       text: null,
-      icon: null
+      icon: null,
+      percentText: null
     });
   });
 
@@ -326,6 +338,9 @@ function buildWheelDom() {
       text.setAttribute("font-weight", "bold");
       text.setAttribute("text-anchor", "middle");
       text.textContent = axis.label || "";
+      if (isResultPage) {
+        text.setAttribute("dominant-baseline", "central");
+      }
       labelsGroup.appendChild(text);
       axisElements[i].text = text;
 
@@ -340,6 +355,21 @@ function buildWheelDom() {
         img.setAttribute("preserveAspectRatio", "xMidYMid meet");
         labelsGroup.appendChild(img);
         axisElements[i].icon = img;
+      }
+
+      // Percentage Text (Under icon for Result Page)
+      if (isResultPage) {
+        const pText = document.createElementNS(svgNS, "text");
+        pText.setAttribute("class", "axis-percent");
+        pText.setAttribute("fill", getAxisAccentColor(axis, 0.38));
+        pText.setAttribute("font-family", "'El Messiri', 'Cairo', sans-serif");
+        pText.setAttribute("font-size", `${metrics.effectivePercentSize}px`);
+        pText.setAttribute("font-weight", "bold");
+        pText.setAttribute("text-anchor", "middle");
+        pText.setAttribute("dominant-baseline", "central");
+        pText.textContent = `${Math.round(axis.percent || 0)}%`;
+        labelsGroup.appendChild(pText);
+        axisElements[i].percentText = pText;
       }
     });
 
@@ -429,17 +459,48 @@ function updateWheelGeometry() {
     const mid = i * sectorAngle + sectorAngle / 2 + rotationAngle + idleWobbleDeg;
     const fillFrac = Math.max(0, Math.min(100, axis.percent !== undefined ? axis.percent : 50)) / 100;
     const currentFillRadius = innerRadius + fillFrac * (outerRadius - innerRadius);
-    const targetRadius = Math.max(innerRadius + 50, currentFillRadius + metrics.effectiveLabelOffset);
+    const targetRadius = isResultPage
+      ? outerRadius + (metrics.effectiveLabelOffset || 54)
+      : Math.max(innerRadius + 50, currentFillRadius + metrics.effectiveLabelOffset);
     const basePos = polarToCartesian(cx, cy, targetRadius, mid);
 
-    if (el.text) {
-      el.text.setAttribute("x", basePos.x);
-      el.text.setAttribute("y", basePos.y + metrics.textYOffset);
-    }
+    if (isResultPage) {
+      const iconSize = metrics.effectiveIconSize || 48;
+      const fontSize = metrics.effectiveFontSize || 25;
+      const percentSize = metrics.effectivePercentSize || 28;
+      const gap = 16; // Generous 16px gap between text, icon, and percent matching Figma
 
-    if (el.icon) {
-      el.icon.setAttribute("x", basePos.x - metrics.effectiveIconSize / 2);
-      el.icon.setAttribute("y", basePos.y + metrics.iconYOffset);
+      if (el.text) {
+        el.text.setAttribute("x", basePos.x);
+        el.text.setAttribute("y", basePos.y - (iconSize / 2 + gap + fontSize / 2));
+        el.text.setAttribute("font-size", `${fontSize}px`);
+        el.text.setAttribute("dominant-baseline", "central");
+      }
+
+      if (el.icon) {
+        el.icon.setAttribute("x", basePos.x - iconSize / 2);
+        el.icon.setAttribute("y", basePos.y - iconSize / 2);
+        el.icon.setAttribute("width", iconSize);
+        el.icon.setAttribute("height", iconSize);
+      }
+
+      if (el.percentText) {
+        el.percentText.setAttribute("x", basePos.x);
+        el.percentText.setAttribute("y", basePos.y + (iconSize / 2 + gap + percentSize / 2));
+        el.percentText.setAttribute("font-size", `${percentSize}px`);
+        el.percentText.setAttribute("dominant-baseline", "central");
+        el.percentText.textContent = `${Math.round(axis.percent || 0)}%`;
+      }
+    } else {
+      if (el.text) {
+        el.text.setAttribute("x", basePos.x);
+        el.text.setAttribute("y", basePos.y + metrics.textYOffset);
+      }
+
+      if (el.icon) {
+        el.icon.setAttribute("x", basePos.x - metrics.effectiveIconSize / 2);
+        el.icon.setAttribute("y", basePos.y + metrics.iconYOffset);
+      }
     }
   });
 }
@@ -1060,7 +1121,6 @@ window.addEventListener("resize", () => {
 });
 
 // ====== RESULT PAGE LOGIC ======
-const isResultPage = options.isResultPage || false;
 if (isResultPage) {
   autoSpinOn = false;
   dynamicBreathingOn = false; // Turn off wobble
@@ -1079,6 +1139,13 @@ if (isResultPage) {
     axesState.forEach((axis, i) => {
       axis.percent = userScores[i];
     });
+  } else {
+    // Exact fallback scores matching Figma design:
+    // Personal(92%), Spiritual(89%), Health(74%), Social(69%), Family(61%), Recreational(73%), Financial(63%), Professional(85%)
+    const figmaScores = [92, 89, 74, 69, 61, 73, 63, 85];
+    axesState.forEach((axis, i) => {
+      axis.percent = figmaScores[i];
+    });
   }
   
   // Set up startup animation
@@ -1087,7 +1154,7 @@ if (isResultPage) {
     axisAnimState[i].current = 0; // Start from 0
   });
   
-  const startupDuration = 2000; // 2 seconds
+  const startupDuration = 1800; // 1.8 seconds
   const startupStartTime = performance.now();
   
   function startupAnim(now) {
@@ -1101,7 +1168,7 @@ if (isResultPage) {
       axisAnimState[i].current = axisAnimState[i].target * ease;
       axis.percent = axisAnimState[i].current; // Update the actual percent for drawing
     });
-    drawWheel(true);
+    updateWheelGeometry();
     
     if (progress < 1) {
       requestAnimationFrame(startupAnim);

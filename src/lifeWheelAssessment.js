@@ -47,7 +47,7 @@ function renderStepper() {
             </div>
             <div class="flex flex-col items-center leading-tight w-full pointer-events-none">
               <span class="font-messiri text-[8px] min-[360px]:text-[9px] md:text-[14px] ${labelColorClass}">${i + 1}</span>
-              <span class="font-messiri text-[7px] min-[360px]:text-[7.5px] min-[390px]:text-[8.5px] md:hidden ${labelColorClass} text-center leading-none mt-0.5 truncate w-full block">${shortLabel}</span>
+              <span class="font-messiri text-[8.5px] min-[360px]:text-[9.5px] min-[390px]:text-[10.5px] md:hidden ${labelColorClass} text-center leading-none mt-1 truncate w-full block font-medium">${shortLabel}</span>
               <span class="font-messiri hidden md:inline text-[13px] lg:text-[14px] ${labelColorClass} whitespace-nowrap mt-0.5">${cat.label}</span>
             </div>
           </button>
@@ -117,14 +117,14 @@ function renderScaleLegend() {
   const html = [];
   visualOrder.forEach((s, i) => {
     html.push(`
-      <div class="flex flex-col items-center gap-1 sm:gap-2 shrink-0">
-        <div class="w-[30px] h-[30px] min-[360px]:w-[34px] min-[360px]:h-[34px] md:w-[50px] md:h-[50px] rounded-full border-2 flex items-center justify-center font-messiri font-bold text-[13px] md:text-[17px] shadow-sm" style="background:${s.bg};color:${s.text};border-color:${s.bg}">${s.value}</div>
-        <span class="font-messiri font-semibold text-[10px] min-[360px]:text-[11.5px] md:text-[14px] text-[#262626] whitespace-nowrap">${s.label}</span>
+      <div class="flex flex-col items-center gap-1.5 sm:gap-2 shrink-0">
+        <div class="w-[32px] h-[32px] min-[360px]:w-[36px] min-[360px]:h-[36px] md:w-[50px] md:h-[50px] rounded-full border-2 flex items-center justify-center font-messiri font-bold text-[14px] md:text-[17px] shadow-sm" style="background:${s.bg};color:${s.text};border-color:${s.bg}">${s.value}</div>
+        <span class="font-messiri font-semibold text-[11px] min-[360px]:text-[12.5px] md:text-[14px] text-[#262626] whitespace-nowrap">${s.label}</span>
       </div>
     `);
     if (i < visualOrder.length - 1) {
       html.push(`
-        <div class="w-px h-[30px] min-[360px]:h-[36px] sm:h-[48px] md:h-[60px] bg-[#DDDDDD] self-center shrink-0" aria-hidden="true"></div>
+        <div class="w-px h-[32px] min-[360px]:h-[38px] sm:h-[48px] md:h-[60px] bg-[#DDDDDD] self-center shrink-0" aria-hidden="true"></div>
       `);
     }
   });
@@ -135,19 +135,17 @@ function renderCategoryHeader() {
   const el = document.getElementById('lw-category-header');
   if (!el) return;
   const cat = CATEGORIES[currentCategoryIndex];
-  // في فيجما الكتلة دي (الرقم "الجانب N من 8" فوق، وتحتها الأيقونة+الاسم) كلها كتلة
-  // واحدة متراصة رأسيًا وملتزقة باليمين - مفيش حاجة تانية جنبها في نفس الصف.
   el.innerHTML = `
     <div class="flex flex-col items-start gap-1.5 md:gap-2 mb-2 md:mb-3">
-      <span class="font-messiri font-medium text-[#6f6f6f] text-[12px] md:text-[18px] whitespace-nowrap">الجانب ${currentCategoryIndex + 1} من ${TOTAL_CATEGORIES}</span>
+      <span class="font-messiri font-semibold text-[#ce9d42] text-[13px] sm:text-[14px] md:text-[18px] whitespace-nowrap">الجانب ${currentCategoryIndex + 1} من ${TOTAL_CATEGORIES}</span>
       <div class="flex items-center gap-2.5 md:gap-3">
-        <div class="w-[36px] h-[36px] md:w-[54px] md:h-[54px] rounded-full bg-[#EFF3F8] flex items-center justify-center shrink-0">
-          <span class="lw-icon-mask w-[15px] h-[15px] md:w-[22px] md:h-[22px] text-brand-primary" style="--icon-url:url('${cat.iconUrl}')"></span>
+        <div class="w-[38px] h-[38px] md:w-[54px] md:h-[54px] rounded-full bg-[#EFF3F8] flex items-center justify-center shrink-0">
+          <span class="lw-icon-mask w-[18px] h-[18px] md:w-[24px] md:h-[24px] text-brand-primary" style="--icon-url:url('${cat.iconUrl}')"></span>
         </div>
-        <h2 class="font-messiri font-bold text-brand-primary text-[17px] md:text-[28px]">${cat.label}</h2>
+        <h2 class="font-messiri font-bold text-brand-primary text-[20px] sm:text-[22px] md:text-[28px]">${cat.label}</h2>
       </div>
     </div>
-    <p class="font-messiri text-[#565656] text-[12.5px] md:text-[17px] leading-relaxed">${cat.description}</p>
+    <p class="font-messiri text-[#565656] text-[13.5px] sm:text-[14.5px] md:text-[17px] leading-relaxed">${cat.description}</p>
   `;
 }
 
@@ -156,9 +154,6 @@ function renderProgressRow() {
   if (!el) return;
   const answered = answers[currentCategoryIndex].filter((v) => v !== null).length;
   const pct = (answered / QUESTIONS_PER_CATEGORY) * 100;
-  // فيجما: الشريط بياخد أغلب العرض على اليمين، والنص الصغير "X/10" في أقصى الشمال.
-  // عشان كود فيجما نفسه LTR افتراضيًا، لازم نقلب ترتيب الـ DOM هنا عشان يرجع نفس
-  // الشكل بالظبط جوه صفحتنا اللي dir=rtl (أول عنصر في DOM بيتحط أقصى اليمين في RTL).
   el.innerHTML = `
     <div class="flex-1 h-[10px] md:h-[12px] bg-[#e5e7eb] rounded-full overflow-hidden">
       <div class="h-full bg-[#2b5788] rounded-full transition-all duration-300" style="width:${pct}%"></div>
@@ -200,9 +195,9 @@ function renderQuestions() {
             data-value="${s.value}" style="border-color:${s.bg};color:${s.text};background:transparent">${s.value}</button>
         `).join('')}
       </div>
-      <div class="flex items-start md:items-center justify-center md:justify-start text-center md:text-right gap-2 order-1 flex-1 min-w-0">
-        <span class="font-messiri font-semibold text-brand-primary text-[14px] md:text-[25px] shrink-0">${qIdx + 1}.</span>
-        <p id="lw-q-text-${qIdx}" class="font-messiri text-[#262626] text-[13.5px] md:text-[21px] leading-snug">${q}</p>
+      <div class="flex items-start md:items-center justify-start text-right w-full gap-2.5 order-1 flex-1 min-w-0">
+        <span class="font-messiri font-bold text-brand-primary text-[16px] md:text-[24px] shrink-0">${qIdx + 1}.</span>
+        <p id="lw-q-text-${qIdx}" class="font-messiri font-medium text-[#262626] text-[15px] sm:text-[16px] md:text-[20px] leading-relaxed text-right">${q}</p>
       </div>
     </div>
   `).join('');
@@ -235,12 +230,12 @@ function renderNavButtons() {
 
   el.innerHTML = `
     ${isFirst ? '<span></span>' : `
-      <button type="button" id="lw-prev-btn" class="flex items-center gap-2 h-[46px] md:h-[60px] px-4 md:px-6 rounded-[15px] border-2 border-brand-primary text-brand-primary font-messiri font-semibold text-[13px] md:text-[21px] hover:bg-brand-primary hover:text-white transition-all cursor-pointer">
+      <button type="button" id="lw-prev-btn" class="flex items-center gap-2 h-[46px] md:h-[60px] px-4 md:px-6 rounded-[15px] border-2 border-brand-primary text-brand-primary font-messiri font-semibold text-[14px] sm:text-[16px] md:text-[21px] hover:bg-brand-primary hover:text-white transition-all cursor-pointer">
         <i class="fa-solid fa-arrow-right text-[12px] md:text-[16px]" aria-hidden="true"></i>
         <span>الجانب السابق</span>
       </button>
     `}
-    <button type="button" id="lw-next-btn" class="flex items-center gap-2 h-[46px] md:h-[60px] px-4 md:px-6 rounded-[15px] font-messiri font-semibold text-[13px] md:text-[21px] transition-all ${allAnswered ? 'bg-brand-primary text-white hover:bg-[#102744] shadow-md cursor-pointer' : 'bg-brand-primary/50 text-white/70 cursor-not-allowed'}" ${allAnswered ? '' : 'disabled'}>
+    <button type="button" id="lw-next-btn" class="flex items-center gap-2 h-[46px] md:h-[60px] px-4 md:px-6 rounded-[15px] font-messiri font-semibold text-[14px] sm:text-[16px] md:text-[21px] transition-all ${allAnswered ? 'bg-brand-primary text-white hover:bg-[#102744] shadow-md cursor-pointer' : 'bg-brand-primary/50 text-white/70 cursor-not-allowed'}" ${allAnswered ? '' : 'disabled'}>
       <span>${isLast ? 'إنهاء الاختبار' : 'الجانب التالي'}</span>
       <i class="fa-solid fa-arrow-left text-[12px] md:text-[16px]" aria-hidden="true"></i>
     </button>
